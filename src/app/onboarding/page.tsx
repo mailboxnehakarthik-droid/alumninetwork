@@ -1,0 +1,57 @@
+import type { Metadata } from "next";
+import { redirect } from "next/navigation";
+import Nav from "@/components/Nav";
+import Footer from "@/components/Footer";
+import Eyebrow from "@/components/Eyebrow";
+import OnboardingForm from "./OnboardingForm";
+import { createClient } from "@/lib/supabase/server";
+import type { Profile } from "@/lib/types";
+
+export const metadata: Metadata = {
+  title: "Complete your profile — BMS Alumni Network",
+};
+
+export default async function OnboardingPage() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) redirect("/login");
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", user.id)
+    .single<Profile>();
+
+  if (profile?.onboarded) redirect("/");
+
+  return (
+    <>
+      <Nav />
+      <main>
+        <section id="top">
+          <div className="mx-auto max-w-2xl px-6 pb-24 pt-16 md:pt-24">
+            <Eyebrow>Welcome</Eyebrow>
+            <h1 className="mt-6 font-display text-[clamp(2.25rem,6vw,3.5rem)] leading-[1.02] tracking-tight text-ink">
+              Complete your profile.
+            </h1>
+            <p className="mt-5 max-w-xl font-sans text-base leading-relaxed text-ink/70">
+              A few details so the network knows who you are. Alumni profiles are
+              reviewed before they appear in the directory.
+            </p>
+            <div className="mt-10">
+              <OnboardingForm
+                userId={user.id}
+                initial={profile}
+                email={user.email ?? ""}
+              />
+            </div>
+          </div>
+        </section>
+      </main>
+      <Footer />
+    </>
+  );
+}

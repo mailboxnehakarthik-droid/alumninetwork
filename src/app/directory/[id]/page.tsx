@@ -1,0 +1,180 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import Nav from "@/components/Nav";
+import Footer from "@/components/Footer";
+import Eyebrow from "@/components/Eyebrow";
+import { createClient } from "@/lib/supabase/server";
+import type { Profile } from "@/lib/types";
+
+export const metadata: Metadata = {
+  title: "Profile — BMS Alumni Network",
+};
+
+export const dynamic = "force-dynamic";
+
+export default async function DirectoryProfilePage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  if (id === user.id) redirect("/profile");
+
+  // RLS decides visibility: verified alumni, or someone connected via a
+  // mentorship request / job application.
+  const { data: p } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", id)
+    .maybeSingle<Profile>();
+
+  if (!p) {
+    return (
+      <>
+        <Nav />
+        <main>
+          <div className="mx-auto max-w-2xl px-6 py-32 text-center">
+            <Eyebrow align="center">Directory</Eyebrow>
+            <h1 className="mt-6 font-display text-3xl text-ink">
+              This profile isn&rsquo;t visible to you.
+            </h1>
+            <p className="mt-4 font-sans text-base text-ink/70">
+              Only verified alumni profiles are listed publicly in the network.
+            </p>
+            <Link
+              href="/directory"
+              className="mt-8 inline-flex items-center justify-center rounded-sm bg-oxblood px-7 py-3 font-sans text-[12px] font-medium uppercase tracking-[0.14em] text-ivory transition-colors hover:bg-maroon"
+            >
+              Back to directory
+            </Link>
+          </div>
+        </main>
+        <Footer />
+      </>
+    );
+  }
+
+  const isStudent = p.user_type === "student";
+  const role = [p.job_title, p.company].filter(Boolean).join(", ");
+  const meta = [
+    p.graduation_year
+      ? `${isStudent ? "Class of" : "Batch of"} ${p.graduation_year}`
+      : null,
+    p.branch,
+    p.current_city,
+  ]
+    .filter(Boolean)
+    .join(" · ");
+
+  return (
+    <>
+      <Nav />
+      <main>
+        <section id="top">
+          <div className="mx-auto max-w-3xl px-6 pb-24 pt-16 md:px-10 md:pt-24">
+            <Link
+              href="/directory"
+              className="font-sans text-[12px] font-medium uppercase tracking-[0.12em] text-oxblood underline decoration-gold underline-offset-4 hover:text-maroon"
+            >
+              ← Directory
+            </Link>
+
+            <div className="mt-8 flex items-center gap-5">
+              <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-full border border-gold/40 bg-ivory-dim font-display text-2xl italic text-oxblood">
+                {p.photo_url ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={p.photo_url}
+                    alt=""
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  (p.full_name || "?").charAt(0).toUpperCase()
+                )}
+              </div>
+              <div>
+                <h1 className="font-display text-3xl leading-tight text-ink">
+                  {p.full_name || "BMS member"}
+                </h1>
+                {role && (
+                  <p className="mt-1 font-sans text-sm text-ink/70">{role}</p>
+                )}
+                {isStudent && (
+                  <span className="mt-2 inline-block rounded-full border border-gold/40 px-3 py-0.5 font-sans text-[10px] font-medium uppercase tracking-[0.12em] text-gold">
+                    Current student
+                  </span>
+                )}
+              </div>
+            </div>
+
+            <dl className="mt-10 grid grid-cols-1 gap-x-10 gap-y-6 border-t border-gold/25 pt-8 sm:grid-cols-2">
+              <Row label={isStudent ? "Student" : "Alumnus"} value={meta} />
+              <Row label="LinkedIn" value={p.linkedin_url} isLink />
+              <Row label="About" value={p.bio} full />
+              {p.is_mentor && (
+                <Row
+                  label="Mentoring"
+                  value={p.mentor_bio ?? "Available as a mentor"}
+                  full
+                />
+              )}
+            </dl>
+
+            {p.is_mentor && (
+              <Link
+                href="/careers/mentorship"
+                className="mt-10 inline-flex items-center justify-center rounded-sm bg-oxblood px-7 py-3 font-sans text-[12px] font-medium uppercase tracking-[0.14em] text-ivory transition-colors hover:bg-maroon"
+              >
+                Request mentorship
+              </Link>
+            )}
+          </div>
+        </section>
+      </main>
+      <Footer />
+    </>
+  );
+}
+
+function Row({
+  label,
+  value,
+  isLink,
+  full,
+}: {
+  label: string;
+  value: string | null;
+  isLink?: boolean;
+  full?: boolean;
+}) {
+  if (!value) return null;
+  return (
+    <div className={full ? "sm:col-span-2" : ""}>
+      <dt className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-ink/50">
+        {label}
+      </dt>
+      <dd className="mt-1.5 font-sans text-sm leading-relaxed text-ink/80">
+        {isLink ? (
+          <a
+            href={value}
+            target="_blank"
+            rel="noreferrer"
+            className="text-oxblood underline decoration-gold underline-offset-2"
+          >
+            {value}
+          </a>
+        ) : (
+          value
+        )}
+      </dd>
+    </div>
+  );
+}
