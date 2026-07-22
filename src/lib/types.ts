@@ -17,8 +17,6 @@ export type Profile = {
   bio: string | null;
   linkedin_url: string | null;
   photo_url: string | null;
-  college_email: string | null;
-  personal_email: string | null;
   is_mentor: boolean;
   seeking_mentorship: boolean;
   mentor_expertise: string[] | null;
@@ -29,6 +27,14 @@ export type Profile = {
   onboarded: boolean;
   created_at: string;
   updated_at: string;
+};
+
+// Sensitive contact fields — stored in a separate table (member_contacts) with
+// strict RLS so they never leak through a profile row. See migration 0008.
+export type MemberContact = {
+  member_id: string;
+  personal_email: string | null;
+  college_email: string | null;
 };
 
 export type EventRow = {

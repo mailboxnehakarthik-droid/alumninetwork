@@ -10,11 +10,15 @@ import {
 
 type Tab = "pending" | "rejected" | "verified";
 
+type Contact = { personal_email: string | null; college_email: string | null };
+
 export default function AdminList({
   members,
+  contacts,
   tab,
 }: {
   members: Profile[];
+  contacts: Record<string, Contact>;
   tab: Tab;
 }) {
   if (members.length === 0) {
@@ -34,13 +38,26 @@ export default function AdminList({
   return (
     <ul className="flex flex-col gap-4">
       {members.map((m) => (
-        <MemberCard key={m.id} member={m} tab={tab} />
+        <MemberCard
+          key={m.id}
+          member={m}
+          contact={contacts[m.id]}
+          tab={tab}
+        />
       ))}
     </ul>
   );
 }
 
-function MemberCard({ member, tab }: { member: Profile; tab: Tab }) {
+function MemberCard({
+  member,
+  contact,
+  tab,
+}: {
+  member: Profile;
+  contact?: Contact;
+  tab: Tab;
+}) {
   const [pending, startTransition] = useTransition();
   const [rejecting, setRejecting] = useState(false);
   const [reason, setReason] = useState("");
@@ -108,8 +125,10 @@ function MemberCard({ member, tab }: { member: Profile; tab: Tab }) {
               </p>
             )}
             <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1 font-sans text-xs text-ink/55">
-              {member.personal_email && <span>{member.personal_email}</span>}
-              {member.college_email && <span>{member.college_email}</span>}
+              {contact?.personal_email && (
+                <span>{contact.personal_email}</span>
+              )}
+              {contact?.college_email && <span>{contact.college_email}</span>}
               {member.linkedin_url && (
                 <a
                   href={member.linkedin_url}

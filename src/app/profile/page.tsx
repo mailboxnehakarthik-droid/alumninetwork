@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Eyebrow from "@/components/Eyebrow";
+import AccountManagement from "./AccountManagement";
 import { createClient } from "@/lib/supabase/server";
 import type { Profile } from "@/lib/types";
 
@@ -101,6 +102,8 @@ export default async function ProfilePage() {
                 full
               />
             </dl>
+
+            <AccountManagement userId={profile.id} />
           </div>
         </section>
       </main>

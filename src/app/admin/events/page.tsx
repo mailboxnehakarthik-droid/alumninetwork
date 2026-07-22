@@ -1,0 +1,137 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import Nav from "@/components/Nav";
+import Footer from "@/components/Footer";
+import Eyebrow from "@/components/Eyebrow";
+import DeleteEventButton from "./DeleteEventButton";
+import { createClient } from "@/lib/supabase/server";
+import type { EventRow } from "@/lib/types";
+
+export const metadata: Metadata = {
+  title: "Admin · Events — BMS Alumni Network",
+};
+
+export const dynamic = "force-dynamic";
+
+export default async function AdminEventsPage() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const { data: me } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+  if (me?.role !== "admin") redirect("/");
+
+  const { data: events } = await supabase
+    .from("events")
+    .select("*")
+    .order("event_date", { ascending: false })
+    .returns<EventRow[]>();
+
+  const now = Date.now();
+  const list = events ?? [];
+
+  return (
+    <>
+      <Nav />
+      <main>
+        <section id="top">
+          <div className="mx-auto max-w-4xl px-6 pb-24 pt-16 md:px-10 md:pt-24">
+            <div className="flex items-center justify-between">
+              <Eyebrow>Admin · Events</Eyebrow>
+              <Link
+                href="/admin"
+                className="font-sans text-[12px] font-medium uppercase tracking-[0.12em] text-oxblood underline decoration-gold underline-offset-4 hover:text-maroon"
+              >
+                ← Verification
+              </Link>
+            </div>
+            <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
+              <h1 className="font-display text-[clamp(2.25rem,6vw,3.5rem)] leading-[1.02] tracking-tight text-ink">
+                Events.
+              </h1>
+              <Link
+                href="/admin/events/new"
+                className="rounded-sm bg-oxblood px-6 py-3 font-sans text-[12px] font-medium uppercase tracking-[0.14em] text-ivory transition-colors hover:bg-maroon"
+              >
+                Create event
+              </Link>
+            </div>
+
+            {list.length === 0 ? (
+              <div className="mt-10 border border-dashed border-gold/40 bg-ivory-dim/40 px-6 py-16 text-center">
+                <p className="font-display text-xl italic text-ink">
+                  No events yet.
+                </p>
+                <p className="mx-auto mt-3 max-w-md font-sans text-sm leading-relaxed text-ink/65">
+                  Create your first event — it&rsquo;ll show on the public
+                  Events page.
+                </p>
+              </div>
+            ) : (
+              <ul className="mt-10 flex flex-col gap-4">
+                {list.map((ev) => {
+                  const past = new Date(ev.event_date).getTime() < now;
+                  const label = new Date(ev.event_date).toLocaleDateString(
+                    "en-US",
+                    {
+                      weekday: "short",
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                      hour: "numeric",
+                      minute: "2-digit",
+                    }
+                  );
+                  return (
+                    <li
+                      key={ev.id}
+                      className="flex flex-wrap items-center justify-between gap-4 border border-gold/25 bg-ivory-dim/50 p-6"
+                    >
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-gold">
+                            {label}
+                          </span>
+                          {past && (
+                            <span className="rounded-full border border-ink/25 bg-ink/5 px-2.5 py-0.5 font-sans text-[10px] font-medium uppercase tracking-[0.12em] text-ink/55">
+                              Past
+                            </span>
+                          )}
+                        </div>
+                        <h3 className="mt-2 font-display text-xl text-ink">
+                          {ev.title}
+                        </h3>
+                        {ev.location && (
+                          <p className="mt-1 font-sans text-sm text-ink/60">
+                            {ev.location}
+                          </p>
+                        )}
+                      </div>
+                      <div className="flex shrink-0 items-center gap-2">
+                        <Link
+                          href={`/admin/events/${ev.id}/edit`}
+                          className="rounded-sm border border-gold/50 px-5 py-2.5 font-sans text-[12px] font-medium uppercase tracking-[0.12em] text-ink/75 transition-colors hover:border-oxblood hover:text-oxblood"
+                        >
+                          Edit
+                        </Link>
+                        <DeleteEventButton id={ev.id} title={ev.title} />
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </div>
+        </section>
+      </main>
+      <Footer />
+    </>
+  );
+}

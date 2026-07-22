@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Eyebrow from "@/components/Eyebrow";
+import ReportButton from "@/components/ReportButton";
 import { createClient } from "@/lib/supabase/server";
 import type { Profile } from "@/lib/types";
 
@@ -129,13 +130,22 @@ export default async function DirectoryProfilePage({
             </dl>
 
             {p.is_mentor && (
-              <Link
-                href="/careers/mentorship"
-                className="mt-10 inline-flex items-center justify-center rounded-sm bg-oxblood px-7 py-3 font-sans text-[12px] font-medium uppercase tracking-[0.14em] text-ivory transition-colors hover:bg-maroon"
-              >
-                Request mentorship
-              </Link>
+              <div className="mt-10">
+                <Link
+                  href="/careers/mentorship"
+                  className="inline-flex items-center justify-center rounded-sm bg-oxblood px-7 py-3 font-sans text-[12px] font-medium uppercase tracking-[0.14em] text-ivory transition-colors hover:bg-maroon"
+                >
+                  Request mentorship
+                </Link>
+              </div>
             )}
+
+            <div className="mt-12 border-t border-gold/20 pt-6">
+              <ReportButton
+                targetType={p.is_mentor ? "mentor" : "profile"}
+                targetId={p.id}
+              />
+            </div>
           </div>
         </section>
       </main>

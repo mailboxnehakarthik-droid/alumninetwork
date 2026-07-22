@@ -15,10 +15,32 @@ const inter = Inter({
   display: "swap",
 });
 
+// Set NEXT_PUBLIC_SITE_URL to your production domain so shared-link previews
+// and the sitemap use absolute URLs. Falls back to localhost for dev.
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+
 export const metadata: Metadata = {
-  title: "BMS Alumni Network — Once BMS. Always BMS.",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "BMS Alumni Network — Once BMS. Always BMS.",
+    template: "%s",
+  },
   description:
-    "The home for every BMS graduate — find your batch, your city chapter, a mentor, or your next opportunity. 14,000+ alumni across 30+ countries.",
+    "The home for every BMS graduate — find your batch, your city chapter, a mentor, or your next opportunity.",
+  openGraph: {
+    title: "BMS Alumni Network — Once BMS. Always BMS.",
+    description:
+      "The home for every BMS graduate — find your batch, your city chapter, a mentor, or your next opportunity.",
+    siteName: "BMS Alumni Network",
+    type: "website",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "BMS Alumni Network — Once BMS. Always BMS.",
+    description:
+      "The home for every BMS graduate — find your batch, your city chapter, a mentor, or your next opportunity.",
+  },
 };
 
 export default function RootLayout({

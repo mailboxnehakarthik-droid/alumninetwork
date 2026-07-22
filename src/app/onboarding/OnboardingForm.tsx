@@ -14,11 +14,13 @@ const LABEL =
 export default function OnboardingForm({
   userId,
   initial,
+  initialPersonalEmail = "",
   email,
   redirectTo = "/",
 }: {
   userId: string;
   initial: Profile | null;
+  initialPersonalEmail?: string;
   email: string;
   redirectTo?: string;
 }) {
@@ -30,9 +32,7 @@ export default function OnboardingForm({
   const [userType, setUserType] = useState<UserType>(
     isCollegeEmail ? "student" : initial?.user_type ?? "alumni"
   );
-  const [personalEmail, setPersonalEmail] = useState(
-    initial?.personal_email ?? ""
-  );
+  const [personalEmail, setPersonalEmail] = useState(initialPersonalEmail);
   const [done, setDone] = useState(false);
   const [fullName, setFullName] = useState(initial?.full_name ?? "");
   const [city, setCity] = useState(initial?.current_city ?? "");
@@ -115,16 +115,25 @@ export default function OnboardingForm({
           bio: bio.trim() || null,
           linkedin_url: linkedin.trim() || null,
           photo_url: nextPhotoUrl || null,
-          personal_email:
-            isCollegeEmail && personalEmail.trim()
-              ? personalEmail.trim()
-              : undefined,
           onboarded: true,
         },
         { onConflict: "id" }
       );
 
       if (upsertErr) throw upsertErr;
+
+      // Personal email is sensitive — it lives in member_contacts, never on the
+      // profile row. Only college-email students provide one here.
+      if (isCollegeEmail && personalEmail.trim()) {
+        // Non-fatal: the profile is already saved. If this fails (e.g. the
+        // hardening migration hasn't run yet), don't block onboarding.
+        await supabase
+          .from("member_contacts")
+          .upsert(
+            { member_id: userId, personal_email: personalEmail.trim() },
+            { onConflict: "member_id" }
+          );
+      }
 
       // College-email students: move their login to the personal email so they
       // keep access after graduation. Supabase emails a confirmation link to

@@ -4,9 +4,10 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Eyebrow from "@/components/Eyebrow";
 import Reveal from "@/components/Reveal";
-import DirectoryBrowser, {
-  type DirectoryAlum,
-} from "@/components/DirectoryBrowser";
+import DirectoryControls, {
+  Pagination,
+  type Facets,
+} from "@/components/DirectoryControls";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
@@ -15,40 +16,152 @@ export const metadata: Metadata = {
     "Search the BMS alumni directory by batch, branch, city, or company. Find your people.",
 };
 
-// Always fetch fresh so a newly-verified member shows up on the next load.
 export const dynamic = "force-dynamic";
 
-export default async function DirectoryPage() {
+const PAGE_SIZE = 24;
+const EMPTY_FACETS: Facets = { years: [], branches: [], cities: [], companies: [] };
+
+type Row = {
+  id: string;
+  full_name: string | null;
+  user_type: string | null;
+  graduation_year: number | null;
+  branch: string | null;
+  company: string | null;
+  job_title: string | null;
+  current_city: string | null;
+  photo_url: string | null;
+};
+
+export default async function DirectoryPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | undefined>>;
+}) {
+  const sp = await searchParams;
+  const tab = sp.tab === "student" ? "student" : "alumni";
+  // Strip characters that are meaningful in PostgREST's or() grammar / ILIKE
+  // wildcards, so the search term can't alter the query.
+  const q = (sp.q ?? "").replace(/[,()%*\\]/g, " ").trim().slice(0, 60);
+  const year = sp.year ?? "";
+  const branch = sp.branch ?? "";
+  const city = sp.city ?? "";
+  const company = sp.company ?? "";
+  const page = Math.max(1, Number.parseInt(sp.page ?? "1", 10) || 1);
+  const from = (page - 1) * PAGE_SIZE;
+  const to = from + PAGE_SIZE - 1;
+
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  let alumni: DirectoryAlum[] = [];
-  if (user) {
-    // RLS also restricts this to verified alumni; the filters are explicit for
-    // clarity and correctness.
-    const { data } = await supabase
-      .from("profiles")
-      .select(
-        "id, full_name, graduation_year, branch, company, job_title, current_city, photo_url"
-      )
-      .eq("verification_status", "verified")
-      .eq("user_type", "alumni")
-      .order("full_name", { ascending: true });
-
-    alumni = (data ?? []).map((p) => ({
-      id: p.id as string,
-      name: (p.full_name as string) ?? "BMS alum",
-      batch: (p.graduation_year as number) ?? null,
-      branch: (p.branch as string) ?? null,
-      company: (p.company as string) ?? null,
-      title: (p.job_title as string) ?? null,
-      city: (p.current_city as string) ?? null,
-      photoUrl: (p.photo_url as string) ?? null,
-    }));
+  if (!user) {
+    return (
+      <Shell>
+        <div className="mt-4 border border-dashed border-gold/40 bg-ivory-dim/40 px-6 py-20 text-center">
+          <p className="font-display text-2xl italic text-ink">
+            Sign in to browse the directory.
+          </p>
+          <p className="mx-auto mt-3 max-w-sm font-sans text-sm leading-relaxed text-ink/65">
+            The alumni directory is for members of the network.
+          </p>
+          <Link
+            href="/login"
+            className="mt-6 inline-flex items-center justify-center rounded-sm bg-oxblood px-7 py-3 font-sans text-[12px] font-medium uppercase tracking-[0.14em] text-ivory transition-colors hover:bg-maroon"
+          >
+            Sign in
+          </Link>
+        </div>
+      </Shell>
+    );
   }
 
+  // Filtered, paginated page of results — all in Postgres.
+  let query = supabase
+    .from("profiles")
+    .select(
+      "id, full_name, user_type, graduation_year, branch, company, job_title, current_city, photo_url",
+      { count: "exact" }
+    )
+    .eq("verification_status", "verified")
+    .eq("user_type", tab);
+
+  if (year) query = query.eq("graduation_year", Number(year));
+  if (branch) query = query.eq("branch", branch);
+  if (city) query = query.eq("current_city", city);
+  if (company) query = query.eq("company", company);
+  if (q) query = query.or(`full_name.ilike.%${q}%,company.ilike.%${q}%`);
+
+  const [
+    { data, count },
+    { count: alumniCount },
+    { count: studentCount },
+    { data: facetData },
+  ] = await Promise.all([
+    query.order("full_name", { ascending: true }).range(from, to).returns<Row[]>(),
+    supabase
+      .from("profiles")
+      .select("id", { count: "exact", head: true })
+      .eq("verification_status", "verified")
+      .eq("user_type", "alumni"),
+    supabase
+      .from("profiles")
+      .select("id", { count: "exact", head: true })
+      .eq("verification_status", "verified")
+      .eq("user_type", "student"),
+    // Falls back to empty facets if migration 0009 hasn't run — search still works.
+    supabase.rpc("directory_facets", { p_user_type: tab }),
+  ]);
+
+  const facets: Facets = (facetData as Facets | null) ?? EMPTY_FACETS;
+  const rows = data ?? [];
+  const total = count ?? 0;
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  const hasFilters = !!(q || year || branch || city || company);
+  const noun = tab === "student" ? "students" : "alumni";
+
+  return (
+    <Shell>
+      <DirectoryControls
+        tab={tab}
+        facets={facets}
+        alumniCount={alumniCount ?? 0}
+        studentCount={studentCount ?? 0}
+      />
+
+      {total === 0 ? (
+        <div className="mt-8 border border-dashed border-gold/40 bg-ivory-dim/40 px-6 py-20 text-center">
+          <p className="font-display text-2xl italic text-ink">
+            {hasFilters
+              ? `No ${noun} match those filters.`
+              : `No verified ${noun} yet.`}
+          </p>
+          <p className="mx-auto mt-3 max-w-sm font-sans text-sm leading-relaxed text-ink/65">
+            {hasFilters
+              ? "Try clearing a filter or two."
+              : "As members join and get verified, they'll appear here."}
+          </p>
+        </div>
+      ) : (
+        <>
+          <p className="mt-8 font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-ink/55">
+            {total} {noun}
+            {totalPages > 1 ? ` · page ${page} of ${totalPages}` : ""}
+          </p>
+          <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {rows.map((r, i) => (
+              <DirectoryCard key={r.id} row={r} index={i} />
+            ))}
+          </div>
+          <Pagination page={page} totalPages={totalPages} />
+        </>
+      )}
+    </Shell>
+  );
+}
+
+function Shell({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Nav />
@@ -71,32 +184,70 @@ export default async function DirectoryPage() {
             </Reveal>
           </div>
         </section>
-
         <section>
           <div className="mx-auto max-w-7xl px-6 pb-20 md:px-10 md:pb-28">
-            {user ? (
-              <DirectoryBrowser alumni={alumni} />
-            ) : (
-              <div className="mt-4 border border-dashed border-gold/40 bg-ivory-dim/40 px-6 py-20 text-center">
-                <p className="font-display text-2xl italic text-ink">
-                  Sign in to browse the directory.
-                </p>
-                <p className="mx-auto mt-3 max-w-sm font-sans text-sm leading-relaxed text-ink/65">
-                  The alumni directory is for members of the network. Sign in or
-                  join to see who&rsquo;s here.
-                </p>
-                <Link
-                  href="/login"
-                  className="mt-6 inline-flex items-center justify-center rounded-sm bg-oxblood px-7 py-3 font-sans text-[12px] font-medium uppercase tracking-[0.14em] text-ivory transition-colors hover:bg-maroon"
-                >
-                  Sign in
-                </Link>
-              </div>
-            )}
+            {children}
           </div>
         </section>
       </main>
       <Footer />
     </>
+  );
+}
+
+function initials(name: string) {
+  return name
+    .split(" ")
+    .map((p) => p[0])
+    .filter(Boolean)
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+}
+
+function DirectoryCard({ row, index }: { row: Row; index: number }) {
+  const name = row.full_name ?? "BMS member";
+  const isStudent = row.user_type === "student";
+  const roleLine = [row.job_title, row.company].filter(Boolean).join(", ");
+  const yearLabel = row.graduation_year
+    ? isStudent
+      ? `Class of ${row.graduation_year}`
+      : `Batch of ${row.graduation_year}`
+    : null;
+  const batchLine = [yearLabel, row.branch].filter(Boolean).join(" · ");
+
+  return (
+    <Reveal delay={Math.min(index, 8) * 50} className="h-full">
+      <Link
+        href={`/directory/${row.id}`}
+        className="flex h-full flex-col border border-gold/25 bg-ivory-dim/60 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-gold/60"
+      >
+        <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-full border border-gold/40 font-display text-lg italic text-oxblood">
+          {row.photo_url ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={row.photo_url} alt="" className="h-full w-full object-cover" />
+          ) : (
+            initials(name)
+          )}
+        </div>
+        <h3 className="mt-6 font-display text-xl text-ink">{name}</h3>
+        {isStudent && (
+          <span className="mt-2 w-fit rounded-full border border-gold/40 px-2.5 py-0.5 font-sans text-[10px] font-medium uppercase tracking-[0.12em] text-gold">
+            Current student
+          </span>
+        )}
+        {roleLine && (
+          <p className="mt-2 font-sans text-sm text-ink/65">{roleLine}</p>
+        )}
+        {batchLine && (
+          <p className="mt-3 font-sans text-sm text-ink/55">{batchLine}</p>
+        )}
+        {row.current_city && (
+          <p className="mt-auto pt-5 font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-gold">
+            {row.current_city}
+          </p>
+        )}
+      </Link>
+    </Reveal>
   );
 }

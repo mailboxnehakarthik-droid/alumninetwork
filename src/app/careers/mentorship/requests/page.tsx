@@ -61,28 +61,48 @@ export default async function MentorshipRequestsPage() {
   );
 
   const peopleById = new Map<string, Profile>();
+  // Contact rows come from member_contacts, whose RLS only returns a
+  // counterpart's contact when there's an ACCEPTED mentorship between us —
+  // the server can't leak an email for a pending/declined request.
+  const contactById = new Map<
+    string,
+    { personal_email: string | null; college_email: string | null }
+  >();
   if (otherIds.length) {
-    const { data: people } = await supabase
-      .from("profiles")
-      .select("*")
-      .in("id", otherIds)
-      .returns<Profile[]>();
+    const [{ data: people }, { data: contacts }] = await Promise.all([
+      supabase.from("profiles").select("*").in("id", otherIds).returns<Profile[]>(),
+      supabase
+        .from("member_contacts")
+        .select("member_id, personal_email, college_email")
+        .in("member_id", otherIds),
+    ]);
     for (const p of people ?? []) peopleById.set(p.id, p);
+    for (const c of contacts ?? [])
+      contactById.set(c.member_id as string, {
+        personal_email: (c.personal_email as string) ?? null,
+        college_email: (c.college_email as string) ?? null,
+      });
   }
 
-  // Contact details are only exposed once a request is accepted.
-  const toPerson = (p: Profile | undefined, accepted: boolean): Person => ({
-    id: p?.id ?? "",
-    name: p?.full_name ?? "BMS member",
-    branch: p?.branch ?? null,
-    gradYear: p?.graduation_year ?? null,
-    userType: p?.user_type ?? null,
-    title: p?.job_title ?? null,
-    company: p?.company ?? null,
-    photoUrl: p?.photo_url ?? null,
-    email: accepted ? p?.personal_email ?? p?.college_email ?? null : null,
-    linkedin: accepted ? p?.linkedin_url ?? null : null,
-  });
+  // Contact details are only exposed once a request is accepted (enforced by
+  // RLS above; the `accepted` flag is belt-and-braces).
+  const toPerson = (p: Profile | undefined, accepted: boolean): Person => {
+    const contact = p ? contactById.get(p.id) : undefined;
+    return {
+      id: p?.id ?? "",
+      name: p?.full_name ?? "BMS member",
+      branch: p?.branch ?? null,
+      gradYear: p?.graduation_year ?? null,
+      userType: p?.user_type ?? null,
+      title: p?.job_title ?? null,
+      company: p?.company ?? null,
+      photoUrl: p?.photo_url ?? null,
+      email: accepted
+        ? contact?.personal_email ?? contact?.college_email ?? null
+        : null,
+      linkedin: accepted ? p?.linkedin_url ?? null : null,
+    };
+  };
 
   const toView = (r: MentorshipRequest, otherId: string): ReqView => ({
     id: r.id,

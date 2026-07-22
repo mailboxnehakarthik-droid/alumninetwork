@@ -99,6 +99,27 @@ export default async function AdminPage({
     listQuery = listQuery.eq("user_type", "alumni");
   }
   const { data: members } = await listQuery.returns<Profile[]>();
+  const memberList = members ?? [];
+
+  // Contact info lives in member_contacts now; admins may read all of it.
+  const contacts: Record<
+    string,
+    { personal_email: string | null; college_email: string | null }
+  > = {};
+  if (memberList.length) {
+    const { data: contactRows } = await supabase
+      .from("member_contacts")
+      .select("member_id, personal_email, college_email")
+      .in(
+        "member_id",
+        memberList.map((m) => m.id)
+      );
+    for (const c of contactRows ?? [])
+      contacts[c.member_id as string] = {
+        personal_email: (c.personal_email as string) ?? null,
+        college_email: (c.college_email as string) ?? null,
+      };
+  }
 
   return (
     <>
@@ -108,12 +129,26 @@ export default async function AdminPage({
           <div className="mx-auto max-w-5xl px-6 pb-24 pt-16 md:px-10 md:pt-24">
             <div className="flex items-center justify-between">
               <Eyebrow>Admin</Eyebrow>
-              <Link
-                href="/admin/social"
-                className="font-sans text-[12px] font-medium uppercase tracking-[0.12em] text-oxblood underline decoration-gold underline-offset-4 hover:text-maroon"
-              >
-                Social posts →
-              </Link>
+              <div className="flex flex-wrap items-center gap-5">
+                <Link
+                  href="/admin/events"
+                  className="font-sans text-[12px] font-medium uppercase tracking-[0.12em] text-oxblood underline decoration-gold underline-offset-4 hover:text-maroon"
+                >
+                  Events →
+                </Link>
+                <Link
+                  href="/admin/reports"
+                  className="font-sans text-[12px] font-medium uppercase tracking-[0.12em] text-oxblood underline decoration-gold underline-offset-4 hover:text-maroon"
+                >
+                  Reports →
+                </Link>
+                <Link
+                  href="/admin/social"
+                  className="font-sans text-[12px] font-medium uppercase tracking-[0.12em] text-oxblood underline decoration-gold underline-offset-4 hover:text-maroon"
+                >
+                  Social posts →
+                </Link>
+              </div>
             </div>
             <h1 className="mt-6 font-display text-[clamp(2.25rem,6vw,3.5rem)] leading-[1.02] tracking-tight text-ink">
               Member verification.
@@ -142,7 +177,11 @@ export default async function AdminPage({
             </div>
 
             <div className="mt-8">
-              <AdminList members={members ?? []} tab={active.key} />
+              <AdminList
+                members={memberList}
+                contacts={contacts}
+                tab={active.key}
+              />
             </div>
           </div>
         </section>

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Eyebrow from "./Eyebrow";
 import Reveal from "./Reveal";
 
@@ -24,12 +25,24 @@ export default function FounderWidget({
           {/* Photo — first in the DOM so it stacks above the text on mobile */}
           <Reveal className="justify-self-center lg:justify-self-start">
             {photoUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={photoUrl}
-                alt="B. M. Sreenivasaiah, founder of BMS College of Engineering"
-                className="aspect-[3/4] w-full max-w-[300px] border border-gold/40 object-cover"
-              />
+              photoUrl.startsWith("/") ? (
+                <div className="relative aspect-[3/4] w-full max-w-[300px] border border-gold/40">
+                  <Image
+                    src={photoUrl}
+                    alt="B. M. Sreenivasaiah, founder of BMS College of Engineering"
+                    fill
+                    sizes="300px"
+                    className="object-cover"
+                  />
+                </div>
+              ) : (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={photoUrl}
+                  alt="B. M. Sreenivasaiah, founder of BMS College of Engineering"
+                  className="aspect-[3/4] w-full max-w-[300px] border border-gold/40 object-cover"
+                />
+              )
             ) : (
               /* ---- PLACEHOLDER: drop the founder photo in to replace this ---- */
               <div

@@ -27,6 +27,12 @@ export default async function OnboardingPage() {
 
   if (profile?.onboarded) redirect("/");
 
+  const { data: contact } = await supabase
+    .from("member_contacts")
+    .select("personal_email")
+    .eq("member_id", user.id)
+    .maybeSingle();
+
   return (
     <>
       <Nav />
@@ -45,6 +51,9 @@ export default async function OnboardingPage() {
               <OnboardingForm
                 userId={user.id}
                 initial={profile}
+                initialPersonalEmail={
+                  (contact?.personal_email as string) ?? ""
+                }
                 email={user.email ?? ""}
               />
             </div>

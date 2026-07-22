@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import Eyebrow from "@/components/Eyebrow";
 import ApplyBox from "./ApplyBox";
 import DeletePostingButton from "@/components/DeletePostingButton";
+import ReportButton from "@/components/ReportButton";
 import { createClient } from "@/lib/supabase/server";
 import type { JobApplication, JobPosting, Profile } from "@/lib/types";
 
@@ -216,6 +217,13 @@ export default async function OpeningPage({
                       closed={!!posting.closed_at}
                       redirectTo="/careers/my-postings"
                     />
+                  </div>
+                )}
+
+                {/* Anyone signed in but the owner can flag it. */}
+                {user && !isOwnerOrAdmin && (
+                  <div className="mt-4">
+                    <ReportButton targetType="posting" targetId={posting.id} />
                   </div>
                 )}
               </div>

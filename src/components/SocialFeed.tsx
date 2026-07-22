@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Reveal from "./Reveal";
 import type { SocialPost } from "@/lib/types";
 
@@ -61,16 +62,28 @@ function PostCard({ post, index }: { post: SocialPost; index: number }) {
         rel="noreferrer"
         className="group flex h-full flex-col overflow-hidden border border-gold/25 bg-ivory-dim/60 transition-all duration-300 hover:-translate-y-1 hover:border-gold/60"
       >
-        {/* Thumbnail */}
+        {/* Thumbnail. The 168 imported posts are re-hosted locally, so they get
+            next/image optimization; admin-added posts may carry an arbitrary
+            remote URL we can't whitelist, so those stay on a plain lazy <img>. */}
         <div className="relative aspect-square overflow-hidden bg-ivory-dim">
           {post.image_url ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={post.image_url}
-              alt={caption || "Instagram post"}
-              loading="lazy"
-              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-            />
+            post.image_url.startsWith("/") ? (
+              <Image
+                src={post.image_url}
+                alt={caption || "Instagram post"}
+                fill
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                className="object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+            ) : (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={post.image_url}
+                alt={caption || "Instagram post"}
+                loading="lazy"
+                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+            )
           ) : (
             <div className="flex h-full w-full items-center justify-center font-display text-lg italic text-oxblood/50">
               BMS
