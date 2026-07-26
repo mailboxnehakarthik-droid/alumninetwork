@@ -9,6 +9,15 @@ export async function GET(request: Request) {
   const next = searchParams.get("next") ?? "/";
   const type = searchParams.get("type");
 
+  // Behind a proxy (Vercel/Netlify/etc.) `origin` can be an internal host or
+  // http. Honour the forwarded host so post-login redirects land on the real
+  // public domain instead of localhost / an internal URL.
+  const forwardedHost = request.headers.get("x-forwarded-host");
+  const forwardedProto = request.headers.get("x-forwarded-proto") ?? "https";
+  const isLocal = process.env.NODE_ENV === "development";
+  const base =
+    !isLocal && forwardedHost ? `${forwardedProto}://${forwardedHost}` : origin;
+
   if (code) {
     const supabase = await createClient();
     const { error } = await supabase.auth.exchangeCodeForSession(code);
@@ -17,7 +26,7 @@ export async function GET(request: Request) {
       // Password recovery: session is established; send them straight to the
       // reset form regardless of onboarding state.
       if (type === "recovery") {
-        return NextResponse.redirect(`${origin}${next}`);
+        return NextResponse.redirect(`${base}${next}`);
       }
 
       const {
@@ -32,10 +41,10 @@ export async function GET(request: Request) {
           .single();
 
         const dest = profile?.onboarded ? next : "/onboarding";
-        return NextResponse.redirect(`${origin}${dest}`);
+        return NextResponse.redirect(`${base}${dest}`);
       }
     }
   }
 
-  return NextResponse.redirect(`${origin}/login?error=auth`);
+  return NextResponse.redirect(`${base}/login?error=auth`);
 }

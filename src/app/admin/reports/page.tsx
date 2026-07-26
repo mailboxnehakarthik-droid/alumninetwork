@@ -8,7 +8,7 @@ import ReportActions from "./ReportActions";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
-  title: "Admin · Reports — BMS Alumni Network",
+  title: "Admin · Reports — BMSCE Alumni Network",
 };
 
 export const dynamic = "force-dynamic";

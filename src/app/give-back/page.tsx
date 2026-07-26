@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import ComingSoon from "@/components/ComingSoon";
 
 export const metadata: Metadata = {
-  title: "Give Back — BMS Alumni Network",
+  title: "Give Back — BMSCE Alumni Network",
   description:
     "Ways to support BMS College of Engineering and its students — coming soon.",
 };

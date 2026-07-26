@@ -8,6 +8,7 @@ import FinalCta from "@/components/FinalCta";
 import MemberHome from "@/components/MemberHome";
 import Footer from "@/components/Footer";
 import { createClient } from "@/lib/supabase/server";
+import { getCareersEnabled } from "@/lib/settings";
 import type { Profile } from "@/lib/types";
 
 // Auth state must be read per-request so the right homepage is served.
@@ -33,20 +34,24 @@ export default async function Home() {
   // Signed in and onboarded → the member homepage (no "Join the network" copy).
   // Anyone else falls through to the public marketing homepage, unchanged.
   const showMemberHome = !!user && !!profile && profile.onboarded;
+  const careersEnabled = await getCareersEnabled();
 
   return (
     <>
       <Nav />
       <main>
         {showMemberHome ? (
-          <MemberHome profile={profile!} />
+          <MemberHome profile={profile!} careersEnabled={careersEnabled} />
         ) : (
           <>
+            {/* Order: Hero -> stats (GlobalCommunity) -> ways back in
+                (ValueProps) -> spotlight -> [mentorship promo, only when Careers
+                is enabled] -> final CTA. */}
             <Hero />
-            <ValueProps />
             <GlobalCommunity />
+            <ValueProps careersEnabled={careersEnabled} />
             <AlumniSpotlight />
-            <MentorCta />
+            {careersEnabled && <MentorCta />}
             <FinalCta />
           </>
         )}

@@ -9,7 +9,7 @@ import { createClient } from "@/lib/supabase/server";
 import type { JobApplication, JobPosting, Profile } from "@/lib/types";
 
 export const metadata: Metadata = {
-  title: "Applicants — BMS Alumni Network",
+  title: "Applicants — BMSCE Alumni Network",
 };
 
 export const dynamic = "force-dynamic";
@@ -67,6 +67,20 @@ export default async function PostingApplicantsPage({
     for (const p of people ?? []) peopleById.set(p.id, p);
   }
 
+  // Signed, time-limited download links for each resume. RLS lets the poster
+  // read resumes submitted to their own postings.
+  const resumeUrlById = new Map<string, string>();
+  await Promise.all(
+    applications
+      .filter((a) => a.resume_url)
+      .map(async (a) => {
+        const { data } = await supabase.storage
+          .from("resumes")
+          .createSignedUrl(a.resume_url as string, 3600);
+        if (data?.signedUrl) resumeUrlById.set(a.id, data.signedUrl);
+      })
+  );
+
   const rows: ApplicantRow[] = applications.map((a) => {
     const p = peopleById.get(a.applicant_id);
     return {
@@ -74,9 +88,13 @@ export default async function PostingApplicantsPage({
       status: a.status,
       coverNote: a.cover_note,
       appliedAt: a.created_at,
+      email: a.applicant_email ?? null,
+      phone: a.applicant_phone ?? null,
+      resumeUrl: resumeUrlById.get(a.id) ?? null,
       person: {
         id: a.applicant_id,
-        name: p?.full_name ?? "BMS member",
+        // Prefer the name submitted on the application; fall back to profile.
+        name: a.applicant_name ?? p?.full_name ?? "BMS member",
         photoUrl: p?.photo_url ?? null,
         branch: p?.branch ?? null,
         gradYear: p?.graduation_year ?? null,

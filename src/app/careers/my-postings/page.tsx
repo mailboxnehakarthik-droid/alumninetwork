@@ -14,7 +14,7 @@ import type {
 } from "@/lib/types";
 
 export const metadata: Metadata = {
-  title: "My Postings — BMS Alumni Network",
+  title: "My Postings — BMSCE Alumni Network",
 };
 
 export const dynamic = "force-dynamic";

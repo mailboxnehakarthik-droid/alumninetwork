@@ -56,6 +56,52 @@ export default function OnboardingForm({
 
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const thisYear = new Date().getFullYear();
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  // Clear a single field's error as the user fixes it.
+  const clearError = (key: string) =>
+    setErrors((prev) => {
+      if (!prev[key]) return prev;
+      const next = { ...prev };
+      delete next[key];
+      return next;
+    });
+
+  // Errored inputs get a red border on top of the shared field style.
+  const fieldClass = (key: string) =>
+    errors[key] ? `${FIELD} border-oxblood/70` : FIELD;
+
+  const validate = () => {
+    const errs: Record<string, string> = {};
+    if (userType !== "alumni" && userType !== "student") {
+      errs.userType = "Please select one.";
+    }
+    if (!fullName.trim()) errs.fullName = "This field is required.";
+    if (!email.trim() || !EMAIL_RE.test(email.trim())) {
+      errs.email = "A valid email address is required.";
+    }
+    if (isCollegeEmail) {
+      if (!personalEmail.trim()) errs.personalEmail = "This field is required.";
+      else if (!EMAIL_RE.test(personalEmail.trim()))
+        errs.personalEmail = "Enter a valid email address.";
+    }
+    if (!city.trim()) errs.city = "This field is required.";
+    if (!gradYear.trim()) {
+      errs.gradYear = "This field is required.";
+    } else {
+      const y = Number(gradYear);
+      if (!Number.isInteger(y) || y < 1946 || y > thisYear + 6) {
+        errs.gradYear = `Enter a year between 1946 and ${thisYear + 6}.`;
+      }
+    }
+    if (!branch) errs.branch = "This field is required.";
+    else if (branch === "Other" && !branchOther.trim())
+      errs.branch = "Please enter your branch / degree.";
+    return errs;
+  };
 
   // Honour the "student" entry point chosen on the login screen.
   useEffect(() => {
@@ -75,6 +121,21 @@ export default function OnboardingForm({
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // Validate before doing anything, so the button never "silently" no-ops.
+    const errs = validate();
+    setErrors(errs);
+    if (Object.keys(errs).length > 0) {
+      setError(null);
+      // Bring the first invalid field into view.
+      setTimeout(() => {
+        document
+          .querySelector('[data-error="true"]')
+          ?.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 0);
+      return;
+    }
+
     setSaving(true);
     setError(null);
 
@@ -164,8 +225,6 @@ export default function OnboardingForm({
     }
   };
 
-  const thisYear = new Date().getFullYear();
-
   if (done) {
     return (
       <div className="rounded-sm border border-gold/40 bg-ivory-dim/40 px-6 py-8 text-center">
@@ -201,7 +260,7 @@ export default function OnboardingForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+    <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-8">
       {/* Type toggle — hidden for college-email users (always verified students) */}
       {isCollegeEmail ? (
         <div className="rounded-sm border border-gold/40 bg-gold/10 px-5 py-4">
@@ -215,14 +274,19 @@ export default function OnboardingForm({
           </p>
         </div>
       ) : (
-        <div>
-          <span className={LABEL}>I am a…</span>
+        <div data-error={errors.userType ? "true" : undefined}>
+          <span className={LABEL}>
+            I am a…<span className="text-oxblood"> *</span>
+          </span>
           <div className="mt-3 inline-flex rounded-sm border border-gold/40 p-1">
             {(["alumni", "student"] as const).map((t) => (
               <button
                 key={t}
                 type="button"
-                onClick={() => setUserType(t)}
+                onClick={() => {
+                  setUserType(t);
+                  clearError("userType");
+                }}
                 className={`rounded-[2px] px-5 py-2 font-sans text-[12px] font-medium uppercase tracking-[0.12em] transition-colors ${
                   userType === t
                     ? "bg-oxblood text-ivory"
@@ -233,17 +297,24 @@ export default function OnboardingForm({
               </button>
             ))}
           </div>
+          {errors.userType && (
+            <p className="mt-2 font-sans text-xs text-oxblood">
+              {errors.userType}
+            </p>
+          )}
         </div>
       )}
 
       {isCollegeEmail && (
-        <Field label="Personal email" required>
+        <Field label="Personal email" required error={errors.personalEmail}>
           <input
-            className={FIELD}
+            className={fieldClass("personalEmail")}
             type="email"
-            required
             value={personalEmail}
-            onChange={(e) => setPersonalEmail(e.target.value)}
+            onChange={(e) => {
+              setPersonalEmail(e.target.value);
+              clearError("personalEmail");
+            }}
             placeholder="you@gmail.com"
           />
         </Field>
@@ -282,49 +353,62 @@ export default function OnboardingForm({
         </div>
       </div>
 
-      <Field label="Full name" required>
+      <Field label="Full name" required error={errors.fullName}>
         <input
-          className={FIELD}
+          className={fieldClass("fullName")}
           value={fullName}
-          onChange={(e) => setFullName(e.target.value)}
-          required
+          onChange={(e) => {
+            setFullName(e.target.value);
+            clearError("fullName");
+          }}
           placeholder="Your name"
         />
       </Field>
 
-      <Field label="Email">
+      <Field label="Email" required error={errors.email}>
         <input className={`${FIELD} opacity-60`} value={email} disabled />
       </Field>
 
       <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
-        <Field label="Current city">
+        <Field label="Current city" required error={errors.city}>
           <input
-            className={FIELD}
+            className={fieldClass("city")}
             value={city}
-            onChange={(e) => setCity(e.target.value)}
+            onChange={(e) => {
+              setCity(e.target.value);
+              clearError("city");
+            }}
             placeholder="Bengaluru"
           />
         </Field>
         <Field
           label={isStudent ? "Expected year of graduation" : "Year of graduation"}
+          required
+          error={errors.gradYear}
         >
           <input
-            className={FIELD}
+            className={fieldClass("gradYear")}
             type="number"
             min={1946}
             max={thisYear + 6}
             value={gradYear}
-            onChange={(e) => setGradYear(e.target.value)}
+            onChange={(e) => {
+              setGradYear(e.target.value);
+              clearError("gradYear");
+            }}
             placeholder={String(isStudent ? thisYear + 2 : thisYear - 5)}
           />
         </Field>
       </div>
 
-      <Field label="Branch / degree">
+      <Field label="Branch / degree" required error={errors.branch}>
         <select
-          className={FIELD}
+          className={fieldClass("branch")}
           value={branch}
-          onChange={(e) => setBranch(e.target.value)}
+          onChange={(e) => {
+            setBranch(e.target.value);
+            clearError("branch");
+          }}
         >
           <option value="">Select a branch…</option>
           {BRANCHES.map((b) => (
@@ -335,9 +419,12 @@ export default function OnboardingForm({
         </select>
         {branch === "Other" && (
           <input
-            className={`${FIELD} mt-3`}
+            className={`${fieldClass("branch")} mt-3`}
             value={branchOther}
-            onChange={(e) => setBranchOther(e.target.value)}
+            onChange={(e) => {
+              setBranchOther(e.target.value);
+              clearError("branch");
+            }}
             placeholder="Your branch / degree"
           />
         )}
@@ -393,6 +480,15 @@ export default function OnboardingForm({
         </p>
       )}
 
+      {Object.keys(errors).length > 0 && (
+        <p
+          role="alert"
+          className="rounded-sm border border-oxblood/30 bg-oxblood/5 px-4 py-3 font-sans text-sm text-oxblood"
+        >
+          Please fill in the required fields marked above before continuing.
+        </p>
+      )}
+
       <div className="flex items-center gap-4">
         <button
           type="submit"
@@ -414,19 +510,24 @@ export default function OnboardingForm({
 function Field({
   label,
   required,
+  error,
   children,
 }: {
   label: string;
   required?: boolean;
+  error?: string;
   children: React.ReactNode;
 }) {
   return (
-    <label className="block">
+    <label className="block" data-error={error ? "true" : undefined}>
       <span className={LABEL}>
         {label}
         {required && <span className="text-oxblood"> *</span>}
       </span>
       <div className="mt-2">{children}</div>
+      {error && (
+        <p className="mt-1.5 font-sans text-xs text-oxblood">{error}</p>
+      )}
     </label>
   );
 }

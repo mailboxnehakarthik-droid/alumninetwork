@@ -33,22 +33,12 @@ export default function Hero() {
         </Reveal>
 
         <Reveal delay={240}>
-          <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center">
+          <div className="mt-10">
             <a
               href="/login"
               className="inline-flex items-center justify-center rounded-sm bg-oxblood px-8 py-3.5 font-sans text-[13px] font-medium uppercase tracking-[0.14em] text-ivory transition-colors hover:bg-maroon"
             >
               Join the network
-            </a>
-            <a
-              href="/directory"
-              className="group inline-flex items-center justify-center gap-2 px-2 py-3.5 font-sans text-[13px] font-medium uppercase tracking-[0.14em] text-ink"
-            >
-              Explore the directory
-              <span
-                aria-hidden="true"
-                className="h-px w-6 bg-gold transition-all duration-300 group-hover:w-10"
-              />
             </a>
           </div>
         </Reveal>

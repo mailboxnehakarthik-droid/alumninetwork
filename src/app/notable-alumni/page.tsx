@@ -6,7 +6,7 @@ import Reveal from "@/components/Reveal";
 import { notableAlumni } from "@/data/notableAlumni";
 
 export const metadata: Metadata = {
-  title: "Notable Alumni — BMS Alumni Network",
+  title: "Notable Alumni — BMSCE Alumni Network",
   description:
     "The graduates who went far — founders, scientists, civil servants, authors, and more from the BMS community.",
 };

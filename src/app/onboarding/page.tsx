@@ -8,7 +8,7 @@ import { createClient } from "@/lib/supabase/server";
 import type { Profile } from "@/lib/types";
 
 export const metadata: Metadata = {
-  title: "Complete your profile — BMS Alumni Network",
+  title: "Complete your profile — BMSCE Alumni Network",
 };
 
 export default async function OnboardingPage() {

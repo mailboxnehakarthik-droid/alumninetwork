@@ -9,7 +9,7 @@ import { createClient } from "@/lib/supabase/server";
 import type { EventRow } from "@/lib/types";
 
 export const metadata: Metadata = {
-  title: "Admin · Events — BMS Alumni Network",
+  title: "Admin · Events — BMSCE Alumni Network",
 };
 
 export const dynamic = "force-dynamic";

@@ -92,8 +92,31 @@ export async function createPosting(input: PostingInput) {
 }
 
 /** Apply to a posting. One application per person per posting. */
-export async function applyToPosting(jobId: string, coverNote: string) {
+export type ApplicationInput = {
+  fullName: string;
+  email: string;
+  phone: string;
+  coverNote: string;
+  resumePath: string;
+};
+
+export async function applyToPosting(jobId: string, input: ApplicationInput) {
   const { supabase, profile } = await requireVerified();
+
+  const fullName = input.fullName.trim();
+  const email = input.email.trim();
+  const phone = input.phone.trim();
+  const coverNote = input.coverNote.trim();
+  const resumePath = input.resumePath.trim();
+
+  // Server-side gate on the required fields (the client validates too).
+  if (!fullName) throw new Error("Full name is required.");
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    throw new Error("A valid email address is required.");
+  }
+  if (!phone) throw new Error("Phone number is required.");
+  if (!coverNote) throw new Error("A cover note is required.");
+  if (!resumePath) throw new Error("A resume is required.");
 
   const { data: posting } = await supabase
     .from("job_postings")
@@ -112,7 +135,11 @@ export async function applyToPosting(jobId: string, coverNote: string) {
   const { error } = await supabase.from("job_applications").insert({
     job_id: jobId,
     applicant_id: profile.id,
-    cover_note: coverNote.trim() || null,
+    cover_note: coverNote,
+    applicant_name: fullName,
+    applicant_email: email,
+    applicant_phone: phone,
+    resume_url: resumePath,
     status: "submitted",
   });
 
@@ -122,6 +149,11 @@ export async function applyToPosting(jobId: string, coverNote: string) {
       throw new Error("You've already applied to this posting.");
     }
     throw new Error(error.message);
+  }
+
+  // Save the phone back to the profile so it prefills next time.
+  if (phone && phone !== profile.phone) {
+    await supabase.from("profiles").update({ phone }).eq("id", profile.id);
   }
 
   revalidatePath(`/careers/openings/${jobId}`);

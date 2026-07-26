@@ -8,12 +8,20 @@ import { createClient } from "@/lib/supabase/server";
 import type { EventRow, SocialPost } from "@/lib/types";
 
 export const metadata: Metadata = {
-  title: "Events — BMS Alumni Network",
+  title: "Events — BMSCE Alumni Network",
   description:
     "Upcoming BMS alumni events and highlights from our community on Instagram.",
 };
 
 export const dynamic = "force-dynamic";
+
+// ---- Event stats (placeholder figures — edit these freely) ----------------
+// The client will likely supply real numbers later; just change the strings.
+const EVENT_STATS = [
+  { value: "10+", label: "events annually" },
+  { value: "1,000+", label: "alumni engaged" },
+  { value: "5+", label: "cities" },
+];
 
 export default async function EventsPage() {
   const supabase = await createClient();
@@ -55,6 +63,27 @@ export default async function EventsPage() {
                 Reunions, meetups, and moments from the BMS alumni community.
               </p>
             </Reveal>
+          </div>
+        </section>
+
+        {/* Event stats — simple placeholder figures, above the events list */}
+        <section className="border-t border-gold/30">
+          <div className="mx-auto max-w-7xl px-6 py-14 md:px-10 md:py-16">
+            <div className="grid grid-cols-1 gap-px overflow-hidden rounded-sm border border-gold/30 bg-gold/20 sm:grid-cols-3">
+              {EVENT_STATS.map((stat) => (
+                <div
+                  key={stat.label}
+                  className="bg-ivory px-6 py-8 text-center md:py-10"
+                >
+                  <p className="font-display text-4xl text-oxblood md:text-5xl">
+                    {stat.value}
+                  </p>
+                  <p className="mt-3 font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-ink/60">
+                    {stat.label}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 

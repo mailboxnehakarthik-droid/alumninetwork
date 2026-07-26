@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useMemo, useState, useTransition, type ChangeEvent } from "react";
 import Link from "next/link";
 import { applyToPosting } from "../../actions";
 import { STATUS_LABEL } from "@/components/PostingsBrowser";
+import { createClient } from "@/lib/supabase/client";
 import type { ApplicationStatus } from "@/lib/types";
 
 type State =
@@ -13,25 +14,107 @@ type State =
   | { kind: "applied"; status: ApplicationStatus }
   | { kind: "can-apply" };
 
+type Prefill = {
+  fullName: string;
+  email: string;
+  phone: string;
+  linkedin: string;
+};
+
+const FIELD =
+  "w-full rounded-sm border border-gold/40 bg-ivory/60 px-4 py-2.5 font-sans text-sm text-ink placeholder:text-ink/40 focus:border-gold focus:outline-none";
+const LABEL =
+  "font-sans text-[11px] font-medium uppercase tracking-[0.14em] text-ink/60";
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const MAX_RESUME = 5 * 1024 * 1024;
+
 export default function ApplyBox({
   jobId,
+  userId,
   state,
+  prefill,
   externalLink,
 }: {
   jobId: string;
+  userId: string;
   state: State;
+  prefill: Prefill;
   externalLink: string | null;
 }) {
+  const supabase = useMemo(() => createClient(), []);
+  const [fullName, setFullName] = useState(prefill.fullName);
+  const [email, setEmail] = useState(prefill.email);
+  const [phone, setPhone] = useState(prefill.phone);
   const [note, setNote] = useState("");
+  const [resume, setResume] = useState<File | null>(null);
+
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [busy, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
 
+  const clearError = (k: string) =>
+    setErrors((p) => {
+      if (!p[k]) return p;
+      const n = { ...p };
+      delete n[k];
+      return n;
+    });
+  const fieldClass = (k: string) =>
+    errors[k] ? `${FIELD} border-oxblood/70` : FIELD;
+
+  const onResume = (e: ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0] ?? null;
+    clearError("resume");
+    if (f && f.type !== "application/pdf") {
+      setResume(null);
+      setErrors((p) => ({ ...p, resume: "Resume must be a PDF." }));
+      return;
+    }
+    if (f && f.size > MAX_RESUME) {
+      setResume(null);
+      setErrors((p) => ({ ...p, resume: "Resume must be under 5 MB." }));
+      return;
+    }
+    setResume(f);
+  };
+
+  const validate = () => {
+    const e: Record<string, string> = {};
+    if (!fullName.trim()) e.fullName = "This field is required.";
+    if (!email.trim()) e.email = "This field is required.";
+    else if (!EMAIL_RE.test(email.trim())) e.email = "Enter a valid email address.";
+    if (!phone.trim()) e.phone = "This field is required.";
+    if (!note.trim()) e.note = "A short note is required.";
+    if (!resume) e.resume = "A PDF resume is required.";
+    return e;
+  };
+
   const submit = () => {
     setError(null);
+    const errs = validate();
+    setErrors(errs);
+    if (Object.keys(errs).length > 0) return;
+
     startTransition(async () => {
       try {
-        await applyToPosting(jobId, note);
+        // Upload the resume to the applicant's own private folder first.
+        const path = `${userId}/${jobId}-${Date.now()}.pdf`;
+        const { error: upErr } = await supabase.storage
+          .from("resumes")
+          .upload(path, resume!, {
+            contentType: "application/pdf",
+            upsert: true,
+          });
+        if (upErr) throw upErr;
+
+        await applyToPosting(jobId, {
+          fullName,
+          email,
+          phone,
+          coverNote: note,
+          resumePath: path,
+        });
         setDone(true);
       } catch (e) {
         setError(e instanceof Error ? e.message : "Could not apply.");
@@ -112,17 +195,95 @@ export default function ApplyBox({
         Apply
       </p>
       <p className="mt-2 font-sans text-sm leading-relaxed text-ink/65">
-        One step — your profile is already on file. Add a short note if
-        you&rsquo;d like.
+        Confirm your details and attach your resume.
       </p>
-      <textarea
-        value={note}
-        onChange={(e) => setNote(e.target.value)}
-        placeholder="Why you're a fit (optional)…"
-        className="mt-4 min-h-[120px] w-full resize-y rounded-sm border border-gold/40 bg-ivory/60 px-4 py-3 font-sans text-sm text-ink placeholder:text-ink/40 focus:border-gold focus:outline-none"
-      />
-      {error && <p className="mt-3 font-sans text-sm text-oxblood">{error}</p>}
-      <div className="mt-4 flex flex-wrap items-center gap-4">
+
+      <div className="mt-5 flex flex-col gap-4">
+        <ApplyField label="Full name" error={errors.fullName}>
+          <input
+            className={fieldClass("fullName")}
+            value={fullName}
+            onChange={(e) => {
+              setFullName(e.target.value);
+              clearError("fullName");
+            }}
+            placeholder="Your name"
+          />
+        </ApplyField>
+
+        <ApplyField label="Email" error={errors.email}>
+          <input
+            className={fieldClass("email")}
+            type="email"
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              clearError("email");
+            }}
+            placeholder="you@email.com"
+          />
+        </ApplyField>
+
+        <ApplyField label="Phone" error={errors.phone}>
+          <input
+            className={fieldClass("phone")}
+            type="tel"
+            value={phone}
+            onChange={(e) => {
+              setPhone(e.target.value);
+              clearError("phone");
+            }}
+            placeholder="+91 …"
+          />
+        </ApplyField>
+
+        <ApplyField label="Resume (PDF)" error={errors.resume}>
+          <input
+            type="file"
+            accept="application/pdf"
+            onChange={onResume}
+            className="block w-full text-xs text-ink/60 file:mr-3 file:cursor-pointer file:rounded-sm file:border file:border-gold/40 file:bg-ivory-dim/60 file:px-3 file:py-1.5 file:font-sans file:text-[11px] file:uppercase file:tracking-[0.12em] file:text-ink"
+          />
+          {resume && (
+            <p className="mt-1 font-sans text-xs text-ink/55">{resume.name}</p>
+          )}
+        </ApplyField>
+
+        <ApplyField label="Why you're a fit" error={errors.note}>
+          <textarea
+            value={note}
+            onChange={(e) => {
+              setNote(e.target.value);
+              clearError("note");
+            }}
+            placeholder="A few lines on why you're a good match…"
+            className={`${fieldClass("note")} min-h-[110px] resize-y`}
+          />
+        </ApplyField>
+
+        {prefill.linkedin && (
+          <div>
+            <span className={LABEL}>LinkedIn (from your profile)</span>
+            <a
+              href={prefill.linkedin}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-1 block truncate font-sans text-sm text-oxblood underline decoration-gold underline-offset-2 hover:text-maroon"
+            >
+              {prefill.linkedin}
+            </a>
+          </div>
+        )}
+      </div>
+
+      {error && <p className="mt-4 font-sans text-sm text-oxblood">{error}</p>}
+      {Object.keys(errors).length > 0 && (
+        <p role="alert" className="mt-3 font-sans text-sm text-oxblood">
+          Please complete the required fields above.
+        </p>
+      )}
+
+      <div className="mt-5 flex flex-wrap items-center gap-4">
         <button
           type="button"
           onClick={submit}
@@ -143,5 +304,28 @@ export default function ApplyBox({
         )}
       </div>
     </div>
+  );
+}
+
+function ApplyField({
+  label,
+  error,
+  children,
+}: {
+  label: string;
+  error?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <label className="block">
+      <span className={LABEL}>
+        {label}
+        <span className="text-oxblood"> *</span>
+      </span>
+      <div className="mt-1.5">{children}</div>
+      {error && (
+        <p className="mt-1 font-sans text-xs text-oxblood">{error}</p>
+      )}
+    </label>
   );
 }

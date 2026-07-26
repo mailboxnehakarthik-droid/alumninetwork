@@ -1,34 +1,44 @@
 import Eyebrow from "./Eyebrow";
 import Reveal from "./Reveal";
 
-const ITEMS = [
-  {
-    tag: "Directory",
-    title: "Find your batch",
-    body: "Search the full alumni directory by batch, branch, or city — and pick up where you left off.",
-    href: "/directory",
-  },
-  {
-    tag: "Careers",
-    title: "Jobs & referrals",
-    body: "Alumni-only listings and warm referrals into companies where BMS graduates already work.",
-    href: "/careers/jobs",
-  },
-  {
-    tag: "Mentorship",
-    title: "Find a mentor",
-    body: "Get paired with someone who has already walked the path you are on, one conversation at a time.",
-    href: "/careers/mentorship",
-  },
-  {
-    tag: "Chapters",
-    title: "Join your city chapter",
-    body: "From Bengaluru to the Bay Area, your chapter is already meeting. Find your city.",
-    href: "/chapters",
-  },
-];
+const DIRECTORY = {
+  tag: "Directory",
+  title: "Find your batch",
+  body: "Search the full alumni directory by batch, branch, or city — and pick up where you left off.",
+  href: "/directory",
+};
+const CHAPTERS = {
+  tag: "Chapters",
+  title: "Join your city chapter",
+  body: "From Bengaluru to the Bay Area, your chapter is already meeting. Find your city.",
+  href: "/chapters",
+};
+// Only surfaced when the admin has enabled Careers.
+const CAREERS = {
+  tag: "Careers",
+  title: "Jobs & referrals",
+  body: "Alumni-only listings and warm referrals into companies where BMS graduates already work.",
+  href: "/careers/jobs",
+};
+const MENTORSHIP = {
+  tag: "Mentorship",
+  title: "Find a mentor",
+  body: "Get paired with someone who has already walked the path you are on, one conversation at a time.",
+  href: "/careers/mentorship",
+};
 
-export default function ValueProps() {
+export default function ValueProps({
+  careersEnabled = false,
+}: {
+  careersEnabled?: boolean;
+}) {
+  // Careers + Mentorship cards only when Careers is enabled (those pages are
+  // otherwise gated). Directory + Chapters are always public.
+  const ITEMS = careersEnabled
+    ? [DIRECTORY, CAREERS, MENTORSHIP, CHAPTERS]
+    : [DIRECTORY, CHAPTERS];
+  const heading = careersEnabled ? "Four ways back in." : "Two ways back in.";
+
   return (
     <section className="border-t border-gold/30">
       <div className="mx-auto max-w-7xl px-6 py-20 md:px-10 md:py-28">
@@ -37,11 +47,15 @@ export default function ValueProps() {
         </Reveal>
         <Reveal delay={80}>
           <h2 className="mt-6 max-w-xl font-display text-4xl leading-[1.05] text-ink md:text-5xl">
-            Four ways back in.
+            {heading}
           </h2>
         </Reveal>
 
-        <div className="mt-16 grid grid-cols-1 border-l border-t border-gold/30 sm:grid-cols-2 lg:grid-cols-4">
+        <div
+          className={`mt-16 grid grid-cols-1 border-l border-t border-gold/30 sm:grid-cols-2 ${
+            careersEnabled ? "lg:grid-cols-4" : ""
+          }`}
+        >
           {ITEMS.map((item, i) => (
             <Reveal key={item.title} delay={i * 90} className="border-b border-r border-gold/30">
               <a href={item.href} className="group block h-full px-6 py-8 md:py-10">

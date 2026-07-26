@@ -8,7 +8,13 @@ import type { EventRow, Profile } from "@/lib/types";
  * Homepage shown to SIGNED-IN members. Deliberately contains no "Join the
  * network" pitch — that copy belongs only to the logged-out marketing home.
  */
-export default async function MemberHome({ profile }: { profile: Profile }) {
+export default async function MemberHome({
+  profile,
+  careersEnabled = false,
+}: {
+  profile: Profile;
+  careersEnabled?: boolean;
+}) {
   const supabase = await createClient();
 
   // Upcoming events (table exists; guard anyway so the page never hard-fails).
@@ -67,7 +73,11 @@ export default async function MemberHome({ profile }: { profile: Profile }) {
             </h2>
           </Reveal>
 
-          <div className="mt-10 grid grid-cols-1 border-l border-t border-gold/30 sm:grid-cols-2 lg:grid-cols-4">
+          <div
+            className={`mt-10 grid grid-cols-1 border-l border-t border-gold/30 sm:grid-cols-2 ${
+              careersEnabled ? "lg:grid-cols-4" : ""
+            }`}
+          >
             <QuickLink
               index={0}
               tag="Directory"
@@ -86,37 +96,47 @@ export default async function MemberHome({ profile }: { profile: Profile }) {
               body="Reunions and meetups, plus highlights from our Instagram."
               href="/events"
             />
-            <QuickLink
-              index={2}
-              tag="Mentorship"
-              title={isStudent ? "Find a mentor" : "Mentor someone"}
-              body={
-                isStudent
-                  ? "Ask an alum a few steps ahead of you for guidance."
-                  : "Offer an hour a month — you choose who you take on."
-              }
-              href={
-                isStudent ? "/careers/mentorship" : "/careers/mentorship/become"
-              }
-            />
-            <QuickLink
-              index={3}
-              tag="Careers"
-              title="Jobs & internships"
-              body="Openings shared by members — apply in a click."
-              href="/careers/jobs"
-            />
+            {careersEnabled && (
+              <>
+                <QuickLink
+                  index={2}
+                  tag="Mentorship"
+                  title={isStudent ? "Find a mentor" : "Mentor someone"}
+                  body={
+                    isStudent
+                      ? "Ask an alum a few steps ahead of you for guidance."
+                      : "Offer an hour a month — you choose who you take on."
+                  }
+                  href={
+                    isStudent
+                      ? "/careers/mentorship"
+                      : "/careers/mentorship/become"
+                  }
+                />
+                <QuickLink
+                  index={3}
+                  tag="Careers"
+                  title="Jobs & internships"
+                  body="Openings shared by members — apply in a click."
+                  href="/careers/jobs"
+                />
+              </>
+            )}
           </div>
 
           <Reveal delay={200}>
             <div className="mt-10 flex flex-wrap gap-x-8 gap-y-3">
               <FooterLink href="/profile">My profile</FooterLink>
-              <FooterLink href="/careers/my-postings">
-                My postings &amp; applications
-              </FooterLink>
-              <FooterLink href="/careers/mentorship/requests">
-                My mentorship
-              </FooterLink>
+              {careersEnabled && (
+                <>
+                  <FooterLink href="/careers/my-postings">
+                    My postings &amp; applications
+                  </FooterLink>
+                  <FooterLink href="/careers/mentorship/requests">
+                    My mentorship
+                  </FooterLink>
+                </>
+              )}
               {profile.role === "admin" && (
                 <FooterLink href="/admin">Admin dashboard</FooterLink>
               )}

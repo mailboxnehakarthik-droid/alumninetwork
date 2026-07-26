@@ -11,7 +11,7 @@ import DirectoryControls, {
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
-  title: "Directory — BMS Alumni Network",
+  title: "Directory — BMSCE Alumni Network",
   description:
     "Search the BMS alumni directory by batch, branch, city, or company. Find your people.",
 };

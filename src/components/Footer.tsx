@@ -1,6 +1,8 @@
 import Link from "next/link";
-import Seal from "./Seal";
+import Logo from "./Logo";
 
+// Only pages with real content behind them. Careers/Newsletter/Leadership/
+// Press/FAQs/Give-back/Alumni-spotlight are intentionally omitted for now.
 const GROUPS = [
   {
     title: "Community",
@@ -8,25 +10,13 @@ const GROUPS = [
       { label: "Directory", href: "/directory" },
       { label: "Chapters", href: "/chapters" },
       { label: "Events", href: "/events" },
-      { label: "Alumni spotlight", href: "/notable-alumni" },
-    ],
-  },
-  {
-    title: "Resources",
-    links: [
-      { label: "Careers & referrals", href: "/careers/jobs" },
-      { label: "Find a mentor", href: "/careers/mentorship" },
-      { label: "Give back", href: "/give-back" },
-      { label: "FAQs", href: "/faqs" },
     ],
   },
   {
     title: "About",
     links: [
       { label: "Our story", href: "/about" },
-      { label: "Leadership", href: "/leadership" },
       { label: "Contact", href: "/about#contact" },
-      { label: "Press", href: "/press" },
     ],
   },
 ];
@@ -50,14 +40,9 @@ export default function Footer() {
   return (
     <footer className="bg-ink text-ivory/70">
       <div className="mx-auto max-w-7xl px-6 py-16 md:px-10 md:py-20">
-        <div className="grid grid-cols-2 gap-10 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
+        <div className="grid grid-cols-2 gap-10 md:grid-cols-[1.6fr_1fr_1fr]">
           <div>
-            <Seal
-              className="h-14 w-14"
-              ringColor="var(--color-gold)"
-              textColor="var(--color-gold)"
-              monogramColor="var(--color-ivory)"
-            />
+            <Logo className="h-12 w-auto" placeholderClassName="h-12 w-32" />
             <p className="mt-5 max-w-[22ch] font-sans text-sm leading-relaxed text-ivory/55">
               The home for every BMS graduate, wherever the world has taken
               them.
@@ -87,7 +72,7 @@ export default function Footer() {
 
         <div className="mt-16 flex flex-col-reverse items-center gap-6 border-t border-gold/20 pt-8 sm:flex-row sm:justify-between">
           <p className="font-sans text-xs text-ivory/45">
-            &copy; {new Date().getFullYear()} BMS Alumni Association. All
+            &copy; {new Date().getFullYear()} BMSCE Alumni Association. All
             rights reserved.
           </p>
           <div className="flex items-center gap-5">

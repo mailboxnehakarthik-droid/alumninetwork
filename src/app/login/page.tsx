@@ -10,7 +10,7 @@ import EmailAuth from "./EmailAuth";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
-  title: "Sign in — BMS Alumni Network",
+  title: "Sign in — BMSCE Alumni Network",
 };
 
 type Props = {
@@ -115,7 +115,7 @@ export default async function LoginPage({ searchParams }: Props) {
 
             <Reveal delay={360}>
               <p className="mt-6 font-sans text-xs leading-relaxed text-ink/45">
-                By continuing you agree to be part of the BMS Alumni Network
+                By continuing you agree to be part of the BMSCE Alumni Network
                 community. Alumni profiles are reviewed before appearing in the
                 directory.
               </p>

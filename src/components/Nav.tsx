@@ -3,36 +3,32 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import Seal from "./Seal";
+import Logo from "./Logo";
 import AuthMenu from "./AuthMenu";
+import { createClient } from "@/lib/supabase/client";
 
 type NavChild = { label: string; href: string };
 type NavItem = { label: string; href: string; children?: NavChild[] };
 
-const LINKS: NavItem[] = [
+// Header nav (exact order). Newsletter and Notable Alumni stay hidden.
+const BASE_LINKS: NavItem[] = [
   { label: "Home", href: "/" },
-  {
-    label: "Directory",
-    href: "/directory",
-    children: [
-      { label: "Directory", href: "/directory" },
-      { label: "Notable Alumni", href: "/notable-alumni" },
-    ],
-  },
-  { label: "Chapters", href: "/chapters" },
-  {
-    label: "Careers",
-    href: "/careers/jobs",
-    children: [
-      { label: "Jobs", href: "/careers/jobs" },
-      { label: "Internships", href: "/careers/internships" },
-      { label: "Mentorship", href: "/careers/mentorship" },
-    ],
-  },
-  { label: "Events", href: "/events" },
-  { label: "Newsletter", href: "/newsletter" },
   { label: "About", href: "/about" },
+  { label: "Chapters", href: "/chapters" },
+  { label: "Directory", href: "/directory" },
+  { label: "Events", href: "/events" },
 ];
+
+// Only shown when the admin has enabled Careers (site_settings.careers_enabled).
+const CAREERS_ITEM: NavItem = {
+  label: "Careers",
+  href: "/careers/jobs",
+  children: [
+    { label: "Jobs", href: "/careers/jobs" },
+    { label: "Internships", href: "/careers/internships" },
+    { label: "Mentorship", href: "/careers/mentorship" },
+  ],
+};
 
 const DESKTOP_LINK =
   "inline-flex items-center gap-1 border-b-2 pb-1 font-sans text-[13px] font-medium uppercase tracking-[0.12em] transition-colors";
@@ -44,6 +40,8 @@ function isRoute(href: string) {
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  // Careers is hidden by default and only appears once the admin flag loads on.
+  const [careersEnabled, setCareersEnabled] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -52,6 +50,25 @@ export default function Nav() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    let active = true;
+    createClient()
+      .from("site_settings")
+      .select("careers_enabled")
+      .limit(1)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (active) setCareersEnabled(data?.careers_enabled === true);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const LINKS: NavItem[] = careersEnabled
+    ? [...BASE_LINKS, CAREERS_ITEM]
+    : BASE_LINKS;
 
   const activeChild = (href: string) => isRoute(href) && pathname === href;
 
@@ -87,10 +104,10 @@ export default function Nav() {
           href="/"
           className="flex items-center gap-3 rounded-sm transition-opacity hover:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold"
         >
-          <Seal className="h-11 w-11 shrink-0" />
-          <span className="hidden font-display text-lg italic tracking-tight text-ink sm:inline">
-            BMS Alumni
-          </span>
+          <Logo
+            className="h-9 w-auto md:h-10"
+            placeholderClassName="h-9 w-28 md:h-10"
+          />
         </Link>
 
         <ul className="hidden items-center gap-8 md:flex">
@@ -117,7 +134,7 @@ export default function Nav() {
                       />
                     </svg>
                   </Link>
-                  <div className="invisible absolute left-0 top-full pt-3 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                  <div className="pointer-events-none invisible absolute left-0 top-full z-50 pt-3 opacity-0 transition-all duration-200 group-hover:pointer-events-auto group-hover:visible group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:visible group-focus-within:opacity-100">
                     <ul className="min-w-[190px] overflow-hidden rounded-sm border border-gold/30 bg-ivory shadow-[0_12px_32px_-14px_rgba(26,20,18,0.3)]">
                       {item.children.map((child) => {
                         const cActive = activeChild(child.href);

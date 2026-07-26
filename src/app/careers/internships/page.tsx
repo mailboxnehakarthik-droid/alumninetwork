@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import CareersList from "../CareersList";
 
 export const metadata: Metadata = {
-  title: "Internships — BMS Alumni Network",
+  title: "Internships — BMSCE Alumni Network",
   description:
     "Internships posted by BMS alumni and students — a foot in the door where someone can vouch for you.",
 };

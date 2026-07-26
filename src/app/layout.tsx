@@ -22,22 +22,22 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "BMS Alumni Network — Once BMS. Always BMS.",
+    default: "BMSCE Alumni Network — Once BMS. Always BMS.",
     template: "%s",
   },
   description:
     "The home for every BMS graduate — find your batch, your city chapter, a mentor, or your next opportunity.",
   openGraph: {
-    title: "BMS Alumni Network — Once BMS. Always BMS.",
+    title: "BMSCE Alumni Network — Once BMS. Always BMS.",
     description:
       "The home for every BMS graduate — find your batch, your city chapter, a mentor, or your next opportunity.",
-    siteName: "BMS Alumni Network",
+    siteName: "BMSCE Alumni Network",
     type: "website",
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "BMS Alumni Network — Once BMS. Always BMS.",
+    title: "BMSCE Alumni Network — Once BMS. Always BMS.",
     description:
       "The home for every BMS graduate — find your batch, your city chapter, a mentor, or your next opportunity.",
   },

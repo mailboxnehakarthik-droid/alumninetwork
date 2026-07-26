@@ -8,7 +8,7 @@ import StartChapterButton from "@/components/StartChapterButton";
 import { featuredChapters } from "@/data/chapters";
 
 export const metadata: Metadata = {
-  title: "Chapters — BMS Alumni Network",
+  title: "Chapters — BMSCE Alumni Network",
   description:
     "Find your city. BMS alumni chapters meet in Bengaluru, London, San Francisco, and dozens of cities worldwide.",
 };

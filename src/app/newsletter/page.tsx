@@ -6,7 +6,7 @@ import Reveal from "@/components/Reveal";
 import NewsletterSignup from "@/components/NewsletterSignup";
 
 export const metadata: Metadata = {
-  title: "Newsletter — BMS Alumni Network",
+  title: "Newsletter — BMSCE Alumni Network",
   description:
     "News from the network — chapter meetups, alumni wins, and opportunities, a few times a year.",
 };

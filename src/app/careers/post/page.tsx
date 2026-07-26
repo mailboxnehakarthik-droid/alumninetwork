@@ -9,7 +9,7 @@ import { createClient } from "@/lib/supabase/server";
 import type { Profile } from "@/lib/types";
 
 export const metadata: Metadata = {
-  title: "Post an Opening — BMS Alumni Network",
+  title: "Post an Opening — BMSCE Alumni Network",
 };
 
 export const dynamic = "force-dynamic";

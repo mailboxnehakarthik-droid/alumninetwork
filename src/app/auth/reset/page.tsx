@@ -5,7 +5,7 @@ import Eyebrow from "@/components/Eyebrow";
 import ResetPasswordForm from "./ResetPasswordForm";
 
 export const metadata: Metadata = {
-  title: "Reset password — BMS Alumni Network",
+  title: "Reset password — BMSCE Alumni Network",
 };
 
 export default function ResetPasswordPage() {

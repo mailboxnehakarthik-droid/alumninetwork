@@ -11,7 +11,7 @@ import { createClient } from "@/lib/supabase/server";
 import type { JobApplication, JobPosting, Profile } from "@/lib/types";
 
 export const metadata: Metadata = {
-  title: "Opening — BMS Alumni Network",
+  title: "Opening — BMSCE Alumni Network",
 };
 
 export const dynamic = "force-dynamic";
@@ -205,7 +205,14 @@ export default async function OpeningPage({
               <div className="lg:sticky lg:top-28 lg:self-start">
                 <ApplyBox
                   jobId={posting.id}
+                  userId={me?.id ?? ""}
                   state={state}
+                  prefill={{
+                    fullName: me?.full_name ?? "",
+                    email: user?.email ?? "",
+                    phone: me?.phone ?? "",
+                    linkedin: me?.linkedin_url ?? "",
+                  }}
                   externalLink={posting.external_link}
                 />
 

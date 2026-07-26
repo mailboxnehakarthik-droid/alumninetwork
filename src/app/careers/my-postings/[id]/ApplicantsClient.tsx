@@ -10,6 +10,9 @@ export type ApplicantRow = {
   status: ApplicationStatus;
   coverNote: string | null;
   appliedAt: string;
+  email: string | null;
+  phone: string | null;
+  resumeUrl: string | null;
   person: {
     id: string;
     name: string;
@@ -151,6 +154,41 @@ function ApplicantCard({ row }: { row: ApplicantRow }) {
             {meta && (
               <p className="mt-1 font-sans text-sm text-ink/60">{meta}</p>
             )}
+
+            {/* Contact + resume */}
+            <div className="mt-2 flex flex-wrap items-center gap-x-5 gap-y-1 font-sans text-sm text-ink/70">
+              {row.email && (
+                <a
+                  href={`mailto:${row.email}`}
+                  className="text-oxblood underline decoration-gold underline-offset-2 hover:text-maroon"
+                >
+                  {row.email}
+                </a>
+              )}
+              {row.phone && (
+                <a
+                  href={`tel:${row.phone.replace(/[^\d+]/g, "")}`}
+                  className="hover:text-oxblood"
+                >
+                  {row.phone}
+                </a>
+              )}
+              {row.resumeUrl ? (
+                <a
+                  href={row.resumeUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1 rounded-sm border border-gold/50 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.1em] text-oxblood transition-colors hover:border-oxblood hover:bg-oxblood hover:text-ivory"
+                >
+                  ↓ Resume (PDF)
+                </a>
+              ) : (
+                <span className="text-[11px] uppercase tracking-[0.1em] text-ink/40">
+                  No resume
+                </span>
+              )}
+            </div>
+
             {row.coverNote && (
               <p className="mt-3 max-w-xl font-sans text-sm leading-relaxed text-ink/75">
                 &ldquo;{row.coverNote}&rdquo;

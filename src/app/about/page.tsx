@@ -8,7 +8,7 @@ import Reveal from "@/components/Reveal";
 import FounderWidget from "@/components/FounderWidget";
 
 export const metadata: Metadata = {
-  title: "About — BMS Alumni Network",
+  title: "About — BMSCE Alumni Network",
   description:
     "About BMS College of Engineering, our founder B. M. Sreenivasaiah, and how to reach the alumni network.",
 };

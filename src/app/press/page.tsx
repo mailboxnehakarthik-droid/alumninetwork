@@ -6,7 +6,7 @@ import Eyebrow from "@/components/Eyebrow";
 import Reveal from "@/components/Reveal";
 
 export const metadata: Metadata = {
-  title: "Press — BMS Alumni Network",
+  title: "Press — BMSCE Alumni Network",
   description:
     "Press and media enquiries for BMS College of Engineering and its alumni network.",
 };

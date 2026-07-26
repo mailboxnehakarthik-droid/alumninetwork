@@ -8,7 +8,7 @@ import EventForm from "../EventForm";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
-  title: "New event — BMS Alumni Network",
+  title: "New event — BMSCE Alumni Network",
 };
 
 export const dynamic = "force-dynamic";

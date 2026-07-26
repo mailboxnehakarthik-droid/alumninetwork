@@ -17,6 +17,7 @@ export type Profile = {
   bio: string | null;
   linkedin_url: string | null;
   photo_url: string | null;
+  phone: string | null;
   is_mentor: boolean;
   seeking_mentorship: boolean;
   mentor_expertise: string[] | null;
@@ -101,6 +102,10 @@ export type JobApplication = {
   applicant_id: string;
   cover_note: string | null;
   status: ApplicationStatus;
+  resume_url: string | null;
+  applicant_name: string | null;
+  applicant_email: string | null;
+  applicant_phone: string | null;
   created_at: string;
 };
 

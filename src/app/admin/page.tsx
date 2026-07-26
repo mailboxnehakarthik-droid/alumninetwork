@@ -5,11 +5,13 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Eyebrow from "@/components/Eyebrow";
 import AdminList from "./AdminList";
+import CareersToggle from "./CareersToggle";
 import { createClient } from "@/lib/supabase/server";
+import { getCareersEnabled } from "@/lib/settings";
 import type { Profile, VerificationStatus } from "@/lib/types";
 
 export const metadata: Metadata = {
-  title: "Admin — BMS Alumni Network",
+  title: "Admin — BMSCE Alumni Network",
 };
 
 export const dynamic = "force-dynamic";
@@ -101,6 +103,8 @@ export default async function AdminPage({
   const { data: members } = await listQuery.returns<Profile[]>();
   const memberList = members ?? [];
 
+  const careersEnabled = await getCareersEnabled();
+
   // Contact info lives in member_contacts now; admins may read all of it.
   const contacts: Record<
     string,
@@ -182,6 +186,16 @@ export default async function AdminPage({
                 contacts={contacts}
                 tab={active.key}
               />
+            </div>
+
+            {/* Site settings */}
+            <div className="mt-16 border-t border-gold/25 pt-10">
+              <h2 className="font-display text-2xl text-ink md:text-3xl">
+                Site settings
+              </h2>
+              <div className="mt-6">
+                <CareersToggle enabled={careersEnabled} />
+              </div>
             </div>
           </div>
         </section>

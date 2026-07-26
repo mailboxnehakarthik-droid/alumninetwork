@@ -50,6 +50,21 @@ export async function resetMemberToPending(id: string) {
   await setStatus(id, "unverified", null);
 }
 
+// --- Site settings --------------------------------------------------------
+
+/** Turn the whole Careers section on/off site-wide. Admin only. */
+export async function setCareersEnabled(enabled: boolean) {
+  const supabase = await requireAdmin();
+  const { error } = await supabase
+    .from("site_settings")
+    .update({ careers_enabled: enabled, updated_at: new Date().toISOString() })
+    .eq("id", 1);
+  if (error) throw new Error(error.message);
+
+  // Careers visibility touches the nav, homepage and the careers routes.
+  revalidatePath("/", "layout");
+}
+
 // --- Social posts ---------------------------------------------------------
 
 export async function addSocialPost(input: {
