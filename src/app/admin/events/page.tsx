@@ -47,7 +47,7 @@ export default async function AdminEventsPage() {
               <Eyebrow>Admin · Events</Eyebrow>
               <Link
                 href="/admin"
-                className="font-sans text-[12px] font-medium uppercase tracking-[0.12em] text-oxblood underline decoration-gold underline-offset-4 hover:text-maroon"
+                className="font-sans text-[12px] font-medium uppercase tracking-[0.12em] text-oxblood underline decoration-accent underline-offset-4 hover:text-maroon"
               >
                 ← Verification
               </Link>
@@ -96,7 +96,7 @@ export default async function AdminEventsPage() {
                     >
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-gold">
+                          <span className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-accent">
                             {label}
                           </span>
                           {past && (

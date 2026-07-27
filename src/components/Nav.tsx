@@ -10,13 +10,14 @@ import { createClient } from "@/lib/supabase/client";
 type NavChild = { label: string; href: string };
 type NavItem = { label: string; href: string; children?: NavChild[] };
 
-// Header nav (exact order). Newsletter and Notable Alumni stay hidden.
+// Header nav (exact order). Notable Alumni stays hidden.
 const BASE_LINKS: NavItem[] = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
   { label: "Chapters", href: "/chapters" },
   { label: "Directory", href: "/directory" },
   { label: "Events", href: "/events" },
+  { label: "Newsletter", href: "/newsletter" },
 ];
 
 // Only shown when the admin has enabled Careers (site_settings.careers_enabled).
@@ -82,7 +83,7 @@ export default function Nav() {
   const linkClass = (active: boolean) =>
     `${DESKTOP_LINK} ${
       active
-        ? "border-gold text-oxblood"
+        ? "border-accent text-oxblood"
         : "border-transparent text-ink/75 hover:text-oxblood"
     }`;
 
@@ -102,7 +103,7 @@ export default function Nav() {
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 md:px-10">
         <Link
           href="/"
-          className="flex items-center gap-3 rounded-sm transition-opacity hover:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold"
+          className="flex items-center gap-3 rounded-sm transition-opacity hover:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
         >
           <Logo
             className="h-9 w-auto md:h-10"

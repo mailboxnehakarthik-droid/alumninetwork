@@ -30,7 +30,7 @@ export default function GlobalCommunity() {
               delay={i * 90}
               className="flex flex-col items-center border-gold/25 px-4 text-center md:border-l md:first:border-l-0"
             >
-              <span className="font-display text-[13vw] leading-none text-gold sm:text-6xl md:text-7xl">
+              <span className="font-display text-[13vw] leading-none text-accent sm:text-6xl md:text-7xl">
                 {stat.value}
               </span>
               <span className="mt-4 font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-ivory/70">

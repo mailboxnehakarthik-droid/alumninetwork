@@ -83,7 +83,7 @@ export default async function DirectoryProfilePage({
           <div className="mx-auto max-w-3xl px-6 pb-24 pt-16 md:px-10 md:pt-24">
             <Link
               href="/directory"
-              className="font-sans text-[12px] font-medium uppercase tracking-[0.12em] text-oxblood underline decoration-gold underline-offset-4 hover:text-maroon"
+              className="font-sans text-[12px] font-medium uppercase tracking-[0.12em] text-oxblood underline decoration-accent underline-offset-4 hover:text-maroon"
             >
               ← Directory
             </Link>
@@ -109,7 +109,7 @@ export default async function DirectoryProfilePage({
                   <p className="mt-1 font-sans text-sm text-ink/70">{role}</p>
                 )}
                 {isStudent && (
-                  <span className="mt-2 inline-block rounded-full border border-gold/40 px-3 py-0.5 font-sans text-[10px] font-medium uppercase tracking-[0.12em] text-gold">
+                  <span className="mt-2 inline-block rounded-full border border-gold/40 px-3 py-0.5 font-sans text-[10px] font-medium uppercase tracking-[0.12em] text-accent">
                     Current student
                   </span>
                 )}
@@ -177,7 +177,7 @@ function Row({
             href={value}
             target="_blank"
             rel="noreferrer"
-            className="text-oxblood underline decoration-gold underline-offset-2"
+            className="text-oxblood underline decoration-accent underline-offset-2"
           >
             {value}
           </a>

@@ -7,7 +7,7 @@ import { BRANCHES } from "@/lib/constants";
 import type { Profile, UserType } from "@/lib/types";
 
 const FIELD =
-  "w-full rounded-sm border border-gold/40 bg-ivory-dim/40 px-4 py-3 font-sans text-sm text-ink placeholder:text-ink/40 transition-colors focus:border-gold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold";
+  "w-full rounded-sm border border-gold/40 bg-ivory-dim/40 px-4 py-3 font-sans text-sm text-ink placeholder:text-ink/40 transition-colors focus:border-gold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent";
 const LABEL =
   "font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-ink/60";
 
@@ -228,7 +228,7 @@ export default function OnboardingForm({
   if (done) {
     return (
       <div className="rounded-sm border border-gold/40 bg-ivory-dim/40 px-6 py-8 text-center">
-        <span className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-gold">
+        <span className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-accent">
           You&rsquo;re all set
         </span>
         <p className="mx-auto mt-4 max-w-md font-display text-2xl italic leading-snug text-oxblood">
@@ -264,7 +264,7 @@ export default function OnboardingForm({
       {/* Type toggle — hidden for college-email users (always verified students) */}
       {isCollegeEmail ? (
         <div className="rounded-sm border border-gold/40 bg-gold/10 px-5 py-4">
-          <span className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-gold">
+          <span className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-accent">
             ✓ Verified student
           </span>
           <p className="mt-2 font-sans text-sm leading-relaxed text-ink/70">

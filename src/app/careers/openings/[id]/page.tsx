@@ -127,7 +127,7 @@ export default async function OpeningPage({
           <div className="mx-auto max-w-4xl px-6 pb-24 pt-16 md:px-10 md:pt-24">
             <Link
               href={posting.type === "job" ? "/careers/jobs" : "/careers/internships"}
-              className="font-sans text-[12px] font-medium uppercase tracking-[0.12em] text-oxblood underline decoration-gold underline-offset-4 hover:text-maroon"
+              className="font-sans text-[12px] font-medium uppercase tracking-[0.12em] text-oxblood underline decoration-accent underline-offset-4 hover:text-maroon"
             >
               ← Back to openings
             </Link>

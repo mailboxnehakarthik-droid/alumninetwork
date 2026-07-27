@@ -115,7 +115,7 @@ export default async function PostingApplicantsPage({
               <Eyebrow>Applicants</Eyebrow>
               <Link
                 href="/careers/my-postings"
-                className="font-sans text-[12px] font-medium uppercase tracking-[0.12em] text-oxblood underline decoration-gold underline-offset-4 hover:text-maroon"
+                className="font-sans text-[12px] font-medium uppercase tracking-[0.12em] text-oxblood underline decoration-accent underline-offset-4 hover:text-maroon"
               >
                 ← My postings
               </Link>
@@ -132,7 +132,7 @@ export default async function PostingApplicantsPage({
             </p>
             <Link
               href={`/careers/openings/${posting.id}`}
-              className="mt-2 inline-block font-sans text-[12px] uppercase tracking-[0.12em] text-oxblood/70 underline decoration-gold underline-offset-4 hover:text-oxblood"
+              className="mt-2 inline-block font-sans text-[12px] uppercase tracking-[0.12em] text-oxblood/70 underline decoration-accent underline-offset-4 hover:text-oxblood"
             >
               View public posting →
             </Link>

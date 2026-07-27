@@ -5,7 +5,7 @@ import { addSocialPost, deleteSocialPost } from "../actions";
 import type { SocialPost } from "@/lib/types";
 
 const FIELD =
-  "w-full rounded-sm border border-gold/40 bg-ivory-dim/40 px-4 py-3 font-sans text-sm text-ink placeholder:text-ink/40 transition-colors focus:border-gold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold";
+  "w-full rounded-sm border border-gold/40 bg-ivory-dim/40 px-4 py-3 font-sans text-sm text-ink placeholder:text-ink/40 transition-colors focus:border-gold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent";
 const LABEL =
   "font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-ink/60";
 
@@ -146,7 +146,7 @@ export default function AddSocialPost({ recent }: { recent: SocialPost[] }) {
                       href={p.permalink}
                       target="_blank"
                       rel="noreferrer"
-                      className="font-sans text-xs text-oxblood/70 underline decoration-gold underline-offset-2"
+                      className="font-sans text-xs text-oxblood/70 underline decoration-accent underline-offset-2"
                     >
                       {p.permalink}
                     </a>

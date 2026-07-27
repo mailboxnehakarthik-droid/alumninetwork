@@ -38,7 +38,7 @@ export default function PressPage() {
 
             <Reveal delay={240}>
               <div className="mt-12 border border-gold/30 bg-ivory-dim/50 p-8 md:p-10">
-                <span className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-gold">
+                <span className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-accent">
                   Media enquiries
                 </span>
 
@@ -50,7 +50,7 @@ export default function PressPage() {
                     <dd className="mt-1.5">
                       <a
                         href="mailto:bmscealumni@bmsce.ac.in?subject=Press%20enquiry"
-                        className="font-sans text-base text-oxblood underline decoration-gold underline-offset-4 transition-colors hover:text-maroon"
+                        className="font-sans text-base text-oxblood underline decoration-accent underline-offset-4 transition-colors hover:text-maroon"
                       >
                         bmscealumni@bmsce.ac.in
                       </a>
@@ -63,7 +63,7 @@ export default function PressPage() {
                     <dd className="mt-1.5">
                       <a
                         href="tel:+918660230306"
-                        className="font-sans text-base text-oxblood underline decoration-gold underline-offset-4 transition-colors hover:text-maroon"
+                        className="font-sans text-base text-oxblood underline decoration-accent underline-offset-4 transition-colors hover:text-maroon"
                       >
                         +91 86602 30306
                       </a>

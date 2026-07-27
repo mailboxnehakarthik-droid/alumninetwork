@@ -171,7 +171,7 @@ function Contact({ person }: { person: Person }) {
   if (!person.email && !person.linkedin) return null;
   return (
     <div className="mt-4 rounded-sm border border-gold/40 bg-gold/10 px-4 py-3">
-      <p className="font-sans text-[11px] font-medium uppercase tracking-[0.14em] text-gold">
+      <p className="font-sans text-[11px] font-medium uppercase tracking-[0.14em] text-accent">
         Contact
       </p>
       <div className="mt-1.5 flex flex-wrap gap-x-5 gap-y-1 font-sans text-sm text-ink/75">
@@ -181,7 +181,7 @@ function Contact({ person }: { person: Person }) {
             href={person.linkedin}
             target="_blank"
             rel="noreferrer"
-            className="text-oxblood underline decoration-gold underline-offset-2"
+            className="text-oxblood underline decoration-accent underline-offset-2"
           >
             LinkedIn
           </a>
@@ -200,7 +200,7 @@ function StatusPill({ status }: { status: "accepted" | "declined" | "pending" })
       : "Pending";
   const tone =
     status === "accepted"
-      ? "border-gold/50 bg-gold/10 text-gold"
+      ? "border-gold/50 bg-gold/10 text-accent"
       : status === "declined"
       ? "border-ink/20 bg-ink/5 text-ink/50"
       : "border-gold/40 bg-ivory/60 text-ink/60";

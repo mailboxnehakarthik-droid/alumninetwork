@@ -118,7 +118,7 @@ export default async function CareersList({
                   </Link>
                   <Link
                     href="/careers/my-postings"
-                    className="font-sans text-[12px] font-medium uppercase tracking-[0.14em] text-oxblood underline decoration-gold underline-offset-4 hover:text-maroon"
+                    className="font-sans text-[12px] font-medium uppercase tracking-[0.14em] text-oxblood underline decoration-accent underline-offset-4 hover:text-maroon"
                   >
                     My postings &amp; applications →
                   </Link>

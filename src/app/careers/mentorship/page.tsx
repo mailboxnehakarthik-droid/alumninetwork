@@ -113,7 +113,7 @@ export default async function MentorshipPage() {
                 {me && (
                   <Link
                     href="/careers/mentorship/requests"
-                    className="font-sans text-[12px] font-medium uppercase tracking-[0.14em] text-oxblood underline decoration-gold underline-offset-4 hover:text-maroon"
+                    className="font-sans text-[12px] font-medium uppercase tracking-[0.14em] text-oxblood underline decoration-accent underline-offset-4 hover:text-maroon"
                   >
                     My mentorship →
                   </Link>

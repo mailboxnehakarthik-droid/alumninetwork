@@ -8,18 +8,23 @@ import Reveal from "@/components/Reveal";
 import LoginButtons from "./LoginButtons";
 import EmailAuth from "./EmailAuth";
 import { createClient } from "@/lib/supabase/server";
+import { safeNextPath } from "@/lib/nav";
 
 export const metadata: Metadata = {
   title: "Sign in — BMSCE Alumni Network",
 };
 
 type Props = {
-  searchParams: Promise<{ as?: string; error?: string }>;
+  searchParams: Promise<{ as?: string; error?: string; next?: string }>;
 };
 
 export default async function LoginPage({ searchParams }: Props) {
-  const { as, error } = await searchParams;
+  const { as, error, next: nextParam } = await searchParams;
   const isStudent = as === "student";
+  // Where to land after signing in (e.g. "/chapters"). Sanitized to a same-origin
+  // path; carried through the OAuth/email flows and the /auth/callback route.
+  const next = safeNextPath(nextParam);
+  const nextQuery = next !== "/" ? `&next=${encodeURIComponent(next)}` : "";
 
   // Already signed in? Skip the login screen.
   const supabase = await createClient();
@@ -32,7 +37,7 @@ export default async function LoginPage({ searchParams }: Props) {
       .select("onboarded")
       .eq("id", user.id)
       .single();
-    redirect(profile?.onboarded ? "/" : "/onboarding");
+    redirect(profile?.onboarded ? next : "/onboarding");
   }
 
   return (
@@ -67,7 +72,10 @@ export default async function LoginPage({ searchParams }: Props) {
 
             <Reveal delay={240}>
               <div className="mt-10">
-                <LoginButtons userType={isStudent ? "student" : "alumni"} />
+                <LoginButtons
+                  userType={isStudent ? "student" : "alumni"}
+                  next={next}
+                />
               </div>
             </Reveal>
 
@@ -82,7 +90,10 @@ export default async function LoginPage({ searchParams }: Props) {
             </Reveal>
 
             <Reveal delay={300}>
-              <EmailAuth userType={isStudent ? "student" : "alumni"} />
+              <EmailAuth
+                userType={isStudent ? "student" : "alumni"}
+                next={next}
+              />
             </Reveal>
 
             <Reveal delay={320}>
@@ -91,7 +102,11 @@ export default async function LoginPage({ searchParams }: Props) {
                   <>
                     Are you an alumnus?{" "}
                     <Link
-                      href="/login"
+                      href={
+                        next !== "/"
+                          ? `/login?next=${encodeURIComponent(next)}`
+                          : "/login"
+                      }
                       className="border-b border-gold pb-0.5 text-oxblood transition-colors hover:border-oxblood"
                     >
                       Sign in here
@@ -102,7 +117,7 @@ export default async function LoginPage({ searchParams }: Props) {
                   <>
                     Current BMS student looking for a mentor?{" "}
                     <Link
-                      href="/login?as=student"
+                      href={`/login?as=student${nextQuery}`}
                       className="border-b border-gold pb-0.5 text-oxblood transition-colors hover:border-oxblood"
                     >
                       Start here

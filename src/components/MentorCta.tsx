@@ -63,7 +63,7 @@ export default function MentorCta() {
                 key={item.tag}
                 className="border-b border-r border-gold/30 px-6 py-7"
               >
-                <span className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-gold">
+                <span className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-accent">
                   {item.tag}
                 </span>
                 <p className="mt-3 font-sans text-sm leading-relaxed text-ink/70">

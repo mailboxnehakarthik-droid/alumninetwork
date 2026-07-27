@@ -73,7 +73,7 @@ export default function AlumniSpotlight() {
                 <p className="mt-1 font-sans text-sm text-ink/65">
                   {person.role}
                 </p>
-                <p className="mt-3 font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-gold">
+                <p className="mt-3 font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-accent">
                   {person.meta}
                 </p>
                 <p className="mt-5 font-display text-base italic leading-snug text-ink/75">

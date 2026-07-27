@@ -54,7 +54,7 @@ export default async function ProfilePage() {
               <Eyebrow>My profile</Eyebrow>
               <Link
                 href="/profile/edit"
-                className="font-sans text-[12px] font-medium uppercase tracking-[0.12em] text-oxblood underline decoration-gold underline-offset-4 hover:text-maroon"
+                className="font-sans text-[12px] font-medium uppercase tracking-[0.12em] text-oxblood underline decoration-accent underline-offset-4 hover:text-maroon"
               >
                 Edit
               </Link>
@@ -135,7 +135,7 @@ function Row({
             href={value}
             target="_blank"
             rel="noreferrer"
-            className="text-oxblood underline decoration-gold underline-offset-2"
+            className="text-oxblood underline decoration-accent underline-offset-2"
           >
             {value}
           </a>

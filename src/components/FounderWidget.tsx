@@ -50,7 +50,7 @@ export default function FounderWidget({
                 aria-label="Founder photo placeholder"
                 className="flex aspect-[3/4] w-full max-w-[300px] flex-col items-center justify-center gap-3 border border-dashed border-gold/50 bg-ivory/5 px-6 text-center"
               >
-                <span className="font-display text-2xl italic text-gold">
+                <span className="font-display text-2xl italic text-accent">
                   Founder photo
                 </span>
                 <span className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-ivory/60">
@@ -79,7 +79,7 @@ export default function FounderWidget({
                 went on to found a sister institution, B.M.S. Institute of
                 Technology and Management, in 2002. In recognition of his
                 contributions, the Maharaja of Mysore honored him with the title{" "}
-                <span className="italic text-gold">
+                <span className="italic text-accent">
                   Dharmaprakasha Rajakarya Prasaktha
                 </span>{" "}
                 in 1946.

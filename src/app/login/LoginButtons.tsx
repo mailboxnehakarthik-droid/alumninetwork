@@ -3,9 +3,12 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 
-type Props = { userType?: "alumni" | "student" };
+type Props = { userType?: "alumni" | "student"; next?: string };
 
-export default function LoginButtons({ userType = "alumni" }: Props) {
+export default function LoginButtons({
+  userType = "alumni",
+  next = "/",
+}: Props) {
   const [loading, setLoading] = useState<null | "google" | "linkedin_oidc">(
     null
   );
@@ -18,10 +21,15 @@ export default function LoginButtons({ userType = "alumni" }: Props) {
     } catch {
       // ignore storage failures
     }
+    // Carry the post-login destination through the callback route.
+    const callback =
+      next !== "/"
+        ? `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`
+        : `${window.location.origin}/auth/callback`;
     const supabase = createClient();
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
-      options: { redirectTo: `${window.location.origin}/auth/callback` },
+      options: { redirectTo: callback },
     });
     if (error) setLoading(null);
   };

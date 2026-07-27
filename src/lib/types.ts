@@ -66,6 +66,15 @@ export type SocialPost = {
   created_at: string;
 };
 
+export type Newsletter = {
+  id: string;
+  year: number;
+  title: string | null;
+  pdf_url: string;
+  uploaded_by: string | null;
+  uploaded_at: string;
+};
+
 export type PostingType = "job" | "internship";
 
 export type JobPosting = {

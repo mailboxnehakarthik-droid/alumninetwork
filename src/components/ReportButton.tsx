@@ -44,7 +44,7 @@ export default function ReportButton({
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="font-sans text-[11px] font-medium uppercase tracking-[0.12em] text-ink/45 underline decoration-transparent underline-offset-4 transition-colors hover:text-oxblood hover:decoration-gold"
+        className="font-sans text-[11px] font-medium uppercase tracking-[0.12em] text-ink/45 underline decoration-transparent underline-offset-4 transition-colors hover:text-oxblood hover:decoration-accent"
       >
         {label}
       </button>

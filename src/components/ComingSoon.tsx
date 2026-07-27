@@ -48,7 +48,7 @@ export default function ComingSoon({
 
             <Reveal delay={240}>
               <div className="mt-12 border border-gold/30 bg-ivory-dim/50 p-8 md:p-10">
-                <span className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-gold">
+                <span className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-accent">
                   In the meantime
                 </span>
                 <p className="mt-4 font-sans text-base leading-relaxed text-ink/75">
@@ -63,7 +63,7 @@ export default function ComingSoon({
                 <p className="mt-4 font-sans text-sm text-ink/55">
                   <a
                     href="mailto:bmscealumni@bmsce.ac.in"
-                    className="text-oxblood underline decoration-gold underline-offset-4 hover:text-maroon"
+                    className="text-oxblood underline decoration-accent underline-offset-4 hover:text-maroon"
                   >
                     bmscealumni@bmsce.ac.in
                   </a>

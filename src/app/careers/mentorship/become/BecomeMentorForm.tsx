@@ -7,7 +7,7 @@ import { MENTOR_EXPERTISE } from "@/lib/constants";
 import type { Profile } from "@/lib/types";
 
 const FIELD =
-  "w-full rounded-sm border border-gold/40 bg-ivory-dim/40 px-4 py-3 font-sans text-sm text-ink placeholder:text-ink/40 transition-colors focus:border-gold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold";
+  "w-full rounded-sm border border-gold/40 bg-ivory-dim/40 px-4 py-3 font-sans text-sm text-ink placeholder:text-ink/40 transition-colors focus:border-gold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent";
 const LABEL =
   "font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-ink/60";
 
@@ -159,7 +159,7 @@ export default function BecomeMentorForm({ profile }: { profile: Profile }) {
             type="button"
             onClick={withdraw}
             disabled={busy}
-            className="font-sans text-[12px] font-medium uppercase tracking-[0.12em] text-ink/55 underline decoration-gold underline-offset-4 transition-colors hover:text-oxblood disabled:opacity-60"
+            className="font-sans text-[12px] font-medium uppercase tracking-[0.12em] text-ink/55 underline decoration-accent underline-offset-4 transition-colors hover:text-oxblood disabled:opacity-60"
           >
             Withdraw as mentor
           </button>

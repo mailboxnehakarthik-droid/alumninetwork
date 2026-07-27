@@ -128,7 +128,7 @@ export default function ApplyBox({
     const status = done ? "submitted" : (state as { status: ApplicationStatus }).status;
     return (
       <div className={shell}>
-        <p className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-gold">
+        <p className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-accent">
           Your application
         </p>
         <p className="mt-3 font-display text-2xl italic text-oxblood">
@@ -268,7 +268,7 @@ export default function ApplyBox({
               href={prefill.linkedin}
               target="_blank"
               rel="noreferrer"
-              className="mt-1 block truncate font-sans text-sm text-oxblood underline decoration-gold underline-offset-2 hover:text-maroon"
+              className="mt-1 block truncate font-sans text-sm text-oxblood underline decoration-accent underline-offset-2 hover:text-maroon"
             >
               {prefill.linkedin}
             </a>
@@ -297,7 +297,7 @@ export default function ApplyBox({
             href={externalLink}
             target="_blank"
             rel="noreferrer"
-            className="font-sans text-[12px] font-medium uppercase tracking-[0.12em] text-oxblood underline decoration-gold underline-offset-4 hover:text-maroon"
+            className="font-sans text-[12px] font-medium uppercase tracking-[0.12em] text-oxblood underline decoration-accent underline-offset-4 hover:text-maroon"
           >
             Apply on company site →
           </a>

@@ -49,7 +49,7 @@ export default async function EditEventPage({
               <Eyebrow>Admin · Events</Eyebrow>
               <Link
                 href="/admin/events"
-                className="font-sans text-[12px] font-medium uppercase tracking-[0.12em] text-oxblood underline decoration-gold underline-offset-4 hover:text-maroon"
+                className="font-sans text-[12px] font-medium uppercase tracking-[0.12em] text-oxblood underline decoration-accent underline-offset-4 hover:text-maroon"
               >
                 ← All events
               </Link>

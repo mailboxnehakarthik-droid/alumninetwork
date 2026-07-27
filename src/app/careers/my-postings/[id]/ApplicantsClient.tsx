@@ -147,7 +147,7 @@ function ApplicantCard({ row }: { row: ApplicantRow }) {
           <div>
             <Link
               href={`/directory/${p.id}`}
-              className="font-display text-xl text-ink underline decoration-gold/0 underline-offset-4 transition-colors hover:decoration-gold"
+              className="font-display text-xl text-ink underline decoration-accent/0 underline-offset-4 transition-colors hover:decoration-accent"
             >
               {p.name}
             </Link>
@@ -160,7 +160,7 @@ function ApplicantCard({ row }: { row: ApplicantRow }) {
               {row.email && (
                 <a
                   href={`mailto:${row.email}`}
-                  className="text-oxblood underline decoration-gold underline-offset-2 hover:text-maroon"
+                  className="text-oxblood underline decoration-accent underline-offset-2 hover:text-maroon"
                 >
                   {row.email}
                 </a>
@@ -259,7 +259,7 @@ function StatusPill({ status }: { status: ApplicationStatus }) {
   }[status];
   const tone =
     status === "accepted"
-      ? "border-gold/50 bg-gold/10 text-gold"
+      ? "border-gold/50 bg-gold/10 text-accent"
       : status === "rejected"
       ? "border-ink/20 bg-ink/5 text-ink/50"
       : "border-gold/40 bg-ivory/60 text-ink/60";

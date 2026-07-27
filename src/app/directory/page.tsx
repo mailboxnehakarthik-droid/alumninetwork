@@ -232,7 +232,7 @@ function DirectoryCard({ row, index }: { row: Row; index: number }) {
         </div>
         <h3 className="mt-6 font-display text-xl text-ink">{name}</h3>
         {isStudent && (
-          <span className="mt-2 w-fit rounded-full border border-gold/40 px-2.5 py-0.5 font-sans text-[10px] font-medium uppercase tracking-[0.12em] text-gold">
+          <span className="mt-2 w-fit rounded-full border border-gold/40 px-2.5 py-0.5 font-sans text-[10px] font-medium uppercase tracking-[0.12em] text-accent">
             Current student
           </span>
         )}
@@ -243,7 +243,7 @@ function DirectoryCard({ row, index }: { row: Row; index: number }) {
           <p className="mt-3 font-sans text-sm text-ink/55">{batchLine}</p>
         )}
         {row.current_city && (
-          <p className="mt-auto pt-5 font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-gold">
+          <p className="mt-auto pt-5 font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-accent">
             {row.current_city}
           </p>
         )}

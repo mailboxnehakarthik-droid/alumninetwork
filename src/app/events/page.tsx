@@ -141,7 +141,7 @@ export default async function EventsPage() {
                   href="https://www.instagram.com/bmsce_alumni/"
                   target="_blank"
                   rel="noreferrer"
-                  className="text-oxblood underline decoration-gold underline-offset-2 hover:text-maroon"
+                  className="text-oxblood underline decoration-accent underline-offset-2 hover:text-maroon"
                 >
                   @bmsce_alumni
                 </a>
@@ -184,7 +184,7 @@ function EventCard({ event, index }: { event: EventRow; index: number }) {
           </div>
         )}
         <div className="flex flex-1 flex-col p-6">
-          <span className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-gold">
+          <span className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-accent">
             {dateLabel}
           </span>
           <h3 className="mt-3 font-display text-xl text-ink">{event.title}</h3>

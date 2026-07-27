@@ -106,7 +106,7 @@ function PostCard({ post, index }: { post: SocialPost; index: number }) {
             </p>
           )}
 
-          <div className="mt-auto flex items-center gap-4 pt-5 font-sans text-[11px] font-medium uppercase tracking-[0.14em] text-gold">
+          <div className="mt-auto flex items-center gap-4 pt-5 font-sans text-[11px] font-medium uppercase tracking-[0.14em] text-accent">
             <span>♥ {formatCount(post.likes_count)}</span>
             <span>✎ {formatCount(post.comments_count)}</span>
             {post.posted_at && (

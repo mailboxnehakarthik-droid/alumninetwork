@@ -161,7 +161,7 @@ function MentorCardView({
               This is you
             </p>
           ) : status ? (
-            <p className="font-sans text-[12px] font-medium uppercase tracking-[0.12em] text-gold">
+            <p className="font-sans text-[12px] font-medium uppercase tracking-[0.12em] text-accent">
               {status === "pending"
                 ? "Request sent · pending"
                 : status === "accepted"

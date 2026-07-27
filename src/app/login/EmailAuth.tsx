@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 const FIELD =
-  "w-full rounded-sm border border-gold/40 bg-ivory-dim/40 px-4 py-3.5 font-sans text-sm text-ink placeholder:text-ink/40 transition-colors focus:border-gold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold";
+  "w-full rounded-sm border border-gold/40 bg-ivory-dim/40 px-4 py-3.5 font-sans text-sm text-ink placeholder:text-ink/40 transition-colors focus:border-gold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent";
 
 const COLLEGE_DOMAIN = "@bmsce.ac.in";
 const MIN_PASSWORD = 8;
@@ -15,10 +15,22 @@ type PwMode = "signin" | "signup";
 
 export default function EmailAuth({
   userType = "alumni",
+  next = "/",
 }: {
   userType?: "alumni" | "student";
+  next?: string;
 }) {
   const router = useRouter();
+  // Callback URL for link-based flows (magic link, signup confirmation), with
+  // the post-login destination carried through when it isn't the default.
+  const callbackUrl =
+    next !== "/"
+      ? `${
+          typeof window !== "undefined" ? window.location.origin : ""
+        }/auth/callback?next=${encodeURIComponent(next)}`
+      : `${
+          typeof window !== "undefined" ? window.location.origin : ""
+        }/auth/callback`;
   const [method, setMethod] = useState<Method>("magic");
   const [pwMode, setPwMode] = useState<PwMode>("signup");
 
@@ -50,7 +62,7 @@ export default function EmailAuth({
     const { error } = await supabase.auth.signInWithOtp({
       email: email.trim(),
       options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
+        emailRedirectTo: callbackUrl,
         shouldCreateUser: true,
       },
     });
@@ -73,7 +85,7 @@ export default function EmailAuth({
       .select("onboarded")
       .eq("id", user.id)
       .single();
-    router.push(prof?.onboarded ? "/" : "/onboarding");
+    router.push(prof?.onboarded ? next : "/onboarding");
     router.refresh();
   };
 
@@ -99,7 +111,7 @@ export default function EmailAuth({
       const { data, error } = await supabase.auth.signUp({
         email: email.trim(),
         password,
-        options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
+        options: { emailRedirectTo: callbackUrl },
       });
       setBusy(false);
       if (error) return setError(error.message);
@@ -159,7 +171,7 @@ export default function EmailAuth({
             setPassword("");
             setConfirm("");
           }}
-          className="mt-4 font-sans text-[12px] font-medium uppercase tracking-[0.12em] text-oxblood/70 underline decoration-gold underline-offset-4 hover:text-oxblood"
+          className="mt-4 font-sans text-[12px] font-medium uppercase tracking-[0.12em] text-oxblood/70 underline decoration-accent underline-offset-4 hover:text-oxblood"
         >
           Back
         </button>
@@ -296,7 +308,7 @@ export default function EmailAuth({
               type="button"
               onClick={sendReset}
               disabled={busy}
-              className="self-start font-sans text-xs text-ink/55 underline decoration-gold underline-offset-4 transition-colors hover:text-oxblood disabled:opacity-60"
+              className="self-start font-sans text-xs text-ink/55 underline decoration-accent underline-offset-4 transition-colors hover:text-oxblood disabled:opacity-60"
             >
               Forgot password?
             </button>

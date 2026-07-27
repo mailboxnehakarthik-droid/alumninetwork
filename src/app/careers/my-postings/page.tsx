@@ -191,7 +191,7 @@ export default async function MyPostingsPage() {
                         <div>
                           <Link
                             href={`/careers/openings/${a.job_id}`}
-                            className="font-display text-lg text-ink underline decoration-gold/0 underline-offset-4 hover:decoration-gold"
+                            className="font-display text-lg text-ink underline decoration-accent/0 underline-offset-4 hover:decoration-accent"
                           >
                             {job?.title ?? "Opening"}
                           </Link>

@@ -104,3 +104,40 @@ export async function deleteSocialPost(id: string) {
   revalidatePath("/admin/social");
   revalidatePath("/events");
 }
+
+// --- Newsletters ----------------------------------------------------------
+// The PDF is uploaded to the public `newsletters` storage bucket client-side
+// (see NewsletterAdmin), which hands us back its public URL. Here we just
+// record the row. Admin-only, re-checked by requireAdmin + RLS.
+
+export async function addNewsletter(input: {
+  year: number;
+  title: string;
+  pdfUrl: string;
+}) {
+  const supabase = await requireAdmin();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!Number.isInteger(input.year)) throw new Error("A valid year is required.");
+  if (!input.pdfUrl.trim()) throw new Error("A PDF is required.");
+
+  const { error } = await supabase.from("newsletters").insert({
+    year: input.year,
+    title: input.title.trim() || null,
+    pdf_url: input.pdfUrl.trim(),
+    uploaded_by: user?.id ?? null,
+  });
+  if (error) throw new Error(error.message);
+  revalidatePath("/admin/newsletters");
+  revalidatePath("/newsletter");
+}
+
+export async function deleteNewsletter(id: string) {
+  const supabase = await requireAdmin();
+  const { error } = await supabase.from("newsletters").delete().eq("id", id);
+  if (error) throw new Error(error.message);
+  revalidatePath("/admin/newsletters");
+  revalidatePath("/newsletter");
+}

@@ -100,7 +100,7 @@ export default async function AdminReportsPage() {
               <Eyebrow>Admin · Reports</Eyebrow>
               <Link
                 href="/admin"
-                className="font-sans text-[12px] font-medium uppercase tracking-[0.12em] text-oxblood underline decoration-gold underline-offset-4 hover:text-maroon"
+                className="font-sans text-[12px] font-medium uppercase tracking-[0.12em] text-oxblood underline decoration-accent underline-offset-4 hover:text-maroon"
               >
                 ← Verification
               </Link>
@@ -132,7 +132,7 @@ export default async function AdminReportsPage() {
                       </span>
                       <Link
                         href={targetHref(r)}
-                        className="mt-3 block font-display text-xl text-ink underline decoration-gold/0 underline-offset-4 hover:decoration-gold"
+                        className="mt-3 block font-display text-xl text-ink underline decoration-accent/0 underline-offset-4 hover:decoration-accent"
                       >
                         {targetLabel(r)}
                       </Link>

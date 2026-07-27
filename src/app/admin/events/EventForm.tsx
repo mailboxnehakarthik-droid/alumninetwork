@@ -6,7 +6,7 @@ import { createEvent, updateEvent } from "./actions";
 import type { EventRow } from "@/lib/types";
 
 const FIELD =
-  "w-full rounded-sm border border-gold/40 bg-ivory-dim/40 px-4 py-3 font-sans text-sm text-ink placeholder:text-ink/40 transition-colors focus:border-gold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold";
+  "w-full rounded-sm border border-gold/40 bg-ivory-dim/40 px-4 py-3 font-sans text-sm text-ink placeholder:text-ink/40 transition-colors focus:border-gold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent";
 const LABEL =
   "font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-ink/60";
 
@@ -86,7 +86,7 @@ export default function EventForm({ event }: { event?: EventRow }) {
       <form onSubmit={submit} className="flex flex-col gap-8">
         {/* Basics */}
         <div className="flex flex-col gap-6">
-          <p className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-gold">
+          <p className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-accent">
             Basics
           </p>
           <Field label="Event title" required>
@@ -119,7 +119,7 @@ export default function EventForm({ event }: { event?: EventRow }) {
 
         {/* Details */}
         <div className="flex flex-col gap-6 border-t border-gold/25 pt-8">
-          <p className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-gold">
+          <p className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-accent">
             Details <span className="text-ink/40">— all optional</span>
           </p>
           <Field label="Description">
@@ -167,7 +167,7 @@ export default function EventForm({ event }: { event?: EventRow }) {
           <button
             type="button"
             onClick={() => router.push("/admin/events")}
-            className="font-sans text-[12px] font-medium uppercase tracking-[0.12em] text-ink/55 underline decoration-gold underline-offset-4 hover:text-oxblood"
+            className="font-sans text-[12px] font-medium uppercase tracking-[0.12em] text-ink/55 underline decoration-accent underline-offset-4 hover:text-oxblood"
           >
             Cancel
           </button>
@@ -189,7 +189,7 @@ export default function EventForm({ event }: { event?: EventRow }) {
             </div>
           )}
           <div className="p-6">
-            <span className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-gold">
+            <span className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-accent">
               {previewDate}
             </span>
             <h3 className="mt-3 font-display text-xl text-ink">

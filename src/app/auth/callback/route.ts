@@ -1,12 +1,14 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { safeNextPath } from "@/lib/nav";
 
 // OAuth redirect target. Exchanges the code for a session, then sends the user
 // to onboarding (first login) or their intended destination.
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
-  const next = searchParams.get("next") ?? "/";
+  // Sanitized so a crafted callback URL can't redirect off-site.
+  const next = safeNextPath(searchParams.get("next"));
   const type = searchParams.get("type");
 
   // Behind a proxy (Vercel/Netlify/etc.) `origin` can be an internal host or

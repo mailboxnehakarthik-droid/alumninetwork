@@ -136,21 +136,27 @@ export default async function AdminPage({
               <div className="flex flex-wrap items-center gap-5">
                 <Link
                   href="/admin/events"
-                  className="font-sans text-[12px] font-medium uppercase tracking-[0.12em] text-oxblood underline decoration-gold underline-offset-4 hover:text-maroon"
+                  className="font-sans text-[12px] font-medium uppercase tracking-[0.12em] text-oxblood underline decoration-accent underline-offset-4 hover:text-maroon"
                 >
                   Events →
                 </Link>
                 <Link
                   href="/admin/reports"
-                  className="font-sans text-[12px] font-medium uppercase tracking-[0.12em] text-oxblood underline decoration-gold underline-offset-4 hover:text-maroon"
+                  className="font-sans text-[12px] font-medium uppercase tracking-[0.12em] text-oxblood underline decoration-accent underline-offset-4 hover:text-maroon"
                 >
                   Reports →
                 </Link>
                 <Link
                   href="/admin/social"
-                  className="font-sans text-[12px] font-medium uppercase tracking-[0.12em] text-oxblood underline decoration-gold underline-offset-4 hover:text-maroon"
+                  className="font-sans text-[12px] font-medium uppercase tracking-[0.12em] text-oxblood underline decoration-accent underline-offset-4 hover:text-maroon"
                 >
                   Social posts →
+                </Link>
+                <Link
+                  href="/admin/newsletters"
+                  className="font-sans text-[12px] font-medium uppercase tracking-[0.12em] text-oxblood underline decoration-accent underline-offset-4 hover:text-maroon"
+                >
+                  Newsletters →
                 </Link>
               </div>
             </div>

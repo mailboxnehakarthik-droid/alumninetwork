@@ -71,7 +71,7 @@ export default function NotableAlumniPage() {
                     <p className="mt-5 border-t border-gold/20 pt-5 font-sans text-sm leading-relaxed text-ink/70">
                       {alum.knownFor}
                     </p>
-                    <span className="mt-auto pt-5 font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-gold">
+                    <span className="mt-auto pt-5 font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-accent">
                       Notable alum
                     </span>
                   </article>

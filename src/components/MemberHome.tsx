@@ -157,7 +157,7 @@ export default async function MemberHome({
             <Reveal delay={80}>
               <Link
                 href="/events"
-                className="font-sans text-[12px] font-medium uppercase tracking-[0.14em] text-oxblood underline decoration-gold underline-offset-4 hover:text-maroon"
+                className="font-sans text-[12px] font-medium uppercase tracking-[0.14em] text-oxblood underline decoration-accent underline-offset-4 hover:text-maroon"
               >
                 All events →
               </Link>
@@ -190,7 +190,7 @@ export default async function MemberHome({
                 return (
                   <Reveal key={ev.id} delay={i * 80} className="h-full">
                     <article className="flex h-full flex-col border border-gold/25 bg-ivory-dim/60 p-6">
-                      <span className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-gold">
+                      <span className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-accent">
                         {label}
                       </span>
                       <h3 className="mt-3 font-display text-xl text-ink">
@@ -237,7 +237,7 @@ function StatusNotice({ profile }: { profile: Profile }) {
 
   return (
     <div className="mt-10 max-w-2xl rounded-sm border border-gold/40 bg-gold/10 px-6 py-5">
-      <p className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-gold">
+      <p className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-accent">
         Pending verification
       </p>
       <p className="mt-2 font-sans text-sm leading-relaxed text-ink/75">
@@ -272,7 +272,7 @@ function QuickLink({
   return (
     <Reveal delay={index * 90} className="border-b border-r border-gold/30">
       <Link href={href} className="group block h-full px-6 py-8 md:py-10">
-        <span className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-gold">
+        <span className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-accent">
           {tag}
         </span>
         <h3 className="mt-4 font-display text-2xl italic text-ink">{title}</h3>

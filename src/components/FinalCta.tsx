@@ -12,7 +12,7 @@ export default function FinalCta() {
         </Reveal>
         <Reveal delay={80}>
           <h2 className="mt-6 font-display text-4xl leading-[1.05] text-ivory md:text-6xl">
-            Ready when <span className="italic text-gold">you</span> are.
+            Ready when <span className="italic text-accent">you</span> are.
           </h2>
         </Reveal>
         <Reveal delay={160}>

@@ -10,7 +10,7 @@ import FounderWidget from "@/components/FounderWidget";
 export const metadata: Metadata = {
   title: "About — BMSCE Alumni Network",
   description:
-    "About BMS College of Engineering, our founder B. M. Sreenivasaiah, and how to reach the alumni network.",
+    "The BMSCE Alumni Network — 58 chapters across 90+ countries, and the programs that turn a shared campus into a lifelong community.",
 };
 
 // Drop the founder's portrait in at public/founder.jpg and it replaces the
@@ -39,55 +39,69 @@ export default function AboutPage() {
           photoFileName={`/public/${FOUNDER_PHOTO_FILE}`}
         />
 
-        {/* 2 — About the college */}
+        {/* A — The network (replaces the old college-description section) */}
         <section className="border-t border-gold/30">
           <div className="mx-auto max-w-7xl px-6 py-20 md:px-10 md:py-28">
             <Reveal>
-              <Eyebrow>The college</Eyebrow>
+              <Eyebrow>The network</Eyebrow>
             </Reveal>
             <Reveal delay={80}>
               <h2 className="mt-6 max-w-2xl font-display text-4xl leading-[1.05] text-ink md:text-5xl">
-                About BMS College of Engineering
+                Built by alumni, for alumni.
               </h2>
             </Reveal>
             <Reveal delay={160}>
               <p className="mt-8 max-w-3xl font-sans text-base leading-relaxed text-ink/70 md:text-lg">
-                BMS College of Engineering (BMSCE) is a private engineering
-                college in Basavanagudi, Bangalore, run by the B.M.S.
-                Educational Trust. Affiliated with Visvesvaraya Technological
-                University, the college became autonomous in 2008 and has since
-                been recognized with an A++ NAAC grade and Tier I NBA
-                accreditation — among the first institutions in Karnataka to
-                achieve this. BMSCE offers a wide range of undergraduate and
-                postgraduate programs across engineering and management, with
-                several departments recognized as research centers. Today, the
-                college&rsquo;s alumni network spans over 24,000 members
-                worldwide.
+                The BMSCE Alumni Network is what happens after convocation — the
+                part where a degree turns into a lifelong community. It spans 58
+                active chapters across 90+ countries, from Bengaluru to the Bay
+                Area to Singapore, each one already meeting, hiring, and looking
+                out for its own. Wherever a BMS graduate lands, a chapter is
+                usually already there.
               </p>
             </Reveal>
+            <Reveal delay={220}>
+              <p className="mt-6 max-w-3xl font-sans text-base leading-relaxed text-ink/70 md:text-lg">
+                But chapters are just the map. What the network actually does is
+                bring alumni back into each other&rsquo;s lives — through the
+                programs below, whether you graduated last summer or thirty years
+                ago.
+              </p>
+            </Reveal>
+          </div>
+        </section>
 
-            <div className="mt-14 grid grid-cols-1 border-l border-t border-gold/30 sm:grid-cols-3">
-              {[
-                { stat: "1946", label: "Founded" },
-                { stat: "A++", label: "NAAC grade" },
-                { stat: "24,000+", label: "Alumni worldwide" },
-              ].map((item, i) => (
-                <Reveal
-                  key={item.label}
-                  delay={i * 90}
-                  className="border-b border-r border-gold/30"
-                >
-                  <div className="px-6 py-8 md:py-10">
-                    <p className="font-display text-4xl text-oxblood">
-                      {item.stat}
-                    </p>
-                    <p className="mt-3 font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-gold">
-                      {item.label}
-                    </p>
-                  </div>
-                </Reveal>
-              ))}
-            </div>
+        {/* B — What we run (plain prose, no cards — matches Section A above) */}
+        <section className="border-t border-gold/30 bg-ivory-dim/30">
+          <div className="mx-auto max-w-7xl px-6 py-20 md:px-10 md:py-28">
+            <Reveal>
+              <Eyebrow>What we run</Eyebrow>
+            </Reveal>
+            <Reveal delay={80}>
+              <h2 className="mt-6 max-w-2xl font-display text-4xl leading-[1.05] text-ink md:text-5xl">
+                Four ways the network shows up.
+              </h2>
+            </Reveal>
+            <Reveal delay={160}>
+              <p className="mt-8 max-w-3xl font-sans text-base leading-relaxed text-ink/70 md:text-lg">
+                Alumni-funded scholarships cover tuition and living costs for BMS
+                students who&rsquo;d otherwise have to choose between the degree
+                and the bill — the network paid it forward, and this is how it
+                comes back. Silver jubilees, decade meetups, and batch dinners
+                bring people together on four continents, because some
+                conversations are just better picked up in person.
+              </p>
+            </Reveal>
+            <Reveal delay={220}>
+              <p className="mt-6 max-w-3xl font-sans text-base leading-relaxed text-ink/70 md:text-lg">
+                An entrepreneurship accelerator backs alumni founders with
+                mentorship, warm introductions, and early customers drawn from
+                within the network itself — three of your first five hires are
+                probably already BMS. And a recruiting bootcamp takes graduating
+                students from campus to offer letter, run by alumni who sit on
+                the other side of the hiring table.
+              </p>
+            </Reveal>
           </div>
         </section>
 
@@ -114,7 +128,7 @@ export default function AboutPage() {
 
               <Reveal delay={160}>
                 <div className="border border-gold/30 bg-ivory-dim/50 p-8 md:p-10">
-                  <h3 className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-gold">
+                  <h3 className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-accent">
                     BMS College of Engineering
                   </h3>
                   <address className="mt-4 not-italic font-sans text-base leading-relaxed text-ink/75">
@@ -133,7 +147,7 @@ export default function AboutPage() {
                       <dd className="mt-1.5">
                         <a
                           href="mailto:bmscealumni@bmsce.ac.in"
-                          className="font-sans text-base text-oxblood underline decoration-gold underline-offset-4 transition-colors hover:text-maroon"
+                          className="font-sans text-base text-oxblood underline decoration-accent underline-offset-4 transition-colors hover:text-maroon"
                         >
                           bmscealumni@bmsce.ac.in
                         </a>
@@ -146,7 +160,7 @@ export default function AboutPage() {
                       <dd className="mt-1.5">
                         <a
                           href="tel:+918660230306"
-                          className="font-sans text-base text-oxblood underline decoration-gold underline-offset-4 transition-colors hover:text-maroon"
+                          className="font-sans text-base text-oxblood underline decoration-accent underline-offset-4 transition-colors hover:text-maroon"
                         >
                           +91 86602 30306
                         </a>

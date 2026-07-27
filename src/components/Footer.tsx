@@ -42,7 +42,11 @@ export default function Footer() {
       <div className="mx-auto max-w-7xl px-6 py-16 md:px-10 md:py-20">
         <div className="grid grid-cols-2 gap-10 md:grid-cols-[1.6fr_1fr_1fr]">
           <div>
-            <Logo className="h-12 w-auto" placeholderClassName="h-12 w-32" />
+            {/* The logo's gears and "ALUMNI NETWORK" wordmark are dark, so on the
+                near-black footer it sits on a light chip to stay legible. */}
+            <span className="inline-flex rounded-md bg-ivory px-3.5 py-2.5">
+              <Logo className="h-11 w-auto" placeholderClassName="h-11 w-32" />
+            </span>
             <p className="mt-5 max-w-[22ch] font-sans text-sm leading-relaxed text-ivory/55">
               The home for every BMS graduate, wherever the world has taken
               them.
@@ -51,7 +55,7 @@ export default function Footer() {
 
           {GROUPS.map((group) => (
             <div key={group.title}>
-              <h3 className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-gold">
+              <h3 className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-ivory/55">
                 {group.title}
               </h3>
               <ul className="mt-5 flex flex-col gap-3">
@@ -83,7 +87,7 @@ export default function Footer() {
                 target="_blank"
                 rel="noreferrer"
                 aria-label={social.label}
-                className="text-ivory/55 transition-colors hover:text-gold"
+                className="text-ivory/55 transition-colors hover:text-accent"
               >
                 <svg
                   viewBox="0 0 24 24"

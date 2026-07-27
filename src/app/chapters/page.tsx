@@ -1,26 +1,31 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Eyebrow from "@/components/Eyebrow";
 import Reveal from "@/components/Reveal";
 import ChapterList from "@/components/ChapterList";
-import StartChapterButton from "@/components/StartChapterButton";
-import { featuredChapters } from "@/data/chapters";
+import { GLOBAL_WHATSAPP_URL } from "@/data/chapters";
+import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
   title: "Chapters — BMSCE Alumni Network",
   description:
-    "Find your city. BMS alumni chapters meet in Bengaluru, London, San Francisco, and dozens of cities worldwide.",
+    "Find your city. BMS alumni chapters meet worldwide — and one global WhatsApp community connects them all.",
 };
 
-function memberLabel(members: number) {
-  if (members >= 1000) {
-    return `${(members / 1000).toFixed(members % 1000 === 0 ? 0 : 1)}k members`;
-  }
-  return `${members} members`;
-}
+// Reads the session to gate the WhatsApp link, so render per-request.
+export const dynamic = "force-dynamic";
 
-export default function ChaptersPage() {
+export default async function ChaptersPage() {
+  // The global WhatsApp community link is members-only: only render it for
+  // signed-in users, so the URL never reaches signed-out visitors' HTML.
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const signedIn = Boolean(user);
+
   return (
     <>
       <Nav />
@@ -38,47 +43,49 @@ export default function ChaptersPage() {
             <Reveal delay={160}>
               <p className="mt-6 max-w-xl font-sans text-base leading-relaxed text-ink/70 md:text-lg">
                 Wherever you have landed, there is likely a table of BMS alumni
-                already meeting nearby. Here is where to find them.
+                already meeting nearby. {signedIn
+                  ? "Join the global WhatsApp community to get connected, then find your chapter below."
+                  : "Sign in to join the global WhatsApp community, then find your chapter below."}
               </p>
             </Reveal>
-          </div>
-        </section>
 
-        {/* Featured chapters */}
-        <section>
-          <div className="mx-auto max-w-7xl px-6 pb-20 md:px-10 md:pb-28">
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {featuredChapters.map((chapter, i) => (
-                <Reveal
-                  key={chapter.city}
-                  delay={Math.min(i, 6) * 70}
-                  className="h-full"
-                >
+            {/* Primary CTA — the one clickable action on the page. There are no
+                per-city join links, only this global community group, and its
+                link is members-only (rendered for signed-in users only). */}
+            <Reveal delay={240}>
+              <div className="mt-10 flex flex-col items-start gap-3">
+                {signedIn ? (
                   <a
-                    href="#"
-                    className="group relative flex aspect-[4/5] h-full flex-col justify-end overflow-hidden rounded-sm border border-gold/25 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-gold/60"
-                    style={{
-                      backgroundImage: `linear-gradient(160deg, ${chapter.gradient[0]}, ${chapter.gradient[1]})`,
-                    }}
+                    href={GLOBAL_WHATSAPP_URL}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="inline-flex items-center gap-2.5 rounded-sm bg-oxblood px-8 py-3.5 font-sans text-[13px] font-medium uppercase tracking-[0.14em] text-ivory transition-colors hover:bg-maroon"
                   >
-                    {/* Readability scrim */}
-                    <div
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
                       aria-hidden="true"
-                      className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/60 via-ink/10 to-transparent"
-                    />
-                    <span className="relative z-10 w-fit rounded-full border border-ivory/30 bg-ink/20 px-3 py-1 font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-ivory/90 backdrop-blur-sm">
-                      {memberLabel(chapter.members)}
-                    </span>
-                    <h2 className="relative z-10 mt-4 font-display text-3xl text-ivory">
-                      {chapter.city}
-                    </h2>
-                    <p className="relative z-10 mt-1 font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-gold">
-                      {chapter.country}
-                    </p>
+                      className="h-[18px] w-[18px]"
+                    >
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                    </svg>
+                    Join the WhatsApp community
                   </a>
-                </Reveal>
-              ))}
-            </div>
+                ) : (
+                  <Link
+                    href="/login?next=/chapters"
+                    className="inline-flex items-center gap-2.5 rounded-sm bg-oxblood px-8 py-3.5 font-sans text-[13px] font-medium uppercase tracking-[0.14em] text-ivory transition-colors hover:bg-maroon"
+                  >
+                    Sign in to join
+                  </Link>
+                )}
+                <p className="font-sans text-xs text-ink/55">
+                  {signedIn
+                    ? "One global group for all BMS alumni — the fastest way in, wherever you are."
+                    : "The WhatsApp community is members-only. Sign in and the link appears here."}
+                </p>
+              </div>
+            </Reveal>
           </div>
         </section>
 
@@ -90,39 +97,12 @@ export default function ChaptersPage() {
             </Reveal>
             <Reveal delay={80}>
               <h2 className="mt-6 max-w-xl font-display text-4xl leading-[1.05] text-ink md:text-5xl">
-                Every city, one list.
+                Every chapter, one list.
               </h2>
             </Reveal>
             <Reveal delay={160}>
               <div className="mt-12">
                 <ChapterList />
-              </div>
-            </Reveal>
-          </div>
-        </section>
-
-        {/* Start a chapter */}
-        <section className="bg-oxblood text-ivory">
-          <div className="mx-auto max-w-3xl px-6 py-20 text-center md:px-10 md:py-28">
-            <Reveal>
-              <Eyebrow tone="ivory" align="center">
-                Don&rsquo;t see your city?
-              </Eyebrow>
-            </Reveal>
-            <Reveal delay={80}>
-              <h2 className="mt-6 font-display text-4xl leading-[1.05] text-ivory md:text-5xl">
-                Start the table yourself.
-              </h2>
-            </Reveal>
-            <Reveal delay={160}>
-              <p className="mx-auto mt-6 max-w-md font-sans text-base leading-relaxed text-ivory/75">
-                It takes one person to gather a city. We will help you find the
-                others and get the first meetup on the calendar.
-              </p>
-            </Reveal>
-            <Reveal delay={240}>
-              <div className="mt-10">
-                <StartChapterButton />
               </div>
             </Reveal>
           </div>

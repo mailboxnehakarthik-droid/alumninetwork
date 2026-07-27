@@ -108,7 +108,7 @@ function MemberCard({
             <h3 className="font-display text-xl text-ink">
               {member.full_name || "Unnamed member"}
               {member.user_type === "student" && (
-                <span className="ml-2 align-middle font-sans text-[10px] font-medium uppercase tracking-[0.12em] text-gold">
+                <span className="ml-2 align-middle font-sans text-[10px] font-medium uppercase tracking-[0.12em] text-accent">
                   Student
                 </span>
               )}
@@ -134,7 +134,7 @@ function MemberCard({
                   href={member.linkedin_url}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-oxblood underline decoration-gold underline-offset-2"
+                  className="text-oxblood underline decoration-accent underline-offset-2"
                 >
                   LinkedIn
                 </a>

@@ -59,7 +59,7 @@ export default function ValueProps({
           {ITEMS.map((item, i) => (
             <Reveal key={item.title} delay={i * 90} className="border-b border-r border-gold/30">
               <a href={item.href} className="group block h-full px-6 py-8 md:py-10">
-                <span className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-gold">
+                <span className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-accent">
                   {item.tag}
                 </span>
                 <h3 className="mt-4 font-display text-2xl italic text-ink">

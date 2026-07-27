@@ -210,7 +210,7 @@ function PostingCardView({
             {posting.type === "job" ? "Job" : "Internship"}
           </span>
           {appliedStatus && (
-            <span className="font-sans text-[10px] font-medium uppercase tracking-[0.12em] text-gold">
+            <span className="font-sans text-[10px] font-medium uppercase tracking-[0.12em] text-accent">
               {STATUS_LABEL[appliedStatus]}
             </span>
           )}
