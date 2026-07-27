@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import Eyebrow from "@/components/Eyebrow";
 import ReportButton from "@/components/ReportButton";
 import { createClient } from "@/lib/supabase/server";
+import { getCareersEnabled } from "@/lib/settings";
 import type { Profile } from "@/lib/types";
 
 export const metadata: Metadata = {
@@ -28,6 +29,10 @@ export default async function DirectoryProfilePage({
   if (!user) redirect("/login");
 
   if (id === user.id) redirect("/profile");
+
+  // Mentorship lives under /careers, so its surfaces stay hidden while Careers
+  // is gated off — even on a profile that happens to be flagged as a mentor.
+  const careersEnabled = await getCareersEnabled();
 
   // RLS decides visibility: verified alumni, or someone connected via a
   // mentorship request / job application.
@@ -120,7 +125,7 @@ export default async function DirectoryProfilePage({
               <Row label={isStudent ? "Student" : "Alumnus"} value={meta} />
               <Row label="LinkedIn" value={p.linkedin_url} isLink />
               <Row label="About" value={p.bio} full />
-              {p.is_mentor && (
+              {p.is_mentor && careersEnabled && (
                 <Row
                   label="Mentoring"
                   value={p.mentor_bio ?? "Available as a mentor"}
@@ -129,7 +134,7 @@ export default async function DirectoryProfilePage({
               )}
             </dl>
 
-            {p.is_mentor && (
+            {p.is_mentor && careersEnabled && (
               <div className="mt-10">
                 <Link
                   href="/careers/mentorship"

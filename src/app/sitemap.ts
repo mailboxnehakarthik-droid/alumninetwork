@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { getCareersEnabled } from "@/lib/settings";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
@@ -11,9 +12,6 @@ const ROUTES = [
   "/chapters",
   "/notable-alumni",
   "/newsletter",
-  "/careers/jobs",
-  "/careers/internships",
-  "/careers/mentorship",
   "/faqs",
   "/give-back",
   "/leadership",
@@ -21,9 +19,19 @@ const ROUTES = [
   "/login",
 ];
 
-export default function sitemap(): MetadataRoute.Sitemap {
+// Only advertised while Careers is enabled — otherwise these redirect to the
+// "not available" gate, so we keep them out of the sitemap entirely.
+const CAREERS_ROUTES = [
+  "/careers/jobs",
+  "/careers/internships",
+  "/careers/mentorship",
+];
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
-  return ROUTES.map((path) => ({
+  const careersEnabled = await getCareersEnabled();
+  const routes = careersEnabled ? [...ROUTES, ...CAREERS_ROUTES] : ROUTES;
+  return routes.map((path) => ({
     url: `${siteUrl}${path}`,
     lastModified: now,
     changeFrequency: "weekly",

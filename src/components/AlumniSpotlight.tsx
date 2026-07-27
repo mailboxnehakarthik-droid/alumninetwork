@@ -1,43 +1,46 @@
 import Eyebrow from "./Eyebrow";
 import Reveal from "./Reveal";
 
-const ALUMNI = [
+type SpotlightAlum = {
+  name: string;
+  // Title/role. Optional — omitted when we only have a name for someone.
+  role?: string;
+  // Batch range, e.g. "1990–1994". Rendered as "Batch of 1990–1994".
+  batch?: string;
+  // Optional headshot. Drop a real photo URL here later and it replaces the
+  // initials square automatically — no code change needed. Do NOT scrape the
+  // web for photos of these real, named people.
+  photoUrl?: string;
+};
+
+// Real BMSCE alumni — name, role, and batch (no fabricated quotes or companies).
+const ALUMNI: SpotlightAlum[] = [
   {
-    initials: "AR",
-    name: "Ananya Rao",
-    role: "Product Lead, Stripe",
-    meta: "Batch of 2014 · San Francisco",
-    quote: "The chapter dinner in SF is where I met my co-founder.",
+    name: "Sujith Somasundar",
+    role: "Former India cricketer",
+    batch: "1990–1994",
   },
+  { name: "Naren", role: "CEO, Nandu Foods", batch: "1991–1995" },
+  { name: "Sunil Rao", role: "MD, Roblox India", batch: "1991–1996" },
   {
-    initials: "KV",
-    name: "Karthik Venkatesh",
-    role: "Founder, Loom Robotics",
-    meta: "Batch of 2009 · Bengaluru",
-    quote: "Three of my first five hires were BMS referrals.",
+    name: "Dinesh Gundu Rao",
+    role: "Member of the Karnataka Legislative Assembly",
+    batch: "1988–1992",
   },
-  {
-    initials: "SP",
-    name: "Sara Pinto",
-    role: "Research Scientist, DeepMind",
-    meta: "Batch of 2017 · London",
-    quote: "My mentor here talked me through the PhD decision.",
-  },
-  {
-    initials: "MI",
-    name: "Mohammed Irfan",
-    role: "VP Engineering, Razorpay",
-    meta: "Batch of 2011 · Bengaluru",
-    quote: "I still recognize the campus in every hire I make.",
-  },
-  {
-    initials: "TN",
-    name: "Tara Nair",
-    role: "Architect, Nair & Bloom Studio",
-    meta: "Batch of 2016 · Singapore",
-    quote: "Found my first client through the directory, month one.",
-  },
+  { name: "Lathika Pai", role: "Microsoft", batch: "1986–1990" },
 ];
+
+// Initials for the avatar square: first + last initial (e.g. "Sujith
+// Somasundar" -> "SS"), or the first two letters of a single-word name.
+function initials(name: string) {
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+// Left-bar accent rotates through the three brand colors (navy / red / plum)
+// so the row has rhythm instead of every card looking identical.
+const ACCENTS = ["border-l-oxblood", "border-l-accent", "border-l-maroon"];
 
 export default function AlumniSpotlight() {
   return (
@@ -56,29 +59,43 @@ export default function AlumniSpotlight() {
           </div>
         </div>
 
-        <div className="mt-16 -mx-6 flex snap-x snap-mandatory gap-6 overflow-x-auto px-6 pb-4 md:mx-0 md:grid md:grid-cols-3 md:gap-8 md:overflow-visible md:px-0 lg:grid-cols-5">
+        {/* One horizontal scroll strip at every breakpoint — all cards sit
+            next to each other rather than wrapping into a grid frame. */}
+        <div className="mt-16 -mx-6 flex snap-x snap-mandatory gap-6 overflow-x-auto px-6 pb-4 md:-mx-10 md:px-10">
           {ALUMNI.map((person, i) => (
             <Reveal
               key={person.name}
               delay={i * 80}
-              className="h-full w-[78vw] shrink-0 snap-start sm:w-[45vw] md:w-auto"
+              className="h-full w-[78vw] shrink-0 snap-start sm:w-[320px]"
             >
-              <article className="flex h-full flex-col border border-gold/25 bg-ivory-dim/60 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-gold/60">
-                <div className="flex h-14 w-14 items-center justify-center border border-gold/40 font-display text-lg italic text-oxblood">
-                  {person.initials}
+              <article
+                className={`flex h-full flex-col rounded-xl border border-gold/25 border-l-4 ${ACCENTS[i % ACCENTS.length]} bg-oxblood/[0.04] p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_34px_-18px_rgba(47,37,68,0.4)]`}
+              >
+                <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-maroon to-oxblood font-display text-lg italic text-ivory">
+                  {person.photoUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={person.photoUrl}
+                      alt={person.name}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    initials(person.name)
+                  )}
                 </div>
                 <h3 className="mt-6 font-display text-xl text-ink">
                   {person.name}
                 </h3>
-                <p className="mt-1 font-sans text-sm text-ink/65">
-                  {person.role}
-                </p>
-                <p className="mt-3 font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-accent">
-                  {person.meta}
-                </p>
-                <p className="mt-5 font-display text-base italic leading-snug text-ink/75">
-                  &ldquo;{person.quote}&rdquo;
-                </p>
+                {person.role && (
+                  <p className="mt-1 font-sans text-sm text-ink/65">
+                    {person.role}
+                  </p>
+                )}
+                {person.batch && (
+                  <p className="mt-1 font-sans text-sm text-ink/55">
+                    Batch of {person.batch}
+                  </p>
+                )}
               </article>
             </Reveal>
           ))}

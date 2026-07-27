@@ -58,7 +58,7 @@ export default async function MemberHome({
           {/* Verification status */}
           {limited && (
             <Reveal delay={200}>
-              <StatusNotice profile={profile} />
+              <StatusNotice profile={profile} careersEnabled={careersEnabled} />
             </Reveal>
           )}
         </div>
@@ -213,7 +213,13 @@ export default async function MemberHome({
   );
 }
 
-function StatusNotice({ profile }: { profile: Profile }) {
+function StatusNotice({
+  profile,
+  careersEnabled = false,
+}: {
+  profile: Profile;
+  careersEnabled?: boolean;
+}) {
   if (profile.verification_status === "rejected") {
     return (
       <div className="mt-10 max-w-2xl rounded-sm border border-oxblood/30 bg-oxblood/5 px-6 py-5">
@@ -242,9 +248,14 @@ function StatusNotice({ profile }: { profile: Profile }) {
       </p>
       <p className="mt-2 font-sans text-sm leading-relaxed text-ink/75">
         An admin is reviewing your profile. Until it&rsquo;s approved you
-        won&rsquo;t appear in the <strong>Directory</strong>, and{" "}
-        <strong>Mentorship</strong> and <strong>Careers</strong> are limited.
-        Everything else is open — this usually doesn&rsquo;t take long.
+        won&rsquo;t appear in the <strong>Directory</strong>
+        {careersEnabled ? (
+          <>
+            , and <strong>Mentorship</strong> and <strong>Careers</strong> are
+            limited
+          </>
+        ) : null}
+        . Everything else is open — this usually doesn&rsquo;t take long.
       </p>
       <Link
         href="/profile"

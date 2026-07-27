@@ -25,11 +25,6 @@ const EXPECT = [
     title: "Alumni spotlights",
     body: "Short profiles of graduates doing remarkable things, wherever their BMS degree has taken them.",
   },
-  {
-    tag: "Careers",
-    title: "Jobs & opportunities",
-    body: "Alumni-only openings and referrals — often shared here before they go anywhere else.",
-  },
 ];
 
 export default async function NewsletterPage() {
@@ -145,7 +140,7 @@ export default async function NewsletterPage() {
               </h2>
             </Reveal>
 
-            <div className="mt-16 grid grid-cols-1 border-l border-t border-gold/30 sm:grid-cols-3">
+            <div className="mt-16 grid grid-cols-1 border-l border-t border-gold/30 sm:grid-cols-2">
               {EXPECT.map((item, i) => (
                 <Reveal
                   key={item.title}
