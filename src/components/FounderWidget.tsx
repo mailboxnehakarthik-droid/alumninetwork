@@ -26,7 +26,7 @@ export default function FounderWidget({
           <Reveal className="justify-self-center lg:justify-self-start">
             {photoUrl ? (
               photoUrl.startsWith("/") ? (
-                <div className="relative aspect-[3/4] w-full max-w-[300px] border border-gold/40">
+                <div className="relative aspect-[3/4] w-[min(240px,85vw)] border border-gold/40">
                   <Image
                     src={photoUrl}
                     alt="B. M. Sreenivasaiah, founder of BMS College of Engineering"
@@ -40,7 +40,7 @@ export default function FounderWidget({
                 <img
                   src={photoUrl}
                   alt="B. M. Sreenivasaiah, founder of BMS College of Engineering"
-                  className="aspect-[3/4] w-full max-w-[300px] border border-gold/40 object-cover"
+                  className="aspect-[3/4] w-[min(240px,85vw)] border border-gold/40 object-cover"
                 />
               )
             ) : (
@@ -48,7 +48,7 @@ export default function FounderWidget({
               <div
                 role="img"
                 aria-label="Founder photo placeholder"
-                className="flex aspect-[3/4] w-full max-w-[300px] flex-col items-center justify-center gap-3 border border-dashed border-gold/50 bg-ivory/5 px-6 text-center"
+                className="flex aspect-[3/4] w-[min(240px,85vw)] flex-col items-center justify-center gap-3 border border-dashed border-gold/50 bg-ivory/5 px-6 text-center"
               >
                 <span className="font-display text-2xl italic text-accent">
                   Founder photo
