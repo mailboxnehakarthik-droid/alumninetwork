@@ -18,6 +18,7 @@ const ROUTES = [
   "/press",
   "/login",
   "/privacy",
+  "/terms",
 ];
 
 // Only advertised while Careers is enabled — otherwise these redirect to the
