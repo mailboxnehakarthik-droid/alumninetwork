@@ -78,6 +78,13 @@ export default function Footer() {
           <p className="font-sans text-xs text-ivory/45">
             &copy; {new Date().getFullYear()} BMSCE Alumni Association. All
             rights reserved.
+            <span className="mx-2 text-ivory/25">·</span>
+            <Link
+              href="/privacy"
+              className="text-ivory/55 transition-colors hover:text-ivory"
+            >
+              Privacy
+            </Link>
           </p>
           <div className="flex items-center gap-5">
             {SOCIALS.map((social) => (
