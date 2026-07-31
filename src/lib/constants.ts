@@ -1,6 +1,7 @@
-// Common BMSCE branches/degrees for the profile dropdown. "Other" lets people
-// type their own.
-export const BRANCHES = [
+// Common BMSCE branches/degrees for the profile dropdown. Sorted alphabetically
+// here at the source so both onboarding and profile-edit (which share this
+// constant) stay in sync. "Other" is the catch-all and stays pinned last.
+const BRANCH_OPTIONS = [
   "Computer Science",
   "Information Science",
   "Electronics & Communication (ECE)",
@@ -15,8 +16,14 @@ export const BRANCHES = [
   "Telecommunication",
   "Aerospace",
   "Architecture",
+];
+
+export const BRANCHES: readonly string[] = [
+  ...[...BRANCH_OPTIONS].sort((a, b) =>
+    a.localeCompare(b, undefined, { sensitivity: "base" })
+  ),
   "Other",
-] as const;
+];
 
 export const EXPERIENCE_LEVELS = [
   "Entry-level",

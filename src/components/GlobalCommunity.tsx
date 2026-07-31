@@ -1,10 +1,13 @@
 import Eyebrow from "./Eyebrow";
 import Reveal from "./Reveal";
+import { CHAPTER_COUNT, COUNTRY_COUNT } from "@/data/chapters";
 
+// Alumni worldwide stays a manually-set number (no live source). Countries and
+// active chapters are derived from the chapters data, so they never go stale.
 const SPREAD = [
   { value: "55,000+", label: "Alumni worldwide" },
-  { value: "90+", label: "Countries" },
-  { value: "58", label: "Active chapters" },
+  { value: String(COUNTRY_COUNT), label: "Countries" },
+  { value: String(CHAPTER_COUNT), label: "Active chapters" },
 ];
 
 export default function GlobalCommunity() {
