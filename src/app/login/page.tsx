@@ -6,7 +6,6 @@ import Footer from "@/components/Footer";
 import Eyebrow from "@/components/Eyebrow";
 import Reveal from "@/components/Reveal";
 import LoginButtons from "./LoginButtons";
-import EmailAuth from "./EmailAuth";
 import { createClient } from "@/lib/supabase/server";
 import { safeNextPath } from "@/lib/nav";
 
@@ -77,23 +76,6 @@ export default async function LoginPage({ searchParams }: Props) {
                   next={next}
                 />
               </div>
-            </Reveal>
-
-            <Reveal delay={280}>
-              <div className="my-7 flex items-center gap-4">
-                <span className="h-px flex-1 bg-gold/30" />
-                <span className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-ink/45">
-                  or with email
-                </span>
-                <span className="h-px flex-1 bg-gold/30" />
-              </div>
-            </Reveal>
-
-            <Reveal delay={300}>
-              <EmailAuth
-                userType={isStudent ? "student" : "alumni"}
-                next={next}
-              />
             </Reveal>
 
             <Reveal delay={320}>
