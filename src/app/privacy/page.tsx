@@ -7,7 +7,7 @@ import Reveal from "@/components/Reveal";
 export const metadata: Metadata = {
   title: "Privacy Policy — BMSCE Alumni Network",
   description:
-    "How the BMSCE Alumni Network collects, uses, shares, and retains your information — and the choices you have over your data.",
+    "How the BMSCE Alumni Network collects, uses, shares, secures, and retains your information — and the rights you have over your data.",
 };
 
 const HEADING = "mt-12 font-display text-2xl text-ink md:text-3xl";
@@ -18,13 +18,14 @@ const LIST =
 function Bullet({ children }: { children: React.ReactNode }) {
   return (
     <li className="flex gap-3">
-      <span
-        aria-hidden="true"
-        className="mt-2.5 h-px w-3 shrink-0 bg-gold"
-      />
+      <span aria-hidden="true" className="mt-2.5 h-px w-3 shrink-0 bg-gold" />
       <span>{children}</span>
     </li>
   );
+}
+
+function Label({ children }: { children: React.ReactNode }) {
+  return <span className="font-medium text-ink">{children}</span>;
 }
 
 const EMAIL = "bmscealumni@bmsce.ac.in";
@@ -46,7 +47,7 @@ export default function PrivacyPage() {
             </Reveal>
             <Reveal delay={140}>
               <p className="mt-5 font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-ink/45">
-                Last updated: July 29, 2026
+                Last updated: July 31, 2026
               </p>
             </Reveal>
 
@@ -66,40 +67,34 @@ export default function PrivacyPage() {
                 </p>
                 <ul className={LIST}>
                   <Bullet>
-                    <span className="font-medium text-ink">
-                      Account information:
-                    </span>{" "}
-                    your name, email address, and profile photo (from Google or
-                    LinkedIn sign-in, or provided directly)
+                    <Label>Account information:</Label> your name, email address,
+                    and profile photo (from Google or LinkedIn sign-in, or
+                    provided directly)
                   </Bullet>
                   <Bullet>
-                    <span className="font-medium text-ink">
-                      Profile details:
-                    </span>{" "}
-                    current city, year of graduation, branch/degree, current
-                    company and job title, a short bio, and your LinkedIn
-                    profile URL
+                    <Label>Profile details:</Label> current city, year of
+                    graduation, branch/degree, current company and job title, a
+                    short bio, and your LinkedIn profile URL
                   </Bullet>
                   <Bullet>
-                    <span className="font-medium text-ink">
-                      Mentorship activity:
-                    </span>{" "}
-                    whether you&rsquo;ve opted in as a mentor or mentee, your
-                    areas of expertise or interests, and messages exchanged
-                    through mentorship requests
+                    <Label>Mentorship activity:</Label> whether you&rsquo;ve
+                    opted in as a mentor or mentee, your areas of expertise or
+                    interests, and messages exchanged through mentorship requests
                   </Bullet>
                   <Bullet>
-                    <span className="font-medium text-ink">
-                      Career activity:
-                    </span>{" "}
-                    job/internship postings and applications, including uploaded
-                    resumes and phone numbers where provided
+                    <Label>Career activity:</Label> job/internship postings and
+                    applications, including uploaded resumes and phone numbers
+                    where provided
                   </Bullet>
                   <Bullet>
-                    <span className="font-medium text-ink">
-                      Usage information:
-                    </span>{" "}
-                    basic activity on the site, such as event RSVPs
+                    <Label>Usage information:</Label> basic activity on the site,
+                    such as event RSVPs
+                  </Bullet>
+                  <Bullet>
+                    <Label>Cookies and similar technologies:</Label> we use
+                    cookies and local storage to maintain your login session,
+                    remember preferences, and support core site functionality. We
+                    do not use cookies for advertising or cross-site tracking.
                   </Bullet>
                 </ul>
 
@@ -125,7 +120,28 @@ export default function PrivacyPage() {
                   <Bullet>
                     Maintain the security and integrity of the platform
                   </Bullet>
+                  <Bullet>
+                    Fulfill our legitimate interest in operating a functioning
+                    alumni network, and where required by applicable law, based on
+                    your consent
+                  </Bullet>
                 </ul>
+
+                <h2 className={HEADING}>Verification</h2>
+                <p className={BODY}>
+                  Verification may involve reviewing your graduation details,
+                  institutional email address, or other information reasonably
+                  necessary to confirm your affiliation with BMS College of
+                  Engineering before granting full access to member features.
+                </p>
+
+                <h2 className={HEADING}>Children&rsquo;s Privacy</h2>
+                <p className={BODY}>
+                  This platform is intended for individuals aged 18 or older. We
+                  do not knowingly collect personal information from children
+                  under 18. If we become aware that we have inadvertently
+                  collected such information, we will take steps to delete it.
+                </p>
 
                 <h2 className={HEADING}>How We Share Information</h2>
                 <p className={BODY}>
@@ -137,42 +153,71 @@ export default function PrivacyPage() {
                 </p>
                 <p className={BODY}>
                   We use Supabase to host our database and manage authentication;
-                  Google and LinkedIn are used solely as sign-in providers and
-                  only receive the standard information required to authenticate
-                  you (typically your name, email, and profile photo).
+                  Supabase acts as our data processor and stores your account and
+                  application data securely on our behalf. Google and LinkedIn are
+                  used solely as sign-in providers and only receive the standard
+                  information required to authenticate you (typically your name,
+                  email, and profile photo).
+                </p>
+                <p className={BODY}>
+                  Information submitted as part of a job or internship application
+                  (including your resume, cover note, and phone number) is shared
+                  only with the specific organization or alumnus who posted that
+                  opportunity — not with the wider network.
                 </p>
 
-                <h2 className={HEADING}>Your Choices</h2>
+                <h2 className={HEADING}>International Users</h2>
                 <p className={BODY}>
-                  You can update or correct your profile information at any time
-                  by signing in and editing your profile. You can request
-                  deletion of your account and associated data from your profile
-                  settings, or by contacting us at the email below.
+                  Alumni may access this service from anywhere in the world. Your
+                  information may be stored and processed on servers located
+                  outside your country of residence, including in jurisdictions
+                  with different data protection laws than your own.
+                </p>
+
+                <h2 className={HEADING}>Security Measures</h2>
+                <p className={BODY}>
+                  We implement reasonable technical and organizational safeguards
+                  to protect your information, including encrypted connections
+                  (HTTPS), secure authentication, row-level database access
+                  controls, and restricted administrative access. However, no
+                  internet-based service can guarantee absolute security, and we
+                  cannot fully eliminate all risk.
+                </p>
+
+                <h2 className={HEADING}>Your Rights</h2>
+                <p className={BODY}>
+                  Depending on your location, you may have the right to access,
+                  correct, or delete your personal data, withdraw from mentorship
+                  participation, and request an export of your information. You can
+                  exercise most of these directly from your profile settings, or
+                  by contacting us at the email below.
                 </p>
 
                 <h2 className={HEADING}>Data Retention</h2>
                 <p className={BODY}>
                   We retain your information for as long as your account is
-                  active. If you delete your account, we will remove your
-                  personal data within a reasonable time, except where retention
-                  is required for legal or security reasons.
+                  active. If you delete your account, we will remove your personal
+                  data within a reasonable time, except where retention is
+                  required for legal or security reasons.
                 </p>
 
                 <h2 className={HEADING}>Contact</h2>
                 <p className={BODY}>
-                  If you have questions about this policy or your data, contact
-                  us at:{" "}
+                  If you have questions about this policy or your data, contact us
+                  at:{" "}
                   <a
                     href={`mailto:${EMAIL}?subject=Privacy%20enquiry`}
                     className="text-oxblood underline decoration-accent underline-offset-4 transition-colors hover:text-maroon"
                   >
                     {EMAIL}
                   </a>
+                  . We aim to respond to privacy-related requests within 30 days.
                 </p>
                 <p className="mt-8 border-t border-gold/25 pt-8 font-sans text-sm leading-relaxed text-ink/55">
-                  This policy may be updated from time to time. Continued use of
-                  the site after changes constitutes acceptance of the updated
-                  policy.
+                  We will post any updates to this Privacy Policy on this page and
+                  revise the &ldquo;Last updated&rdquo; date above. Your continued
+                  use of the website after such updates indicates your acceptance
+                  of the revised policy.
                 </p>
               </div>
             </Reveal>
