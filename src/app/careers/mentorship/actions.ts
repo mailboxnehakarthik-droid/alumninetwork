@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { rateLimit } from "@/lib/rateLimit";
 import type { Profile } from "@/lib/types";
 
 async function currentProfile() {
@@ -91,6 +92,9 @@ export async function sendMentorshipRequest(mentorId: string, message: string) {
   if (mentorId === profile.id) {
     throw new Error("You can't request mentorship from yourself.");
   }
+
+  // Cap mentorship requests per member (spam / abuse guard).
+  await rateLimit(supabase, `mentorship:${profile.id}`, 15, 3600);
 
   // Target must actually be an opted-in, verified alumni mentor.
   const { data: mentor } = await supabase

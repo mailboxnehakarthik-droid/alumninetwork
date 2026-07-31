@@ -2,6 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { rateLimit } from "@/lib/rateLimit";
+import { logAdminAction } from "@/lib/audit";
 import type { ApplicationStatus, PostingType, Profile } from "@/lib/types";
 
 async function currentProfile() {
@@ -102,6 +104,9 @@ export type ApplicationInput = {
 
 export async function applyToPosting(jobId: string, input: ApplicationInput) {
   const { supabase, profile } = await requireVerified();
+
+  // Cap application submissions per member (spam / abuse guard).
+  await rateLimit(supabase, `apply:${profile.id}`, 15, 3600);
 
   const fullName = input.fullName.trim();
   const email = input.email.trim();
@@ -216,6 +221,7 @@ export async function closePosting(jobId: string) {
     .eq("id", jobId);
 
   if (error) throw new Error(error.message);
+  await logAdminAction(supabase, "posting.delete", jobId);
 
   revalidatePath("/careers/my-postings");
   revalidatePath("/careers/jobs");
