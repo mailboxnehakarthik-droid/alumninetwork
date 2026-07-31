@@ -19,15 +19,32 @@ const ALUMNI: SpotlightAlum[] = [
     name: "Sujith Somasundar",
     role: "Former India cricketer",
     batch: "1990–1994",
+    photoUrl: "/sujith-somasundar.jpg",
   },
-  { name: "Naren", role: "CEO, Nandu Foods", batch: "1991–1995" },
-  { name: "Sunil Rao", role: "MD, Roblox India", batch: "1991–1996" },
+  {
+    name: "Naren",
+    role: "CEO, Nandu Foods",
+    batch: "1991–1995",
+    photoUrl: "/naren.jpg",
+  },
+  {
+    name: "Sunil Rao",
+    role: "MD, Roblox India",
+    batch: "1991–1996",
+    photoUrl: "/sunil-rao.jpg",
+  },
   {
     name: "Dinesh Gundu Rao",
     role: "Member of the Karnataka Legislative Assembly",
     batch: "1988–1992",
+    photoUrl: "/dinesh-gundu-rao.jpg",
   },
-  { name: "Lathika Pai", role: "Microsoft", batch: "1986–1990" },
+  {
+    name: "Lathika Pai",
+    role: "Microsoft",
+    batch: "1986–1990",
+    photoUrl: "/lathika-pai.jpg",
+  },
 ];
 
 // Initials for the avatar square: first + last initial (e.g. "Sujith
