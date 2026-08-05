@@ -4,6 +4,7 @@ import { useMemo, useState, useTransition } from "react";
 import Link from "next/link";
 import { setApplicationStatus } from "../../actions";
 import type { ApplicationStatus } from "@/lib/types";
+import MemberPhoto from "@/components/MemberPhoto";
 
 export type ApplicantRow = {
   applicationId: string;
@@ -138,8 +139,7 @@ function ApplicantCard({ row }: { row: ApplicantRow }) {
             className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full border border-gold/40 font-display text-base italic text-oxblood transition-colors hover:border-gold"
           >
             {p.photoUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={p.photoUrl} alt="" className="h-full w-full object-cover" />
+              <MemberPhoto src={p.photoUrl} />
             ) : (
               initials(p.name)
             )}

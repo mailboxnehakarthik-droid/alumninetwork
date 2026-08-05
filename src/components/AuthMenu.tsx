@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import type { Profile } from "@/lib/types";
+import MemberPhoto from "@/components/MemberPhoto";
 
 type State =
   | { status: "loading" }
@@ -150,8 +151,7 @@ export default function AuthMenu({ variant = "desktop" }: { variant?: "desktop" 
         className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full border border-gold/50 bg-ivory-dim transition-colors hover:border-gold"
       >
         {p?.photo_url ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={p.photo_url} alt="" className="h-full w-full object-cover" />
+          <MemberPhoto src={p.photo_url} />
         ) : (
           <span className="font-display text-sm italic text-oxblood">
             {initial}

@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import type { Profile } from "@/lib/types";
+import MemberPhoto from "@/components/MemberPhoto";
 import {
   approveMember,
   rejectMember,
@@ -94,12 +95,7 @@ function MemberCard({
         <div className="flex gap-4">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full border border-gold/40 font-display text-base italic text-oxblood">
             {member.photo_url ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={member.photo_url}
-                alt=""
-                className="h-full w-full object-cover"
-              />
+              <MemberPhoto src={member.photo_url} />
             ) : (
               (member.full_name || "?").charAt(0).toUpperCase()
             )}

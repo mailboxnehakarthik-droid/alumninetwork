@@ -16,7 +16,12 @@ export const dynamic = "force-dynamic";
 type ReportRow = {
   id: string;
   reporter_id: string | null;
-  target_type: "posting" | "profile" | "mentor";
+  target_type:
+    | "posting"
+    | "profile"
+    | "mentor"
+    | "discussion_post"
+    | "discussion_comment";
   target_id: string;
   reason: string | null;
   created_at: string;
@@ -47,14 +52,21 @@ export default async function AdminReportsPage() {
   // Resolve reporter names + a friendly target label.
   const profileIds = new Set<string>();
   const postingIds = new Set<string>();
+  const discPostIds = new Set<string>();
+  const discCommentIds = new Set<string>();
   for (const r of list) {
     if (r.reporter_id) profileIds.add(r.reporter_id);
     if (r.target_type === "posting") postingIds.add(r.target_id);
+    else if (r.target_type === "discussion_post") discPostIds.add(r.target_id);
+    else if (r.target_type === "discussion_comment")
+      discCommentIds.add(r.target_id);
     else profileIds.add(r.target_id);
   }
 
   const nameById = new Map<string, string>();
   const postingById = new Map<string, string>();
+  const discPostById = new Map<string, string>(); // id -> title
+  const discCommentById = new Map<string, { postId: string; snippet: string }>();
   await Promise.all([
     profileIds.size
       ? supabase
@@ -79,16 +91,52 @@ export default async function AdminReportsPage() {
               );
           })
       : Promise.resolve(),
+    discPostIds.size
+      ? supabase
+          .from("discussion_posts")
+          .select("id, title")
+          .in("id", [...discPostIds])
+          .then(({ data }) => {
+            for (const p of data ?? [])
+              discPostById.set(p.id as string, (p.title as string) ?? "");
+          })
+      : Promise.resolve(),
+    discCommentIds.size
+      ? supabase
+          .from("discussion_comments")
+          .select("id, post_id, body")
+          .in("id", [...discCommentIds])
+          .then(({ data }) => {
+            for (const c of data ?? [])
+              discCommentById.set(c.id as string, {
+                postId: c.post_id as string,
+                snippet: ((c.body as string) ?? "")
+                  .replace(/\s+/g, " ")
+                  .trim()
+                  .slice(0, 80),
+              });
+          })
+      : Promise.resolve(),
   ]);
 
-  const targetHref = (r: ReportRow) =>
-    r.target_type === "posting"
-      ? `/careers/openings/${r.target_id}`
-      : `/directory/${r.target_id}`;
-  const targetLabel = (r: ReportRow) =>
-    r.target_type === "posting"
-      ? postingById.get(r.target_id) ?? "Posting"
-      : nameById.get(r.target_id) || "Member profile";
+  const targetHref = (r: ReportRow) => {
+    if (r.target_type === "posting") return `/careers/openings/${r.target_id}`;
+    if (r.target_type === "discussion_post") return `/community/${r.target_id}`;
+    if (r.target_type === "discussion_comment")
+      return `/community/${discCommentById.get(r.target_id)?.postId ?? ""}`;
+    return `/directory/${r.target_id}`;
+  };
+  const targetLabel = (r: ReportRow) => {
+    if (r.target_type === "posting")
+      return postingById.get(r.target_id) ?? "Posting";
+    if (r.target_type === "discussion_post")
+      return discPostById.get(r.target_id) || "Discussion post";
+    if (r.target_type === "discussion_comment") {
+      const c = discCommentById.get(r.target_id);
+      return c ? `“${c.snippet}”` : "Comment";
+    }
+    return nameById.get(r.target_id) || "Member profile";
+  };
 
   return (
     <>

@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { respondToRequest } from "../actions";
+import MemberPhoto from "@/components/MemberPhoto";
 
 export type Person = {
   id: string;
@@ -158,8 +159,7 @@ function Avatar({ person }: { person: Person }) {
   return (
     <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full border border-gold/40 font-display text-base italic text-oxblood">
       {person.photoUrl ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={person.photoUrl} alt="" className="h-full w-full object-cover" />
+        <MemberPhoto src={person.photoUrl} />
       ) : (
         initials(person.name)
       )}

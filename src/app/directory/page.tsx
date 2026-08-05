@@ -9,6 +9,7 @@ import DirectoryControls, {
   type Facets,
 } from "@/components/DirectoryControls";
 import { createClient } from "@/lib/supabase/server";
+import MemberPhoto from "@/components/MemberPhoto";
 
 export const metadata: Metadata = {
   title: "Directory — BMSCE Alumni Network",
@@ -224,8 +225,7 @@ function DirectoryCard({ row, index }: { row: Row; index: number }) {
       >
         <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-full border border-gold/40 font-display text-lg italic text-oxblood">
           {row.photo_url ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={row.photo_url} alt="" className="h-full w-full object-cover" />
+            <MemberPhoto src={row.photo_url} />
           ) : (
             initials(name)
           )}

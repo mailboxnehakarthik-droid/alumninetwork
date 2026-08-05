@@ -8,6 +8,7 @@ import ReportButton from "@/components/ReportButton";
 import { createClient } from "@/lib/supabase/server";
 import { getCareersEnabled } from "@/lib/settings";
 import type { Profile } from "@/lib/types";
+import MemberPhoto from "@/components/MemberPhoto";
 
 export const metadata: Metadata = {
   title: "Profile — BMSCE Alumni Network",
@@ -96,12 +97,7 @@ export default async function DirectoryProfilePage({
             <div className="mt-8 flex items-center gap-5">
               <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-full border border-gold/40 bg-ivory-dim font-display text-2xl italic text-oxblood">
                 {p.photo_url ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={p.photo_url}
-                    alt=""
-                    className="h-full w-full object-cover"
-                  />
+                  <MemberPhoto src={p.photo_url} />
                 ) : (
                   (p.full_name || "?").charAt(0).toUpperCase()
                 )}

@@ -8,7 +8,12 @@ export default function ReportButton({
   targetId,
   label = "Report",
 }: {
-  targetType: "posting" | "profile" | "mentor";
+  targetType:
+    | "posting"
+    | "profile"
+    | "mentor"
+    | "discussion_post"
+    | "discussion_comment";
   targetId: string;
   label?: string;
 }) {

@@ -3,7 +3,12 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 
-type TargetType = "posting" | "profile" | "mentor";
+type TargetType =
+  | "posting"
+  | "profile"
+  | "mentor"
+  | "discussion_post"
+  | "discussion_comment";
 
 /** Any signed-in member can flag content for admin review. */
 export async function reportContent(

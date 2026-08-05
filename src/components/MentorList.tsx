@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import Link from "next/link";
 import Reveal from "./Reveal";
 import { sendMentorshipRequest } from "@/app/careers/mentorship/actions";
+import MemberPhoto from "@/components/MemberPhoto";
 
 export type MentorCard = {
   id: string;
@@ -118,8 +119,7 @@ function MentorCardView({
       <article className="flex h-full flex-col border border-gold/25 bg-ivory-dim/60 p-6 transition-all duration-300 hover:border-gold/60">
         <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-full border border-gold/40 font-display text-lg italic text-oxblood">
           {mentor.photoUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={mentor.photoUrl} alt="" className="h-full w-full object-cover" />
+            <MemberPhoto src={mentor.photoUrl} />
           ) : (
             initials(mentor.name)
           )}

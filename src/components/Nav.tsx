@@ -20,6 +20,9 @@ const BASE_LINKS: NavItem[] = [
   { label: "Newsletter", href: "/newsletter" },
 ];
 
+// Members-only discussions. Only shown to signed-in users.
+const COMMUNITY_ITEM: NavItem = { label: "Community", href: "/community" };
+
 // Only shown when the admin has enabled Careers (site_settings.careers_enabled).
 const CAREERS_ITEM: NavItem = {
   label: "Careers",
@@ -43,6 +46,8 @@ export default function Nav() {
   const [menuOpen, setMenuOpen] = useState(false);
   // Careers is hidden by default and only appears once the admin flag loads on.
   const [careersEnabled, setCareersEnabled] = useState(false);
+  // Community is members-only — shown once we know the visitor is signed in.
+  const [signedIn, setSignedIn] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -67,9 +72,30 @@ export default function Nav() {
     };
   }, []);
 
-  const LINKS: NavItem[] = careersEnabled
-    ? [...BASE_LINKS, CAREERS_ITEM]
-    : BASE_LINKS;
+  useEffect(() => {
+    const supabase = createClient();
+    let active = true;
+    const load = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (active) setSignedIn(Boolean(user));
+    };
+    load();
+    const { data: sub } = supabase.auth.onAuthStateChange(() => load());
+    return () => {
+      active = false;
+      sub.subscription.unsubscribe();
+    };
+  }, []);
+
+  // Community (members-only) sits with Directory; Careers appends when enabled.
+  const LINKS: NavItem[] = [
+    ...BASE_LINKS.slice(0, 4),
+    ...(signedIn ? [COMMUNITY_ITEM] : []),
+    ...BASE_LINKS.slice(4),
+    ...(careersEnabled ? [CAREERS_ITEM] : []),
+  ];
 
   const activeChild = (href: string) => isRoute(href) && pathname === href;
 
