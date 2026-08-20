@@ -5,7 +5,7 @@ import Footer from "@/components/Footer";
 import Eyebrow from "@/components/Eyebrow";
 import OnboardingForm from "./OnboardingForm";
 import { createClient } from "@/lib/supabase/server";
-import type { Profile } from "@/lib/types";
+import type { Profile, EducationEntry } from "@/lib/types";
 
 export const metadata: Metadata = {
   title: "Complete your profile — BMSCE Alumni Network",
@@ -33,6 +33,13 @@ export default async function OnboardingPage() {
     .eq("member_id", user.id)
     .maybeSingle();
 
+  const { data: education } = await supabase
+    .from("education_entries")
+    .select("*")
+    .eq("profile_id", user.id)
+    .order("year", { ascending: false })
+    .returns<EducationEntry[]>();
+
   return (
     <>
       <Nav />
@@ -55,6 +62,7 @@ export default async function OnboardingPage() {
                   (contact?.personal_email as string) ?? ""
                 }
                 email={user.email ?? ""}
+                initialEducation={education ?? []}
               />
             </div>
           </div>

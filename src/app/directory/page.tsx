@@ -20,7 +20,14 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 const PAGE_SIZE = 24;
-const EMPTY_FACETS: Facets = { years: [], branches: [], cities: [], companies: [] };
+const EMPTY_FACETS: Facets = {
+  years: [],
+  branches: [],
+  cities: [],
+  companies: [],
+  industries: [],
+  roles: [],
+};
 
 type Row = {
   id: string;
@@ -30,6 +37,7 @@ type Row = {
   branch: string | null;
   company: string | null;
   job_title: string | null;
+  industry: string | null;
   current_city: string | null;
   photo_url: string | null;
 };
@@ -48,6 +56,8 @@ export default async function DirectoryPage({
   const branch = sp.branch ?? "";
   const city = sp.city ?? "";
   const company = sp.company ?? "";
+  const industry = sp.industry ?? "";
+  const role = sp.role ?? "";
   const page = Math.max(1, Number.parseInt(sp.page ?? "1", 10) || 1);
   const from = (page - 1) * PAGE_SIZE;
   const to = from + PAGE_SIZE - 1;
@@ -82,7 +92,7 @@ export default async function DirectoryPage({
   let query = supabase
     .from("profiles")
     .select(
-      "id, full_name, user_type, graduation_year, branch, company, job_title, current_city, photo_url",
+      "id, full_name, user_type, graduation_year, branch, company, job_title, industry, current_city, photo_url",
       { count: "exact" }
     )
     .eq("verification_status", "verified")
@@ -92,6 +102,8 @@ export default async function DirectoryPage({
   if (branch) query = query.eq("branch", branch);
   if (city) query = query.eq("current_city", city);
   if (company) query = query.eq("company", company);
+  if (industry) query = query.eq("industry", industry);
+  if (role) query = query.eq("job_title", role);
   if (q) query = query.or(`full_name.ilike.%${q}%,company.ilike.%${q}%`);
 
   const [
@@ -119,7 +131,7 @@ export default async function DirectoryPage({
   const rows = data ?? [];
   const total = count ?? 0;
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
-  const hasFilters = !!(q || year || branch || city || company);
+  const hasFilters = !!(q || year || branch || city || company || industry || role);
   const noun = tab === "student" ? "students" : "alumni";
 
   return (
@@ -238,6 +250,9 @@ function DirectoryCard({ row, index }: { row: Row; index: number }) {
         )}
         {roleLine && (
           <p className="mt-2 font-sans text-sm text-ink/65">{roleLine}</p>
+        )}
+        {row.industry && (
+          <p className="mt-1 font-sans text-xs text-ink/50">{row.industry}</p>
         )}
         {batchLine && (
           <p className="mt-3 font-sans text-sm text-ink/55">{batchLine}</p>

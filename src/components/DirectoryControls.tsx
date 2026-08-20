@@ -8,6 +8,8 @@ export type Facets = {
   branches: string[];
   cities: string[];
   companies: string[];
+  industries: string[];
+  roles: string[];
 };
 
 type Tab = "alumni" | "student";
@@ -66,7 +68,9 @@ export default function DirectoryControls({
   const cur = (k: string) => params.get(k) ?? "all";
   const hasFilters =
     !!params.get("q") ||
-    ["year", "branch", "city", "company"].some((k) => params.get(k));
+    ["year", "branch", "city", "company", "industry", "role"].some((k) =>
+      params.get(k)
+    );
 
   return (
     <div>
@@ -116,7 +120,7 @@ export default function DirectoryControls({
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:flex-1">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:flex-1 lg:grid-cols-6">
             <Select
               label={isStudents ? "Class" : "Batch"}
               value={cur("year")}
@@ -148,6 +152,20 @@ export default function DirectoryControls({
               allLabel={isStudents ? "Any company" : "All companies"}
               options={facets.companies.map((c) => ({ value: c, label: c }))}
             />
+            <Select
+              label="Industry"
+              value={cur("industry")}
+              onChange={(v) => navigate({ industry: v === "all" ? null : v })}
+              allLabel="All industries"
+              options={facets.industries.map((c) => ({ value: c, label: c }))}
+            />
+            <Select
+              label="Role"
+              value={cur("role")}
+              onChange={(v) => navigate({ role: v === "all" ? null : v })}
+              allLabel="All roles"
+              options={facets.roles.map((c) => ({ value: c, label: c }))}
+            />
           </div>
 
           {hasFilters && (
@@ -156,7 +174,15 @@ export default function DirectoryControls({
               onClick={() => {
                 setQ("");
                 navigate(
-                  { q: null, year: null, branch: null, city: null, company: null },
+                  {
+                    q: null,
+                    year: null,
+                    branch: null,
+                    city: null,
+                    company: null,
+                    industry: null,
+                    role: null,
+                  },
                   { resetPage: true }
                 );
               }}

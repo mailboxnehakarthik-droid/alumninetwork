@@ -3,8 +3,8 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { BRANCHES } from "@/lib/constants";
-import type { Profile, UserType } from "@/lib/types";
+import { BRANCHES, INDUSTRIES } from "@/lib/constants";
+import type { Profile, UserType, EducationEntry } from "@/lib/types";
 
 const FIELD =
   "w-full rounded-sm border border-gold/40 bg-ivory-dim/40 px-4 py-3 font-sans text-sm text-ink placeholder:text-ink/40 transition-colors focus:border-gold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent";
@@ -17,12 +17,14 @@ export default function OnboardingForm({
   initialPersonalEmail = "",
   email,
   redirectTo = "/",
+  initialEducation = [],
 }: {
   userId: string;
   initial: Profile | null;
   initialPersonalEmail?: string;
   email: string;
   redirectTo?: string;
+  initialEducation?: EducationEntry[];
 }) {
   const router = useRouter();
   const supabase = useMemo(() => createClient(), []);
@@ -49,6 +51,14 @@ export default function OnboardingForm({
   );
   const [company, setCompany] = useState(initial?.company ?? "");
   const [jobTitle, setJobTitle] = useState(initial?.job_title ?? "");
+  const [industry, setIndustry] = useState(initial?.industry ?? "");
+  const [education, setEducation] = useState(
+    initialEducation.map((e) => ({
+      degree: e.degree,
+      institution: e.institution,
+      year: e.year ? String(e.year) : "",
+    }))
+  );
   const [bio, setBio] = useState(initial?.bio ?? "");
   const [linkedin, setLinkedin] = useState(initial?.linkedin_url ?? "");
   const [photoUrl, setPhotoUrl] = useState(initial?.photo_url ?? "");
@@ -173,6 +183,7 @@ export default function OnboardingForm({
           branch: resolvedBranch,
           company: isStudent ? null : company.trim() || null,
           job_title: isStudent ? null : jobTitle.trim() || null,
+          industry: isStudent ? null : industry.trim() || null,
           bio: bio.trim() || null,
           linkedin_url: linkedin.trim() || null,
           photo_url: nextPhotoUrl || null,
@@ -182,6 +193,25 @@ export default function OnboardingForm({
       );
 
       if (upsertErr) throw upsertErr;
+
+      // Sync higher-education entries: replace the member's rows with the
+      // current list. Non-fatal — the profile is already saved.
+      try {
+        const eduRows = education
+          .filter((e) => e.degree.trim() && e.institution.trim())
+          .map((e) => ({
+            profile_id: userId,
+            degree: e.degree.trim(),
+            institution: e.institution.trim(),
+            year: e.year && Number.isInteger(Number(e.year)) ? Number(e.year) : null,
+          }));
+        await supabase.from("education_entries").delete().eq("profile_id", userId);
+        if (eduRows.length) {
+          await supabase.from("education_entries").insert(eduRows);
+        }
+      } catch {
+        // ignore — education is optional and the profile is saved
+      }
 
       // Personal email is sensitive — it lives in member_contacts, never on the
       // profile row. Only college-email students provide one here.
@@ -448,6 +478,20 @@ export default function OnboardingForm({
               placeholder="Software Engineer"
             />
           </Field>
+          <Field label="Industry">
+            <select
+              className={FIELD}
+              value={industry}
+              onChange={(e) => setIndustry(e.target.value)}
+            >
+              <option value="">Select an industry…</option>
+              {INDUSTRIES.map((ind) => (
+                <option key={ind} value={ind}>
+                  {ind}
+                </option>
+              ))}
+            </select>
+          </Field>
         </div>
       )}
 
@@ -473,6 +517,83 @@ export default function OnboardingForm({
           placeholder="https://linkedin.com/in/you"
         />
       </Field>
+
+      {/* Higher education — optional, repeatable (Master's, MBA, PhD, …). */}
+      <div>
+        <span className={LABEL}>Higher education</span>
+        <p className="mt-1 font-sans text-xs text-ink/50">
+          Any degrees beyond your BMS degree — optional.
+        </p>
+        {education.length > 0 && (
+          <div className="mt-3 flex flex-col gap-3">
+            {education.map((ed, i) => (
+              <div
+                key={i}
+                className="grid grid-cols-1 gap-3 sm:grid-cols-[1fr_1fr_90px_auto]"
+              >
+                <input
+                  className={FIELD}
+                  value={ed.degree}
+                  placeholder="Degree (e.g. MBA)"
+                  onChange={(e) =>
+                    setEducation((cur) =>
+                      cur.map((x, j) =>
+                        j === i ? { ...x, degree: e.target.value } : x
+                      )
+                    )
+                  }
+                />
+                <input
+                  className={FIELD}
+                  value={ed.institution}
+                  placeholder="Institution"
+                  onChange={(e) =>
+                    setEducation((cur) =>
+                      cur.map((x, j) =>
+                        j === i ? { ...x, institution: e.target.value } : x
+                      )
+                    )
+                  }
+                />
+                <input
+                  className={FIELD}
+                  value={ed.year}
+                  placeholder="Year"
+                  inputMode="numeric"
+                  onChange={(e) =>
+                    setEducation((cur) =>
+                      cur.map((x, j) =>
+                        j === i ? { ...x, year: e.target.value } : x
+                      )
+                    )
+                  }
+                />
+                <button
+                  type="button"
+                  onClick={() =>
+                    setEducation((cur) => cur.filter((_, j) => j !== i))
+                  }
+                  className="rounded-sm border border-gold/50 px-3 py-2 font-sans text-[11px] font-medium uppercase tracking-[0.12em] text-ink/60 transition-colors hover:border-oxblood hover:text-oxblood"
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+        <button
+          type="button"
+          onClick={() =>
+            setEducation((cur) => [
+              ...cur,
+              { degree: "", institution: "", year: "" },
+            ])
+          }
+          className="mt-3 rounded-sm border border-gold/50 px-4 py-2 font-sans text-[11px] font-medium uppercase tracking-[0.12em] text-ink/70 transition-colors hover:border-oxblood hover:text-oxblood"
+        >
+          + Add education
+        </button>
+      </div>
 
       {error && (
         <p className="rounded-sm border border-oxblood/30 bg-oxblood/5 px-4 py-3 font-sans text-sm text-oxblood">

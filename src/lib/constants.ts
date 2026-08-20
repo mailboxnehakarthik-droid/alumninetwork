@@ -46,3 +46,29 @@ export const MENTOR_EXPERTISE = [
   "Higher Studies / Grad School",
   "Research",
 ] as const;
+
+// Standard industry list for the Directory (filterable, consistent). Sorted at
+// the source; "Other" stays last as the catch-all.
+const INDUSTRY_OPTIONS = [
+  "Technology",
+  "Finance",
+  "Healthcare",
+  "Consulting",
+  "Manufacturing",
+  "Education",
+  "Government",
+  "Design",
+  "Media",
+  "Legal",
+  "Retail",
+  "Energy",
+  "Real Estate",
+  "Nonprofit",
+];
+
+export const INDUSTRIES: readonly string[] = [
+  ...[...INDUSTRY_OPTIONS].sort((a, b) =>
+    a.localeCompare(b, undefined, { sensitivity: "base" })
+  ),
+  "Other",
+];

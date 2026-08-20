@@ -6,7 +6,7 @@ import Footer from "@/components/Footer";
 import Eyebrow from "@/components/Eyebrow";
 import AccountManagement from "./AccountManagement";
 import { createClient } from "@/lib/supabase/server";
-import type { Profile } from "@/lib/types";
+import type { Profile, EducationEntry } from "@/lib/types";
 import MemberPhoto from "@/components/MemberPhoto";
 
 export const metadata: Metadata = {
@@ -30,6 +30,14 @@ export default async function ProfilePage() {
     .single<Profile>();
 
   if (!profile || !profile.onboarded) redirect("/onboarding");
+
+  const { data: education } = await supabase
+    .from("education_entries")
+    .select("*")
+    .eq("profile_id", user.id)
+    .order("year", { ascending: false })
+    .returns<EducationEntry[]>();
+  const eduList = education ?? [];
 
   const isStudent = profile.user_type === "student";
   const detail = [profile.job_title, profile.company].filter(Boolean).join(", ");
@@ -91,6 +99,7 @@ export default async function ProfilePage() {
 
             <dl className="mt-10 grid grid-cols-1 gap-x-10 gap-y-6 border-t border-gold/25 pt-8 sm:grid-cols-2">
               <Row label={isStudent ? "Student" : "Alumnus"} value={meta} />
+              <Row label="Industry" value={profile.industry} />
               <Row label="LinkedIn" value={profile.linkedin_url} isLink />
               <Row
                 label={isStudent ? "Looking for" : "About"}
@@ -98,6 +107,25 @@ export default async function ProfilePage() {
                 full
               />
             </dl>
+
+            {eduList.length > 0 && (
+              <div className="mt-8 border-t border-gold/25 pt-8">
+                <h2 className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-ink/50">
+                  Higher education
+                </h2>
+                <ul className="mt-3 flex flex-col gap-2">
+                  {eduList.map((e) => (
+                    <li key={e.id} className="font-sans text-sm text-ink/80">
+                      <span className="font-medium text-ink">{e.degree}</span>
+                      {e.institution ? `, ${e.institution}` : ""}
+                      {e.year ? (
+                        <span className="text-ink/50"> · {e.year}</span>
+                      ) : null}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
             <AccountManagement userId={profile.id} />
           </div>

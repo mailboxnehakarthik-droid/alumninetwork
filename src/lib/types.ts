@@ -14,6 +14,7 @@ export type Profile = {
   branch: string | null;
   company: string | null;
   job_title: string | null;
+  industry: string | null;
   bio: string | null;
   linkedin_url: string | null;
   photo_url: string | null;
@@ -128,4 +129,13 @@ export type MentorshipRequest = {
   status: MentorshipStatus;
   created_at: string;
   updated_at: string;
+};
+
+export type EducationEntry = {
+  id: string;
+  profile_id: string;
+  degree: string;
+  institution: string;
+  year: number | null;
+  created_at: string;
 };
