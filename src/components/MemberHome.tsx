@@ -1,4 +1,5 @@
 import Link from "next/link";
+import ProfileCompletionNudge from "./ProfileCompletionNudge";
 import Eyebrow from "./Eyebrow";
 import Reveal from "./Reveal";
 import { createClient } from "@/lib/supabase/server";
@@ -31,6 +32,10 @@ export default async function MemberHome({
   const isStudent = profile.user_type === "student";
   const status = profile.verification_status;
   const limited = status !== "verified";
+  // Existing alumni who signed up before industry/role existed get a nudge.
+  const needsProfileCompletion =
+    profile.user_type === "alumni" &&
+    (!profile.industry || !profile.job_title);
 
   return (
     <>
@@ -61,6 +66,8 @@ export default async function MemberHome({
               <StatusNotice profile={profile} careersEnabled={careersEnabled} />
             </Reveal>
           )}
+
+          <ProfileCompletionNudge show={needsProfileCompletion} />
         </div>
       </section>
 
