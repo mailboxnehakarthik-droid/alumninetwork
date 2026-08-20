@@ -34,6 +34,22 @@ export default async function AdminEventsPage() {
     .order("event_date", { ascending: false })
     .returns<EventRow[]>();
 
+  const { data: rsvpRows } = await supabase
+    .from("event_rsvps")
+    .select(
+      "event_id, profile:profiles!event_rsvps_profile_id_fkey(full_name)"
+    )
+    .eq("status", "going")
+    .returns<
+      { event_id: string; profile: { full_name: string | null } | null }[]
+    >();
+  const rsvpsByEvent = new Map<string, string[]>();
+  for (const r of rsvpRows ?? []) {
+    const arr = rsvpsByEvent.get(r.event_id) ?? [];
+    arr.push(r.profile?.full_name || "A member");
+    rsvpsByEvent.set(r.event_id, arr);
+  }
+
   const now = Date.now();
   const list = events ?? [];
 
@@ -89,6 +105,7 @@ export default async function AdminEventsPage() {
                       minute: "2-digit",
                     }
                   );
+                  const rsvpNames = rsvpsByEvent.get(ev.id) ?? [];
                   return (
                     <li
                       key={ev.id}
@@ -113,6 +130,24 @@ export default async function AdminEventsPage() {
                             {ev.location}
                           </p>
                         )}
+                        <details className="mt-3">
+                          <summary className="cursor-pointer font-sans text-[11px] font-medium uppercase tracking-[0.14em] text-oxblood/80">
+                            {rsvpNames.length} RSVP
+                            {rsvpNames.length === 1 ? "" : "s"}
+                          </summary>
+                          {rsvpNames.length > 0 && (
+                            <ul className="mt-2 flex flex-col gap-1">
+                              {rsvpNames.map((nm, i) => (
+                                <li
+                                  key={i}
+                                  className="font-sans text-sm text-ink/70"
+                                >
+                                  {nm}
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </details>
                       </div>
                       <div className="flex shrink-0 items-center gap-2">
                         <Link

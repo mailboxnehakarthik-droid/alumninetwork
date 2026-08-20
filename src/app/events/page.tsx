@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import Eyebrow from "@/components/Eyebrow";
 import Reveal from "@/components/Reveal";
 import SocialFeed from "@/components/SocialFeed";
+import RsvpButton from "./RsvpButton";
 import { createClient } from "@/lib/supabase/server";
 import type { EventRow, SocialPost } from "@/lib/types";
 
@@ -42,6 +43,31 @@ export default async function EventsPage() {
   ]);
 
   const upcoming = events ?? [];
+
+  // RSVP context: who's signed in, whether they can RSVP, their own RSVPs, and
+  // aggregate going-counts (via a security-definer RPC — see SQL).
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const signedIn = Boolean(user);
+  let canRsvp = false;
+  let myRsvps = new Set<string>();
+  if (user) {
+    const { data: me } = await supabase
+      .from("profiles")
+      .select("verification_status")
+      .eq("id", user.id)
+      .single();
+    canRsvp = me?.verification_status === "verified";
+    const { data: mine } = await supabase
+      .from("event_rsvps")
+      .select("event_id")
+      .eq("profile_id", user.id);
+    myRsvps = new Set((mine ?? []).map((r) => r.event_id as string));
+  }
+  const { data: countsJson } = await supabase.rpc("event_going_counts");
+  const counts: Record<string, number> =
+    (countsJson as Record<string, number> | null) ?? {};
 
   return (
     <>
@@ -116,7 +142,15 @@ export default async function EventsPage() {
             ) : (
               <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {upcoming.map((ev, i) => (
-                  <EventCard key={ev.id} event={ev} index={i} />
+                  <EventCard
+                    key={ev.id}
+                    event={ev}
+                    index={i}
+                    going={myRsvps.has(ev.id)}
+                    count={counts[ev.id] ?? 0}
+                    canRsvp={canRsvp}
+                    signedIn={signedIn}
+                  />
                 ))}
               </div>
             )}
@@ -159,7 +193,21 @@ export default async function EventsPage() {
   );
 }
 
-function EventCard({ event, index }: { event: EventRow; index: number }) {
+function EventCard({
+  event,
+  index,
+  going,
+  count,
+  canRsvp,
+  signedIn,
+}: {
+  event: EventRow;
+  index: number;
+  going: boolean;
+  count: number;
+  canRsvp: boolean;
+  signedIn: boolean;
+}) {
   const date = new Date(event.event_date);
   const dateLabel = isNaN(date.getTime())
     ? ""
@@ -198,16 +246,25 @@ function EventCard({ event, index }: { event: EventRow; index: number }) {
               {event.description}
             </p>
           )}
-          {event.rsvp_url && (
-            <a
-              href={event.rsvp_url}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-auto pt-5 font-sans text-[11px] font-medium uppercase tracking-[0.14em] text-oxblood/80 hover:text-oxblood"
-            >
-              RSVP →
-            </a>
-          )}
+          <div className="mt-auto pt-5">
+            {event.rsvp_url && (
+              <a
+                href={event.rsvp_url}
+                target="_blank"
+                rel="noreferrer"
+                className="mb-3 block font-sans text-[11px] font-medium uppercase tracking-[0.14em] text-oxblood/70 hover:text-oxblood"
+              >
+                Event details →
+              </a>
+            )}
+            <RsvpButton
+              eventId={event.id}
+              initialGoing={going}
+              count={count}
+              canRsvp={canRsvp}
+              signedIn={signedIn}
+            />
+          </div>
         </div>
       </article>
     </Reveal>
