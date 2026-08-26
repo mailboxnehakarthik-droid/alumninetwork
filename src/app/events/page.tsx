@@ -249,7 +249,7 @@ function EventCard({
 
   return (
     <Reveal delay={Math.min(index, 6) * 70} className="h-full">
-      <article className="flex h-full flex-col overflow-hidden border border-gold/25 bg-oxblood/[0.04]">
+      <article className="flex h-full flex-col overflow-hidden border border-gold/25 bg-oxblood/[0.10]">
         {event.cover_image_url && (
           <div className="aspect-[16/9] overflow-hidden bg-ivory-dim">
             {/* eslint-disable-next-line @next/next/no-img-element */}

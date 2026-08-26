@@ -72,16 +72,16 @@ export default async function MemberHome({
       </section>
 
       {/* Quick links into real features */}
-      <section className="bg-ink">
+      <section className="border-t border-gold/30">
         <div className="mx-auto max-w-7xl px-6 py-16 md:px-10 md:py-20">
           <Reveal>
-            <h2 className="font-display text-3xl leading-[1.05] text-ivory md:text-4xl">
+            <h2 className="font-display text-3xl leading-[1.05] text-ink md:text-4xl">
               Jump back in.
             </h2>
           </Reveal>
 
           <div
-            className={`mt-10 grid grid-cols-1 border-l border-t border-ivory/15 sm:grid-cols-2 ${
+            className={`mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 ${
               careersEnabled ? "lg:grid-cols-4" : ""
             }`}
           >
@@ -95,6 +95,7 @@ export default async function MemberHome({
                   : "Search alumni by batch, branch, city, or company."
               }
               href="/directory"
+              tone="maroon"
             />
             <QuickLink
               index={1}
@@ -102,6 +103,7 @@ export default async function MemberHome({
               title="What's coming up"
               body="Reunions and meetups, plus highlights from our Instagram."
               href="/events"
+              tone="maroon"
             />
             {careersEnabled && (
               <>
@@ -153,7 +155,7 @@ export default async function MemberHome({
       </section>
 
       {/* Upcoming events */}
-      <section className="bg-ivory-dim/30">
+      <section className="border-t border-gold/30 bg-ivory-dim/30">
         <div className="mx-auto max-w-7xl px-6 py-16 md:px-10 md:py-20">
           <div className="flex items-baseline justify-between">
             <Reveal>
@@ -280,26 +282,50 @@ function QuickLink({
   title,
   body,
   href,
+  tone = "light",
 }: {
   index: number;
   tag: string;
   title: string;
   body: string;
   href: string;
+  tone?: "light" | "maroon";
 }) {
+  const maroon = tone === "maroon";
   return (
-    <Reveal delay={index * 90} className="border-b border-r border-ivory/15">
-      <Link href={href} className="group block h-full px-6 py-8 md:py-10">
+    <Reveal delay={index * 90} className="h-full">
+      <Link
+        href={href}
+        className={`group block h-full rounded-sm p-6 transition-colors md:p-8 ${
+          maroon
+            ? "bg-oxblood"
+            : "border border-gold/30 bg-ivory-dim/40 hover:border-gold/60"
+        }`}
+      >
         <span className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-accent">
           {tag}
         </span>
-        <h3 className="mt-4 font-display text-2xl italic text-ivory">
+        <h3
+          className={`mt-4 font-display text-2xl italic ${
+            maroon ? "text-ivory" : "text-ink"
+          }`}
+        >
           {title}
         </h3>
-        <p className="mt-4 font-sans text-sm leading-relaxed text-ivory/70">
+        <p
+          className={`mt-4 font-sans text-sm leading-relaxed ${
+            maroon ? "text-ivory/75" : "text-ink/65"
+          }`}
+        >
           {body}
         </p>
-        <span className="mt-6 inline-block font-sans text-[11px] font-medium uppercase tracking-[0.14em] text-ivory/60 transition-colors group-hover:text-ivory">
+        <span
+          className={`mt-6 inline-block font-sans text-[11px] font-medium uppercase tracking-[0.14em] transition-colors ${
+            maroon
+              ? "text-ivory/60 group-hover:text-ivory"
+              : "text-oxblood/70 group-hover:text-oxblood"
+          }`}
+        >
           Open →
         </span>
       </Link>
@@ -317,9 +343,9 @@ function FooterLink({
   return (
     <Link
       href={href}
-      className="group font-sans text-[12px] font-medium uppercase tracking-[0.14em] text-ivory"
+      className="group font-sans text-[12px] font-medium uppercase tracking-[0.14em] text-oxblood"
     >
-      <span className="border-b border-ivory/40 pb-1 transition-colors group-hover:border-ivory">
+      <span className="border-b border-gold pb-1 transition-colors group-hover:border-oxblood">
         {children}
       </span>
     </Link>
