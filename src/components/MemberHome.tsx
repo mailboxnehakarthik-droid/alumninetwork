@@ -2,8 +2,7 @@ import Link from "next/link";
 import ProfileCompletionNudge from "./ProfileCompletionNudge";
 import Eyebrow from "./Eyebrow";
 import Reveal from "./Reveal";
-import { createClient } from "@/lib/supabase/server";
-import type { EventRow, Profile } from "@/lib/types";
+import type { Profile } from "@/lib/types";
 
 /**
  * Homepage shown to SIGNED-IN members. Deliberately contains no "Join the
@@ -16,18 +15,6 @@ export default async function MemberHome({
   profile: Profile;
   careersEnabled?: boolean;
 }) {
-  const supabase = await createClient();
-
-  // Upcoming events (table exists; guard anyway so the page never hard-fails).
-  const { data: eventRows } = await supabase
-    .from("events")
-    .select("*")
-    .gte("event_date", new Date().toISOString())
-    .order("event_date", { ascending: true })
-    .limit(3)
-    .returns<EventRow[]>();
-  const upcoming = eventRows ?? [];
-
   const firstName = (profile.full_name ?? "").trim().split(" ")[0] || "there";
   const isStudent = profile.user_type === "student";
   const status = profile.verification_status;
@@ -151,71 +138,6 @@ export default async function MemberHome({
               )}
             </div>
           </Reveal>
-        </div>
-      </section>
-
-      {/* Upcoming events */}
-      <section className="border-t border-gold/30 bg-ivory-dim/30">
-        <div className="mx-auto max-w-7xl px-6 py-16 md:px-10 md:py-20">
-          <div className="flex items-baseline justify-between">
-            <Reveal>
-              <h2 className="font-display text-3xl leading-[1.05] text-ink md:text-4xl">
-                Upcoming events
-              </h2>
-            </Reveal>
-            <Reveal delay={80}>
-              <Link
-                href="/events"
-                className="font-sans text-[12px] font-medium uppercase tracking-[0.14em] text-oxblood underline decoration-accent underline-offset-4 hover:text-maroon"
-              >
-                All events →
-              </Link>
-            </Reveal>
-          </div>
-
-          {upcoming.length === 0 ? (
-            <Reveal delay={120}>
-              <div className="mt-8 border border-dashed border-gold/40 bg-ivory-dim/40 px-6 py-14 text-center">
-                <p className="font-display text-xl italic text-ink">
-                  Nothing on the calendar just yet.
-                </p>
-                <p className="mx-auto mt-3 max-w-md font-sans text-sm leading-relaxed text-ink/65">
-                  Reunions and meetups will show up here as they&rsquo;re
-                  announced.
-                </p>
-              </div>
-            </Reveal>
-          ) : (
-            <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
-              {upcoming.map((ev, i) => {
-                const d = new Date(ev.event_date);
-                const label = isNaN(d.getTime())
-                  ? ""
-                  : d.toLocaleDateString("en-US", {
-                      weekday: "short",
-                      month: "short",
-                      day: "numeric",
-                    });
-                return (
-                  <Reveal key={ev.id} delay={i * 80} className="h-full">
-                    <article className="flex h-full flex-col border border-gold/25 bg-ivory-dim/60 p-6">
-                      <span className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-accent">
-                        {label}
-                      </span>
-                      <h3 className="mt-3 font-display text-xl text-ink">
-                        {ev.title}
-                      </h3>
-                      {ev.location && (
-                        <p className="mt-1 font-sans text-sm text-ink/60">
-                          {ev.location}
-                        </p>
-                      )}
-                    </article>
-                  </Reveal>
-                );
-              })}
-            </div>
-          )}
         </div>
       </section>
     </>
