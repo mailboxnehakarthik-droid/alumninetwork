@@ -101,18 +101,14 @@ export default function AboutPage() {
                 Four ways the network shows up.
               </h2>
             </Reveal>
-            <div className="mt-10 grid max-w-3xl grid-cols-1 border-l border-t border-gold/30 sm:grid-cols-2">
+            <div className="mt-10 max-w-2xl">
               {WHAT_WE_RUN.map((item, i) => (
-                <Reveal
-                  key={item.tag}
-                  delay={160 + i * 60}
-                  className="border-b border-r border-gold/30"
-                >
-                  <div className="h-full px-6 py-7">
+                <Reveal key={item.tag} delay={160 + i * 70}>
+                  <div className="border-t border-gold/25 py-8">
                     <span className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-accent">
                       {item.tag}
                     </span>
-                    <p className="mt-3 font-sans text-sm leading-relaxed text-ink/70">
+                    <p className="mt-3 font-sans text-lg leading-relaxed text-ink/80 md:text-xl">
                       {item.body}
                     </p>
                   </div>
