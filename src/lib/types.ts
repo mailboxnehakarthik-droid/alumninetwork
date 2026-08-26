@@ -47,6 +47,8 @@ export type EventRow = {
   description: string | null;
   event_date: string;
   location: string | null;
+  country: string | null;
+  state: string | null;
   cover_image_url: string | null;
   rsvp_url: string | null;
   created_by: string | null;

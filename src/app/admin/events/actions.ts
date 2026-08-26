@@ -23,6 +23,8 @@ export type EventInput = {
   description: string;
   eventDate: string; // ISO string
   location: string;
+  country: string;
+  state: string;
   coverImageUrl: string;
   rsvpUrl: string;
 };
@@ -38,6 +40,8 @@ function validate(input: EventInput) {
     description: input.description.trim() || null,
     event_date: d.toISOString(),
     location: input.location.trim() || null,
+    country: input.country.trim() || null,
+    state: input.state.trim() || null,
     cover_image_url: input.coverImageUrl.trim() || null,
     rsvp_url: input.rsvpUrl.trim() || null,
   };

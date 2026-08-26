@@ -3,6 +3,7 @@
 import { useState, useTransition, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { createEvent, updateEvent } from "./actions";
+import { COUNTRIES, INDIA_STATES } from "@/lib/constants";
 import type { EventRow } from "@/lib/types";
 
 const FIELD =
@@ -28,6 +29,8 @@ export default function EventForm({ event }: { event?: EventRow }) {
   const [title, setTitle] = useState(event?.title ?? "");
   const [date, setDate] = useState(toLocalInput(event?.event_date ?? null));
   const [location, setLocation] = useState(event?.location ?? "");
+  const [country, setCountry] = useState(event?.country ?? "");
+  const [stateField, setStateField] = useState(event?.state ?? "");
   const [description, setDescription] = useState(event?.description ?? "");
   const [coverImageUrl, setCoverImageUrl] = useState(
     event?.cover_image_url ?? ""
@@ -38,6 +41,16 @@ export default function EventForm({ event }: { event?: EventRow }) {
   const [error, setError] = useState<string | null>(null);
 
   const canSave = title.trim() && date;
+
+  // Switching Country to/away from India changes what State means (a select
+  // of Indian states vs. free text) — clear it so a stale value from the
+  // other mode doesn't linger.
+  const handleCountryChange = (value: string) => {
+    const wasIndia = country === "India";
+    const isIndia = value === "India";
+    setCountry(value);
+    if (wasIndia !== isIndia) setStateField("");
+  };
 
   const submit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -52,6 +65,8 @@ export default function EventForm({ event }: { event?: EventRow }) {
       // datetime-local has no timezone; interpret as local and store as ISO.
       eventDate: date ? new Date(date).toISOString() : "",
       location,
+      country,
+      state: stateField,
       coverImageUrl,
       rsvpUrl,
     };
@@ -113,6 +128,43 @@ export default function EventForm({ event }: { event?: EventRow }) {
                 onChange={(e) => setLocation(e.target.value)}
                 placeholder="BMSCE Campus, Basavanagudi"
               />
+            </Field>
+            <Field label="Country">
+              <select
+                className={FIELD}
+                value={country}
+                onChange={(e) => handleCountryChange(e.target.value)}
+              >
+                <option value="">Select a country…</option>
+                {COUNTRIES.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
+            </Field>
+            <Field label="State / Province">
+              {country === "India" ? (
+                <select
+                  className={FIELD}
+                  value={stateField}
+                  onChange={(e) => setStateField(e.target.value)}
+                >
+                  <option value="">Select a state…</option>
+                  {INDIA_STATES.map((s) => (
+                    <option key={s} value={s}>
+                      {s}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  className={FIELD}
+                  value={stateField}
+                  onChange={(e) => setStateField(e.target.value)}
+                  placeholder="State / Province"
+                />
+              )}
             </Field>
           </div>
         </div>
