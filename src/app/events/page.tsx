@@ -42,8 +42,6 @@ export default async function EventsPage() {
       .returns<SocialPost[]>(),
   ]);
 
-  const upcoming = events ?? [];
-
   // RSVP context: who's signed in, whether they can RSVP, their own RSVPs, and
   // aggregate going-counts (via a security-definer RPC — see SQL).
   const {
@@ -52,13 +50,17 @@ export default async function EventsPage() {
   const signedIn = Boolean(user);
   let canRsvp = false;
   let myRsvps = new Set<string>();
+  let userCountry = "";
+  let userState = "";
   if (user) {
     const { data: me } = await supabase
       .from("profiles")
-      .select("verification_status")
+      .select("verification_status, country, state")
       .eq("id", user.id)
       .single();
     canRsvp = me?.verification_status === "verified";
+    userCountry = (me?.country ?? "").trim().toLowerCase();
+    userState = (me?.state ?? "").trim().toLowerCase();
     const { data: mine } = await supabase
       .from("event_rsvps")
       .select("event_id")
@@ -68,6 +70,25 @@ export default async function EventsPage() {
   const { data: countsJson } = await supabase.rpc("event_going_counts");
   const counts: Record<string, number> =
     (countsJson as Record<string, number> | null) ?? {};
+
+  // Float events near the member's location to the top — never hide any.
+  // Tier 0: same country + state. Tier 1: same country only. Tier 2: rest
+  // (including events with no country set). Skipped entirely for signed-out
+  // users or members with no country on file, so their order stays the
+  // existing soonest-date-first default. Array.sort is stable, and `events`
+  // already arrives ordered by event_date ascending, so ties within a tier
+  // keep resolving to soonest first.
+  const locationTier = (event: EventRow): 0 | 1 | 2 => {
+    const evCountry = (event.country ?? "").trim().toLowerCase();
+    if (!evCountry || evCountry !== userCountry) return 2;
+    const evState = (event.state ?? "").trim().toLowerCase();
+    if (userState && evState && evState === userState) return 0;
+    return 1;
+  };
+
+  const upcoming = userCountry
+    ? [...(events ?? [])].sort((a, b) => locationTier(a) - locationTier(b))
+    : events ?? [];
 
   return (
     <>
@@ -141,17 +162,23 @@ export default async function EventsPage() {
               </Reveal>
             ) : (
               <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {upcoming.map((ev, i) => (
-                  <EventCard
-                    key={ev.id}
-                    event={ev}
-                    index={i}
-                    going={myRsvps.has(ev.id)}
-                    count={counts[ev.id] ?? 0}
-                    canRsvp={canRsvp}
-                    signedIn={signedIn}
-                  />
-                ))}
+                {upcoming.map((ev, i) => {
+                  const tier = userCountry ? locationTier(ev) : 2;
+                  const locationBadge =
+                    tier === 0 ? "Near you" : tier === 1 ? "In your country" : null;
+                  return (
+                    <EventCard
+                      key={ev.id}
+                      event={ev}
+                      index={i}
+                      going={myRsvps.has(ev.id)}
+                      count={counts[ev.id] ?? 0}
+                      canRsvp={canRsvp}
+                      signedIn={signedIn}
+                      locationBadge={locationBadge}
+                    />
+                  );
+                })}
               </div>
             )}
           </div>
@@ -200,6 +227,7 @@ function EventCard({
   count,
   canRsvp,
   signedIn,
+  locationBadge,
 }: {
   event: EventRow;
   index: number;
@@ -207,6 +235,7 @@ function EventCard({
   count: number;
   canRsvp: boolean;
   signedIn: boolean;
+  locationBadge: "Near you" | "In your country" | null;
 }) {
   const date = new Date(event.event_date);
   const dateLabel = isNaN(date.getTime())
@@ -237,8 +266,19 @@ function EventCard({
           </span>
           <h3 className="mt-3 font-display text-xl text-ink">{event.title}</h3>
           {event.location && (
-            <p className="mt-1 font-sans text-sm text-ink/60">
-              {event.location}
+            <p className="mt-1 flex flex-wrap items-center gap-2 font-sans text-sm text-ink/60">
+              <span>{event.location}</span>
+              {locationBadge && (
+                <span
+                  className={`w-fit rounded-full border px-2.5 py-0.5 font-sans text-[10px] font-medium uppercase tracking-[0.12em] ${
+                    locationBadge === "Near you"
+                      ? "border-accent/30 text-accent"
+                      : "border-oxblood/25 text-oxblood/70"
+                  }`}
+                >
+                  {locationBadge}
+                </span>
+              )}
             </p>
           )}
           {event.description && (

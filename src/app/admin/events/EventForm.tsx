@@ -40,7 +40,7 @@ export default function EventForm({ event }: { event?: EventRow }) {
   const [busy, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
-  const canSave = title.trim() && date;
+  const canSave = title.trim() && date && location.trim() && country;
 
   // Switching Country to/away from India changes what State means (a select
   // of Indian states vs. free text) — clear it so a stale value from the
@@ -56,7 +56,7 @@ export default function EventForm({ event }: { event?: EventRow }) {
     e.preventDefault();
     setError(null);
     if (!canSave) {
-      setError("A title and a date are required.");
+      setError("Title, date, location, and country are required.");
       return;
     }
     const input = {
@@ -121,7 +121,7 @@ export default function EventForm({ event }: { event?: EventRow }) {
                 onChange={(e) => setDate(e.target.value)}
               />
             </Field>
-            <Field label="Location">
+            <Field label="Location" required>
               <input
                 className={FIELD}
                 value={location}
@@ -129,7 +129,7 @@ export default function EventForm({ event }: { event?: EventRow }) {
                 placeholder="BMSCE Campus, Basavanagudi"
               />
             </Field>
-            <Field label="Country">
+            <Field label="Country" required>
               <select
                 className={FIELD}
                 value={country}
