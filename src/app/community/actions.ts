@@ -99,6 +99,40 @@ export async function toggleLike(postId: string) {
   revalidatePath("/community");
 }
 
+/** Toggle the current user's like on a comment. */
+export async function toggleCommentLike(commentId: string) {
+  const { supabase, user } = await requireVerified();
+
+  const { data: existing } = await supabase
+    .from("discussion_comment_likes")
+    .select("comment_id")
+    .eq("comment_id", commentId)
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (existing) {
+    const { error } = await supabase
+      .from("discussion_comment_likes")
+      .delete()
+      .eq("comment_id", commentId)
+      .eq("user_id", user.id);
+    if (error) throw new Error(error.message);
+  } else {
+    const { error } = await supabase
+      .from("discussion_comment_likes")
+      .insert({ comment_id: commentId, user_id: user.id });
+    if (error) throw new Error(error.message);
+  }
+
+  const { data: comment } = await supabase
+    .from("discussion_comments")
+    .select("post_id")
+    .eq("id", commentId)
+    .maybeSingle();
+  if (comment?.post_id) revalidatePath(`/community/${comment.post_id}`);
+  revalidatePath("/community");
+}
+
 /** Delete a post — RLS allows the author or an admin (moderation). */
 export async function deletePost(postId: string) {
   const { supabase } = await requireUser();

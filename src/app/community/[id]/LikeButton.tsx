@@ -2,17 +2,19 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { toggleLike } from "../actions";
+import { toggleLike, toggleCommentLike } from "../actions";
 
-export default function LikeButton({
-  postId,
-  liked,
-  count,
-}: {
-  postId: string;
+type LikeButtonProps = {
   liked: boolean;
   count: number;
-}) {
+} & ({ postId: string; commentId?: never } | { commentId: string; postId?: never });
+
+export default function LikeButton({
+  liked,
+  count,
+  postId,
+  commentId,
+}: LikeButtonProps) {
   const router = useRouter();
   // Optimistic local state; the server action + revalidate is the source of truth.
   const [on, setOn] = useState(liked);
@@ -24,7 +26,11 @@ export default function LikeButton({
     setN((v) => v + (on ? -1 : 1));
     startTransition(async () => {
       try {
-        await toggleLike(postId);
+        if (postId) {
+          await toggleLike(postId);
+        } else if (commentId) {
+          await toggleCommentLike(commentId);
+        }
         router.refresh();
       } catch {
         // revert on failure

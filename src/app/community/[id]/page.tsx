@@ -36,6 +36,7 @@ type CommentRow = {
   body: string;
   created_at: string;
   author: Author;
+  likes: { count: number }[];
 };
 
 function initials(name: string | null) {
@@ -129,7 +130,8 @@ export default async function DiscussionPage({
       .from("discussion_comments")
       .select(
         `id, author_id, body, created_at,
-         author:profiles!discussion_comments_author_id_fkey(full_name, photo_url)`
+         author:profiles!discussion_comments_author_id_fkey(full_name, photo_url),
+         likes:discussion_comment_likes(count)`
       )
       .eq("post_id", id)
       .order("created_at", { ascending: true })
@@ -140,6 +142,20 @@ export default async function DiscussionPage({
   const likeCount = post.likes[0]?.count ?? 0;
   const liked = Boolean(myLike);
   const canDeletePost = post.author_id === user.id || isAdmin;
+
+  // Which of these comments the current user has liked — a single bulk query
+  // rather than one per comment.
+  const commentIds = comments.map((c) => c.id);
+  const { data: myCommentLikes } = commentIds.length
+    ? await supabase
+        .from("discussion_comment_likes")
+        .select("comment_id")
+        .eq("user_id", user.id)
+        .in("comment_id", commentIds)
+    : { data: [] as { comment_id: string }[] };
+  const likedCommentIds = new Set(
+    (myCommentLikes ?? []).map((r) => r.comment_id as string)
+  );
 
   return (
     <>
@@ -200,6 +216,8 @@ export default async function DiscussionPage({
                 <ul className="mt-6 flex flex-col gap-6">
                   {comments.map((c) => {
                     const canDelete = c.author_id === user.id || isAdmin;
+                    const commentLikeCount = c.likes[0]?.count ?? 0;
+                    const commentLiked = likedCommentIds.has(c.id);
                     return (
                       <li
                         key={c.id}
@@ -220,6 +238,11 @@ export default async function DiscussionPage({
                           {c.body}
                         </p>
                         <div className="mt-3 flex items-center gap-4">
+                          <LikeButton
+                            commentId={c.id}
+                            liked={commentLiked}
+                            count={commentLikeCount}
+                          />
                           <ReportButton
                             targetType="discussion_comment"
                             targetId={c.id}
