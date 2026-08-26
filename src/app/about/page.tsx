@@ -108,7 +108,7 @@ export default function AboutPage() {
                     <span className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-accent">
                       {item.tag}
                     </span>
-                    <p className="mt-3 font-sans text-lg leading-relaxed text-ink/80 md:text-xl">
+                    <p className="mt-3 font-sans text-base leading-relaxed text-ink/80 md:text-lg">
                       {item.body}
                     </p>
                   </div>
