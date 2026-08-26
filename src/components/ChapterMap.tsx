@@ -13,13 +13,18 @@ import { chapters } from "@/data/chapters";
 // depends on a runtime fetch to a CDN. See src/data/world-110m.json.
 import worldTopoJson from "@/data/world-110m.json";
 
-// 2:1 viewBox — a world map's natural aspect ratio. scale=150.6 was computed
-// with d3-geo's geoEqualEarth().fitSize([800, 400], world) against this exact
-// topojson, so the full world (poles to Antarctica) fits edge-to-edge with no
-// cropping at the default zoom.
+// 2:1 viewBox — a world map's natural aspect ratio. Projection is pinned
+// explicitly to geoEqualEarth (matching what scale/center below were verified
+// against) rather than relying on ComposableMap's default. scale=150 with an
+// explicit center=[0, 0] was checked by replicating react-simple-maps' own
+// projection setup (translate([w/2,h/2]) -> center -> rotate -> scale) against
+// this exact topojson in Node: the projected world bounds land at roughly
+// [1.6, 4.2] to [798.4, 397.6] inside the 800x400 viewBox — i.e. the full
+// world, equator vertically centered, no cropping, ~2px margin on every side.
 const WIDTH = 800;
 const HEIGHT = 400;
-const PROJECTION_CONFIG = { scale: 150.6 };
+const PROJECTION: "geoEqualEarth" = "geoEqualEarth";
+const PROJECTION_CONFIG = { scale: 150, center: [0, 0] as [number, number] };
 
 const DEFAULT_CENTER: [number, number] = [0, 0];
 const MIN_ZOOM = 1;
@@ -59,6 +64,7 @@ export default function ChapterMap() {
         <ComposableMap
           width={WIDTH}
           height={HEIGHT}
+          projection={PROJECTION}
           projectionConfig={PROJECTION_CONFIG}
           role="img"
           aria-label="Map of BMS alumni chapter locations worldwide"
