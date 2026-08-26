@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   ComposableMap,
   Geographies,
@@ -12,23 +13,65 @@ import { chapters } from "@/data/chapters";
 // depends on a runtime fetch to a CDN. See src/data/world-110m.json.
 import worldTopoJson from "@/data/world-110m.json";
 
-// Roughly centered between the Americas, Europe, and Asia — where most
-// chapters actually are — rather than the default [0, 0], which leans on the
-// empty Atlantic/Pacific.
-const MAP_CENTER: [number, number] = [20, 15];
+// 2:1 viewBox — a world map's natural aspect ratio. scale=150.6 was computed
+// with d3-geo's geoEqualEarth().fitSize([800, 400], world) against this exact
+// topojson, so the full world (poles to Antarctica) fits edge-to-edge with no
+// cropping at the default zoom.
+const WIDTH = 800;
+const HEIGHT = 400;
+const PROJECTION_CONFIG = { scale: 150.6 };
+
+const DEFAULT_CENTER: [number, number] = [0, 0];
+const MIN_ZOOM = 1;
+const MAX_ZOOM = 5;
+
+// @types/react-simple-maps declares this as (element: SVGElement) => boolean,
+// but at runtime react-simple-maps forwards the raw d3-zoom event (which has
+// .type/.ctrlKey/.button, not an SVGElement) — see its useZoomPan source.
+// Blocking "wheel" here stops d3-zoom from calling preventDefault on wheel
+// events, so scrolling the page over the map behaves normally; touch
+// (drag-pan, pinch-zoom) and mouse drag are untouched.
+function filterZoomEvent(event: SVGElement) {
+  const e = event as unknown as { type: string; ctrlKey: boolean; button: number };
+  if (e.type === "wheel") return false;
+  return !e.ctrlKey && !e.button;
+}
 
 export default function ChapterMap() {
+  const [center, setCenter] = useState<[number, number]>(DEFAULT_CENTER);
+  const [zoom, setZoom] = useState(MIN_ZOOM);
+
+  const handleMoveEnd = (position: { coordinates: [number, number]; zoom: number }) => {
+    setCenter(position.coordinates);
+    setZoom(position.zoom);
+  };
+
+  const zoomIn = () => setZoom((z) => Math.min(MAX_ZOOM, z * 1.5));
+  const zoomOut = () => setZoom((z) => Math.max(MIN_ZOOM, z / 1.5));
+  const resetView = () => {
+    setCenter(DEFAULT_CENTER);
+    setZoom(MIN_ZOOM);
+  };
+
   return (
     <div>
-      <div className="h-[300px] w-full overflow-hidden rounded-sm border border-gold/30 bg-ivory sm:h-[380px] md:h-[460px] lg:h-[520px]">
+      <div className="relative mx-auto aspect-[2/1] w-full max-h-[520px] overflow-hidden rounded-sm border border-gold/30 bg-ivory">
         <ComposableMap
-          width={800}
-          height={450}
+          width={WIDTH}
+          height={HEIGHT}
+          projectionConfig={PROJECTION_CONFIG}
           role="img"
           aria-label="Map of BMS alumni chapter locations worldwide"
           className="h-full w-full"
         >
-          <ZoomableGroup center={MAP_CENTER} zoom={1} minZoom={1} maxZoom={5}>
+          <ZoomableGroup
+            center={center}
+            zoom={zoom}
+            minZoom={MIN_ZOOM}
+            maxZoom={MAX_ZOOM}
+            onMoveEnd={handleMoveEnd}
+            filterZoomEvent={filterZoomEvent}
+          >
             <Geographies geography={worldTopoJson}>
               {({ geographies }) =>
                 geographies.map((geo) => (
@@ -98,9 +141,39 @@ export default function ChapterMap() {
             ))}
           </ZoomableGroup>
         </ComposableMap>
+
+        {/* Zoom controls — bottom-right, brand-styled, subtle */}
+        <div className="absolute bottom-3 right-3 z-10 flex flex-col overflow-hidden rounded-sm border border-oxblood/25 bg-ivory/90 shadow-sm backdrop-blur-sm">
+          <button
+            type="button"
+            onClick={zoomIn}
+            disabled={zoom >= MAX_ZOOM}
+            aria-label="Zoom in"
+            className="flex h-8 w-8 items-center justify-center border-b border-oxblood/15 font-sans text-base font-semibold leading-none text-oxblood transition-colors hover:bg-oxblood hover:text-ivory disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-oxblood"
+          >
+            +
+          </button>
+          <button
+            type="button"
+            onClick={zoomOut}
+            disabled={zoom <= MIN_ZOOM}
+            aria-label="Zoom out"
+            className="flex h-8 w-8 items-center justify-center border-b border-oxblood/15 font-sans text-base font-semibold leading-none text-oxblood transition-colors hover:bg-oxblood hover:text-ivory disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-oxblood"
+          >
+            −
+          </button>
+          <button
+            type="button"
+            onClick={resetView}
+            aria-label="Reset map view"
+            className="flex h-8 w-8 items-center justify-center font-sans text-xs font-semibold leading-none text-oxblood transition-colors hover:bg-oxblood hover:text-ivory"
+          >
+            ↺
+          </button>
+        </div>
       </div>
-      <p className="mt-3 text-center font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-ink/45">
-        Drag to explore · scroll to zoom
+      <p className="mt-3 hidden text-center font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-ink/45 sm:block">
+        Drag to explore · use + / − to zoom
       </p>
     </div>
   );
