@@ -77,12 +77,12 @@ export default function ChapterList() {
                         src={ch.image}
                         alt=""
                         loading="lazy"
-                        className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.06]"
+                        className="absolute inset-0 h-full w-full object-cover"
                       />
                       {/* Dark gradient — heaviest at the bottom where text sits. */}
                       <div
                         aria-hidden="true"
-                        className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/30 to-transparent transition-colors duration-300 group-hover:from-ink/95"
+                        className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/30 to-transparent"
                       />
                       <div className="absolute inset-x-0 bottom-0 p-4">
                         <h4 className="font-display text-lg font-medium leading-tight text-ivory drop-shadow-sm md:text-xl">

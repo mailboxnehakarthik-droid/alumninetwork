@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import Eyebrow from "@/components/Eyebrow";
 import Reveal from "@/components/Reveal";
 import ChapterList from "@/components/ChapterList";
+import ChapterMap from "@/components/ChapterMap";
 import { GLOBAL_WHATSAPP_URL } from "@/data/chapters";
 import { createClient } from "@/lib/supabase/server";
 
@@ -100,8 +101,13 @@ export default async function ChaptersPage() {
                 Every chapter, one list.
               </h2>
             </Reveal>
+            <Reveal delay={120}>
+              <div className="mt-10">
+                <ChapterMap />
+              </div>
+            </Reveal>
             <Reveal delay={160}>
-              <div className="mt-12">
+              <div className="mt-14">
                 <ChapterList />
               </div>
             </Reveal>
