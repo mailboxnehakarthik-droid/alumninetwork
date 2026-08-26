@@ -48,7 +48,7 @@ export default function SocialFeed({ posts }: { posts: SocialPost[] }) {
   );
 }
 
-function PostCard({ post, index }: { post: SocialPost; index: number }) {
+export function PostCard({ post, index }: { post: SocialPost; index: number }) {
   const isVideo = post.post_type === "Video";
   const isSidecar = post.post_type === "Sidecar";
   const caption = truncate(post.caption ?? "", 120);

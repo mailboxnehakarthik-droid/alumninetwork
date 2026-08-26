@@ -2,7 +2,9 @@ import Link from "next/link";
 import ProfileCompletionNudge from "./ProfileCompletionNudge";
 import Eyebrow from "./Eyebrow";
 import Reveal from "./Reveal";
-import type { Profile } from "@/lib/types";
+import { PostCard } from "./SocialFeed";
+import { createClient } from "@/lib/supabase/server";
+import type { Profile, SocialPost } from "@/lib/types";
 
 /**
  * Homepage shown to SIGNED-IN members. Deliberately contains no "Join the
@@ -15,6 +17,18 @@ export default async function MemberHome({
   profile: Profile;
   careersEnabled?: boolean;
 }) {
+  const supabase = await createClient();
+
+  // 4 most recent Instagram highlights for the homepage teaser — mirrors the
+  // query on the events page's "From our Instagram" section.
+  const { data: postRows } = await supabase
+    .from("social_posts")
+    .select("*")
+    .order("posted_at", { ascending: false })
+    .limit(4)
+    .returns<SocialPost[]>();
+  const posts = postRows ?? [];
+
   const firstName = (profile.full_name ?? "").trim().split(" ")[0] || "there";
   const isStudent = profile.user_type === "student";
   const status = profile.verification_status;
@@ -140,6 +154,39 @@ export default async function MemberHome({
           </Reveal>
         </div>
       </section>
+
+      {/* From our Instagram — teaser, full feed lives on the events page */}
+      {posts.length > 0 && (
+        <section className="border-t border-gold/30 bg-ivory-dim/30">
+          <div className="mx-auto max-w-7xl px-6 py-16 md:px-10 md:py-20">
+            <Reveal>
+              <Eyebrow>From our Instagram</Eyebrow>
+            </Reveal>
+            <Reveal delay={80}>
+              <h2 className="mt-6 font-display text-3xl leading-[1.05] text-ink md:text-4xl">
+                Recent moments.
+              </h2>
+            </Reveal>
+
+            <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {posts.map((post, i) => (
+                <PostCard key={post.id} post={post} index={i} />
+              ))}
+            </div>
+
+            <Reveal delay={200}>
+              <div className="mt-10">
+                <Link
+                  href="/events"
+                  className="font-sans text-[12px] font-medium uppercase tracking-[0.14em] text-oxblood underline decoration-accent underline-offset-4 hover:text-maroon"
+                >
+                  See more on Instagram →
+                </Link>
+              </div>
+            </Reveal>
+          </div>
+        </section>
+      )}
     </>
   );
 }
