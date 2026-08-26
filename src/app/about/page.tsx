@@ -17,6 +17,25 @@ export const metadata: Metadata = {
 // placeholder automatically — no code change needed.
 const FOUNDER_PHOTO_FILE = "founder.jpg";
 
+const WHAT_WE_RUN = [
+  {
+    tag: "Scholarships",
+    body: "Alumni-funded scholarships cover tuition and living costs for BMS students who’d otherwise have to choose between the degree and the bill — the network paid it forward, and this is how it comes back.",
+  },
+  {
+    tag: "Reunions & meetups",
+    body: "Silver jubilees, decade meetups, and batch dinners bring people together on four continents, because some conversations are just better picked up in person.",
+  },
+  {
+    tag: "Entrepreneurship accelerator",
+    body: "An entrepreneurship accelerator backs alumni founders with mentorship, warm introductions, and early customers drawn from within the network itself — three of your first five hires are probably already BMS.",
+  },
+  {
+    tag: "Recruiting bootcamp",
+    body: "And a recruiting bootcamp takes graduating students from campus to offer letter, run by alumni who sit on the other side of the hiring table.",
+  },
+];
+
 function founderPhotoUrl(): string | null {
   try {
     const p = path.join(process.cwd(), "public", FOUNDER_PHOTO_FILE);
@@ -71,7 +90,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* B — What we run (plain prose, no cards — matches Section A above) */}
+        {/* B — What we run */}
         <section className="border-t border-gold/30 bg-ivory-dim/30">
           <div className="mx-auto max-w-7xl px-6 py-20 md:px-10 md:py-28">
             <Reveal>
@@ -82,26 +101,24 @@ export default function AboutPage() {
                 Four ways the network shows up.
               </h2>
             </Reveal>
-            <Reveal delay={160}>
-              <p className="mt-8 max-w-3xl font-sans text-base leading-relaxed text-ink/70 md:text-lg">
-                Alumni-funded scholarships cover tuition and living costs for BMS
-                students who&rsquo;d otherwise have to choose between the degree
-                and the bill — the network paid it forward, and this is how it
-                comes back. Silver jubilees, decade meetups, and batch dinners
-                bring people together on four continents, because some
-                conversations are just better picked up in person.
-              </p>
-            </Reveal>
-            <Reveal delay={220}>
-              <p className="mt-6 max-w-3xl font-sans text-base leading-relaxed text-ink/70 md:text-lg">
-                An entrepreneurship accelerator backs alumni founders with
-                mentorship, warm introductions, and early customers drawn from
-                within the network itself — three of your first five hires are
-                probably already BMS. And a recruiting bootcamp takes graduating
-                students from campus to offer letter, run by alumni who sit on
-                the other side of the hiring table.
-              </p>
-            </Reveal>
+            <div className="mt-10 grid max-w-3xl grid-cols-1 border-l border-t border-gold/30 sm:grid-cols-2">
+              {WHAT_WE_RUN.map((item, i) => (
+                <Reveal
+                  key={item.tag}
+                  delay={160 + i * 60}
+                  className="border-b border-r border-gold/30"
+                >
+                  <div className="h-full px-6 py-7">
+                    <span className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-accent">
+                      {item.tag}
+                    </span>
+                    <p className="mt-3 font-sans text-sm leading-relaxed text-ink/70">
+                      {item.body}
+                    </p>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
           </div>
         </section>
 
