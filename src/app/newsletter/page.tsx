@@ -129,32 +129,32 @@ export default async function NewsletterPage() {
           </div>
         </section>
 
-        <section className="border-t border-gold/30">
+        <section className="bg-oxblood text-ivory">
           <div className="mx-auto max-w-7xl px-6 py-20 md:px-10 md:py-28">
             <Reveal>
-              <Eyebrow>What to expect</Eyebrow>
+              <Eyebrow tone="ivory">What to expect</Eyebrow>
             </Reveal>
             <Reveal delay={80}>
-              <h2 className="mt-6 max-w-xl font-display text-4xl leading-[1.05] text-ink md:text-5xl">
+              <h2 className="mt-6 max-w-xl font-display text-4xl leading-[1.05] text-ivory md:text-5xl">
                 A few times a year, worth the wait.
               </h2>
             </Reveal>
 
-            <div className="mt-16 grid grid-cols-1 border-l border-t border-gold/30 sm:grid-cols-2">
+            <div className="mt-16 grid grid-cols-1 border-l border-t border-ivory/15 sm:grid-cols-2">
               {EXPECT.map((item, i) => (
                 <Reveal
                   key={item.title}
                   delay={i * 90}
-                  className="border-b border-r border-gold/30"
+                  className="border-b border-r border-ivory/15"
                 >
                   <div className="h-full px-6 py-8 md:py-10">
                     <span className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-accent">
                       {item.tag}
                     </span>
-                    <h3 className="mt-4 font-display text-2xl italic text-ink">
+                    <h3 className="mt-4 font-display text-2xl italic text-ivory">
                       {item.title}
                     </h3>
-                    <p className="mt-4 font-sans text-sm leading-relaxed text-ink/65">
+                    <p className="mt-4 font-sans text-sm leading-relaxed text-ivory/70">
                       {item.body}
                     </p>
                   </div>

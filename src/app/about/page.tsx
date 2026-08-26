@@ -127,11 +127,11 @@ export default function AboutPage() {
               </div>
 
               <Reveal delay={160}>
-                <div className="border border-gold/30 bg-ivory-dim/50 p-8 md:p-10">
+                <div className="bg-oxblood p-8 text-ivory md:p-10">
                   <h3 className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-accent">
                     BMS College of Engineering
                   </h3>
-                  <address className="mt-4 not-italic font-sans text-base leading-relaxed text-ink/75">
+                  <address className="mt-4 not-italic font-sans text-base leading-relaxed text-ivory/80">
                     P.O. Box No.: 1908, Bull Temple Road,
                     <br />
                     Bangalore - 560 019,
@@ -139,28 +139,28 @@ export default function AboutPage() {
                     Karnataka, India
                   </address>
 
-                  <dl className="mt-8 flex flex-col gap-5 border-t border-gold/25 pt-8">
+                  <dl className="mt-8 flex flex-col gap-5 border-t border-ivory/20 pt-8">
                     <div>
-                      <dt className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-ink/50">
+                      <dt className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-ivory/55">
                         Email
                       </dt>
                       <dd className="mt-1.5">
                         <a
                           href="mailto:bmscealumni@bmsce.ac.in"
-                          className="font-sans text-base text-oxblood underline decoration-accent underline-offset-4 transition-colors hover:text-maroon"
+                          className="font-sans text-base text-ivory underline decoration-accent underline-offset-4 transition-colors hover:text-gold"
                         >
                           bmscealumni@bmsce.ac.in
                         </a>
                       </dd>
                     </div>
                     <div>
-                      <dt className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-ink/50">
+                      <dt className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-ivory/55">
                         Phone
                       </dt>
                       <dd className="mt-1.5">
                         <a
                           href="tel:+918660230306"
-                          className="font-sans text-base text-oxblood underline decoration-accent underline-offset-4 transition-colors hover:text-maroon"
+                          className="font-sans text-base text-ivory underline decoration-accent underline-offset-4 transition-colors hover:text-gold"
                         >
                           +91 86602 30306
                         </a>

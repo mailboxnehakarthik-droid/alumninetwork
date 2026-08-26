@@ -233,7 +233,7 @@ function DirectoryCard({ row, index }: { row: Row; index: number }) {
     <Reveal delay={Math.min(index, 8) * 50} className="h-full">
       <Link
         href={`/directory/${row.id}`}
-        className="flex h-full flex-col border border-gold/25 bg-ivory-dim/60 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-gold/60"
+        className="flex h-full flex-col border border-gold/25 bg-oxblood/[0.04] p-6 transition-all duration-300 hover:-translate-y-1 hover:border-gold/60"
       >
         <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-full border border-gold/40 font-display text-lg italic text-oxblood">
           {row.photo_url ? (
