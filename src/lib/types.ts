@@ -10,6 +10,8 @@ export type Profile = {
   rejection_reason: string | null;
   full_name: string | null;
   current_city: string | null;
+  country: string | null;
+  state: string | null;
   graduation_year: number | null;
   branch: string | null;
   company: string | null;

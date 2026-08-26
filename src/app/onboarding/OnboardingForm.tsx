@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { BRANCHES, INDUSTRIES } from "@/lib/constants";
+import { BRANCHES, COUNTRIES, INDIA_STATES, INDUSTRIES } from "@/lib/constants";
 import type { Profile, UserType, EducationEntry } from "@/lib/types";
 
 const FIELD =
@@ -38,6 +38,8 @@ export default function OnboardingForm({
   const [done, setDone] = useState(false);
   const [fullName, setFullName] = useState(initial?.full_name ?? "");
   const [city, setCity] = useState(initial?.current_city ?? "");
+  const [country, setCountry] = useState(initial?.country ?? "");
+  const [stateField, setStateField] = useState(initial?.state ?? "");
   const [gradYear, setGradYear] = useState(
     initial?.graduation_year ? String(initial.graduation_year) : ""
   );
@@ -83,6 +85,16 @@ export default function OnboardingForm({
   // Errored inputs get a red border on top of the shared field style.
   const fieldClass = (key: string) =>
     errors[key] ? `${FIELD} border-oxblood/70` : FIELD;
+
+  // Switching Country to/away from India changes what State means (a select
+  // of Indian states vs. free text) — clear it so a stale value from the
+  // other mode doesn't linger.
+  const handleCountryChange = (value: string) => {
+    const wasIndia = country === "India";
+    const isIndia = value === "India";
+    setCountry(value);
+    if (wasIndia !== isIndia) setStateField("");
+  };
 
   const validate = () => {
     const errs: Record<string, string> = {};
@@ -179,6 +191,8 @@ export default function OnboardingForm({
           user_type: userType,
           full_name: fullName.trim() || null,
           current_city: city.trim() || null,
+          country: country.trim() || null,
+          state: stateField.trim() || null,
           graduation_year: gradYear ? Number(gradYear) : null,
           branch: resolvedBranch,
           company: isStudent ? null : company.trim() || null,
@@ -410,6 +424,43 @@ export default function OnboardingForm({
             }}
             placeholder="Bengaluru"
           />
+        </Field>
+        <Field label="Country">
+          <select
+            className={FIELD}
+            value={country}
+            onChange={(e) => handleCountryChange(e.target.value)}
+          >
+            <option value="">Select a country…</option>
+            {COUNTRIES.map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
+          </select>
+        </Field>
+        <Field label="State / Province">
+          {country === "India" ? (
+            <select
+              className={FIELD}
+              value={stateField}
+              onChange={(e) => setStateField(e.target.value)}
+            >
+              <option value="">Select a state…</option>
+              {INDIA_STATES.map((s) => (
+                <option key={s} value={s}>
+                  {s}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <input
+              className={FIELD}
+              value={stateField}
+              onChange={(e) => setStateField(e.target.value)}
+              placeholder="State / Province"
+            />
+          )}
         </Field>
         <Field
           label={isStudent ? "Expected year of graduation" : "Year of graduation"}
