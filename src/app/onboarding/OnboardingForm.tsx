@@ -382,19 +382,38 @@ export default function OnboardingForm({
           )}
         </div>
         <div>
-          <label className={`${LABEL} block cursor-pointer`}>
+          <label
+            htmlFor="onboarding-photo-upload"
+            className={`${LABEL} block cursor-pointer`}
+          >
             Profile photo
-            <input
-              type="file"
-              accept="image/*"
-              className="mt-2 block text-xs text-ink/60 file:mr-3 file:cursor-pointer file:rounded-sm file:border file:border-gold/40 file:bg-ivory-dim/60 file:px-3 file:py-1.5 file:font-sans file:text-[11px] file:uppercase file:tracking-[0.12em] file:text-ink"
-              onChange={(e) => {
-                const f = e.target.files?.[0] ?? null;
-                setPhotoFile(f);
-                if (f) setPhotoUrl(URL.createObjectURL(f));
-              }}
-            />
           </label>
+          <div className="mt-2 flex items-center">
+            <label
+              htmlFor="onboarding-photo-upload"
+              className="mr-3 cursor-pointer rounded-sm border border-gold/40 bg-ivory-dim/60 px-3 py-1.5 font-sans text-[11px] uppercase tracking-[0.12em] text-ink"
+            >
+              {photoUrl ? "Change photo" : "Choose file"}
+            </label>
+            <span className="text-xs text-ink/60">
+              {photoFile
+                ? photoFile.name
+                : photoUrl
+                ? "Current photo shown"
+                : "no file selected"}
+            </span>
+          </div>
+          <input
+            id="onboarding-photo-upload"
+            type="file"
+            accept="image/*"
+            className="sr-only"
+            onChange={(e) => {
+              const f = e.target.files?.[0] ?? null;
+              setPhotoFile(f);
+              if (f) setPhotoUrl(URL.createObjectURL(f));
+            }}
+          />
         </div>
       </div>
 
