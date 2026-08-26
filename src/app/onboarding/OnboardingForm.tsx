@@ -111,6 +111,7 @@ export default function OnboardingForm({
         errs.personalEmail = "Enter a valid email address.";
     }
     if (!city.trim()) errs.city = "This field is required.";
+    if (!country.trim()) errs.country = "Please select your country.";
     if (!gradYear.trim()) {
       errs.gradYear = "This field is required.";
     } else {
@@ -425,11 +426,14 @@ export default function OnboardingForm({
             placeholder="Bengaluru"
           />
         </Field>
-        <Field label="Country">
+        <Field label="Country" required error={errors.country}>
           <select
-            className={FIELD}
+            className={fieldClass("country")}
             value={country}
-            onChange={(e) => handleCountryChange(e.target.value)}
+            onChange={(e) => {
+              handleCountryChange(e.target.value);
+              clearError("country");
+            }}
           >
             <option value="">Select a country…</option>
             {COUNTRIES.map((c) => (
