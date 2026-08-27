@@ -5,6 +5,7 @@ import Link from "next/link";
 import { applyToPosting } from "../../actions";
 import { STATUS_LABEL } from "@/components/PostingsBrowser";
 import { createClient } from "@/lib/supabase/client";
+import { safeUrl } from "@/lib/url";
 import type { ApplicationStatus } from "@/lib/types";
 
 type State =
@@ -42,6 +43,8 @@ export default function ApplyBox({
   externalLink: string | null;
 }) {
   const supabase = useMemo(() => createClient(), []);
+  const linkedinHref = safeUrl(prefill.linkedin);
+  const externalHref = safeUrl(externalLink);
   const [fullName, setFullName] = useState(prefill.fullName);
   const [email, setEmail] = useState(prefill.email);
   const [phone, setPhone] = useState(prefill.phone);
@@ -261,13 +264,13 @@ export default function ApplyBox({
           />
         </ApplyField>
 
-        {prefill.linkedin && (
+        {linkedinHref && (
           <div>
             <span className={LABEL}>LinkedIn (from your profile)</span>
             <a
-              href={prefill.linkedin}
+              href={linkedinHref}
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               className="mt-1 block truncate font-sans text-sm text-oxblood underline decoration-accent underline-offset-2 hover:text-maroon"
             >
               {prefill.linkedin}
@@ -292,11 +295,11 @@ export default function ApplyBox({
         >
           {busy ? "Sending…" : "Submit application"}
         </button>
-        {externalLink && (
+        {externalHref && (
           <a
-            href={externalLink}
+            href={externalHref}
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
             className="font-sans text-[12px] font-medium uppercase tracking-[0.12em] text-oxblood underline decoration-accent underline-offset-4 hover:text-maroon"
           >
             Apply on company site →

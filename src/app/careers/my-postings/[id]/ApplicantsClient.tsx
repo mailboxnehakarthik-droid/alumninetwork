@@ -3,6 +3,7 @@
 import { useMemo, useState, useTransition } from "react";
 import Link from "next/link";
 import { setApplicationStatus } from "../../actions";
+import { safeUrl } from "@/lib/url";
 import type { ApplicationStatus } from "@/lib/types";
 import MemberPhoto from "@/components/MemberPhoto";
 
@@ -109,6 +110,7 @@ function ApplicantCard({ row }: { row: ApplicantRow }) {
   const [busy, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const p = row.person;
+  const resumeHref = safeUrl(row.resumeUrl);
 
   const set = (status: ApplicationStatus) => {
     setError(null);
@@ -173,11 +175,11 @@ function ApplicantCard({ row }: { row: ApplicantRow }) {
                   {row.phone}
                 </a>
               )}
-              {row.resumeUrl ? (
+              {resumeHref ? (
                 <a
-                  href={row.resumeUrl}
+                  href={resumeHref}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   className="inline-flex items-center gap-1 rounded-sm border border-gold/50 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.1em] text-oxblood transition-colors hover:border-oxblood hover:bg-oxblood hover:text-ivory"
                 >
                   ↓ Resume (PDF)

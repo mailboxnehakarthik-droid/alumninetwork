@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import Eyebrow from "@/components/Eyebrow";
 import Reveal from "@/components/Reveal";
 import { createClient } from "@/lib/supabase/server";
+import { safeUrl } from "@/lib/url";
 import type { Newsletter } from "@/lib/types";
 
 export const metadata: Metadata = {
@@ -103,23 +104,39 @@ export default async function NewsletterPage() {
                         {group.year}
                       </div>
                       <ul className="flex flex-col gap-4">
-                        {group.items.map((n) => (
-                          <li key={n.id}>
-                            <a
-                              href={n.pdf_url}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="group flex items-baseline justify-between gap-4 border-b border-gold/15 pb-4 last:border-0 last:pb-0"
-                            >
+                        {group.items.map((n) => {
+                          const pdfHref = safeUrl(n.pdf_url);
+                          const content = (
+                            <>
                               <span className="font-display text-xl italic text-ink transition-colors group-hover:text-oxblood">
                                 {n.title || `${group.year} Edition`}
                               </span>
-                              <span className="shrink-0 font-sans text-[12px] font-medium uppercase tracking-[0.14em] text-oxblood underline decoration-accent underline-offset-4 group-hover:text-maroon">
-                                View PDF →
-                              </span>
-                            </a>
-                          </li>
-                        ))}
+                              {pdfHref && (
+                                <span className="shrink-0 font-sans text-[12px] font-medium uppercase tracking-[0.14em] text-oxblood underline decoration-accent underline-offset-4 group-hover:text-maroon">
+                                  View PDF →
+                                </span>
+                              )}
+                            </>
+                          );
+                          return (
+                            <li key={n.id}>
+                              {pdfHref ? (
+                                <a
+                                  href={pdfHref}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="group flex items-baseline justify-between gap-4 border-b border-gold/15 pb-4 last:border-0 last:pb-0"
+                                >
+                                  {content}
+                                </a>
+                              ) : (
+                                <div className="flex items-baseline justify-between gap-4 border-b border-gold/15 pb-4 last:border-0 last:pb-0">
+                                  {content}
+                                </div>
+                              )}
+                            </li>
+                          );
+                        })}
                       </ul>
                     </div>
                   </Reveal>

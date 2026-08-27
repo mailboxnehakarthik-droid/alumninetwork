@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import Eyebrow from "@/components/Eyebrow";
 import AccountManagement from "./AccountManagement";
 import { createClient } from "@/lib/supabase/server";
+import { safeUrl } from "@/lib/url";
 import type { Profile, EducationEntry } from "@/lib/types";
 import MemberPhoto from "@/components/MemberPhoto";
 
@@ -148,17 +149,18 @@ function Row({
   full?: boolean;
 }) {
   if (!value) return null;
+  const href = isLink ? safeUrl(value) : null;
   return (
     <div className={full ? "sm:col-span-2" : ""}>
       <dt className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-ink/50">
         {label}
       </dt>
       <dd className="mt-1.5 font-sans text-sm leading-relaxed text-ink/80">
-        {isLink ? (
+        {href ? (
           <a
-            href={value}
+            href={href}
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
             className="text-oxblood underline decoration-accent underline-offset-2"
           >
             {value}

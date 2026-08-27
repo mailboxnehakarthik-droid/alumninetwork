@@ -6,6 +6,7 @@ import Reveal from "@/components/Reveal";
 import SocialFeed from "@/components/SocialFeed";
 import RsvpButton from "./RsvpButton";
 import { createClient } from "@/lib/supabase/server";
+import { safeUrl } from "@/lib/url";
 import type { EventRow, SocialPost } from "@/lib/types";
 
 export const metadata: Metadata = {
@@ -246,6 +247,7 @@ function EventCard({
         day: "numeric",
         year: "numeric",
       });
+  const rsvpHref = safeUrl(event.rsvp_url);
 
   return (
     <Reveal delay={Math.min(index, 6) * 70} className="h-full">
@@ -287,11 +289,11 @@ function EventCard({
             </p>
           )}
           <div className="mt-auto pt-5">
-            {event.rsvp_url && (
+            {rsvpHref && (
               <a
-                href={event.rsvp_url}
+                href={rsvpHref}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 className="mb-3 block font-sans text-[11px] font-medium uppercase tracking-[0.14em] text-oxblood/70 hover:text-oxblood"
               >
                 Event details →

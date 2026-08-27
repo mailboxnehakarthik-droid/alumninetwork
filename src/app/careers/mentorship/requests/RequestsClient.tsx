@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { respondToRequest } from "../actions";
 import MemberPhoto from "@/components/MemberPhoto";
+import { safeUrl } from "@/lib/url";
 
 export type Person = {
   id: string;
@@ -169,6 +170,7 @@ function Avatar({ person }: { person: Person }) {
 
 function Contact({ person }: { person: Person }) {
   if (!person.email && !person.linkedin) return null;
+  const linkedinHref = safeUrl(person.linkedin);
   return (
     <div className="mt-4 rounded-xl border border-gold/40 bg-gold/10 px-4 py-3">
       <p className="font-sans text-[11px] font-medium uppercase tracking-[0.14em] text-accent">
@@ -176,11 +178,11 @@ function Contact({ person }: { person: Person }) {
       </p>
       <div className="mt-1.5 flex flex-wrap gap-x-5 gap-y-1 font-sans text-sm text-ink/75">
         {person.email && <span>{person.email}</span>}
-        {person.linkedin && (
+        {linkedinHref && (
           <a
-            href={person.linkedin}
+            href={linkedinHref}
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
             className="text-oxblood underline decoration-accent underline-offset-2"
           >
             LinkedIn

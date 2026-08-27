@@ -2,6 +2,7 @@
 
 import { useState, useTransition, type FormEvent } from "react";
 import { addSocialPost, deleteSocialPost } from "../actions";
+import { safeUrl } from "@/lib/url";
 import type { SocialPost } from "@/lib/types";
 
 const FIELD =
@@ -122,7 +123,9 @@ export default function AddSocialPost({ recent }: { recent: SocialPost[] }) {
         <div>
           <h2 className="font-display text-2xl text-ink">Recently added</h2>
           <ul className="mt-5 flex flex-col gap-3">
-            {recent.map((p) => (
+            {recent.map((p) => {
+              const permalinkHref = safeUrl(p.permalink);
+              return (
               <li
                 key={p.id}
                 className="flex items-center gap-4 rounded-xl border border-gold/25 bg-ivory-dim/40 p-4"
@@ -141,11 +144,11 @@ export default function AddSocialPost({ recent }: { recent: SocialPost[] }) {
                   <p className="truncate font-sans text-sm text-ink/80">
                     {p.caption || p.permalink || "(no caption)"}
                   </p>
-                  {p.permalink && (
+                  {permalinkHref && (
                     <a
-                      href={p.permalink}
+                      href={permalinkHref}
                       target="_blank"
-                      rel="noreferrer"
+                      rel="noopener noreferrer"
                       className="font-sans text-xs text-oxblood/70 underline decoration-accent underline-offset-2"
                     >
                       {p.permalink}
@@ -161,7 +164,8 @@ export default function AddSocialPost({ recent }: { recent: SocialPost[] }) {
                   Delete
                 </button>
               </li>
-            ))}
+              );
+            })}
           </ul>
         </div>
       )}

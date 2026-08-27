@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import type { Profile } from "@/lib/types";
 import MemberPhoto from "@/components/MemberPhoto";
+import { safeUrl } from "@/lib/url";
 import {
   approveMember,
   rejectMember,
@@ -88,6 +89,7 @@ function MemberCard({
   ]
     .filter(Boolean)
     .join(" · ");
+  const linkedinHref = safeUrl(member.linkedin_url);
 
   return (
     <li className="rounded-2xl border border-gold/25 bg-ivory-dim/50 p-6">
@@ -125,11 +127,11 @@ function MemberCard({
                 <span>{contact.personal_email}</span>
               )}
               {contact?.college_email && <span>{contact.college_email}</span>}
-              {member.linkedin_url && (
+              {linkedinHref && (
                 <a
-                  href={member.linkedin_url}
+                  href={linkedinHref}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   className="text-oxblood underline decoration-accent underline-offset-2"
                 >
                   LinkedIn

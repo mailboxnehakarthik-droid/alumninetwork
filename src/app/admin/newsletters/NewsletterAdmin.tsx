@@ -9,6 +9,7 @@ import {
 } from "react";
 import { addNewsletter, deleteNewsletter } from "../actions";
 import { createClient } from "@/lib/supabase/client";
+import { safeUrl } from "@/lib/url";
 import type { Newsletter } from "@/lib/types";
 
 const FIELD =
@@ -175,7 +176,9 @@ export default function NewsletterAdmin({
         <div>
           <h2 className="font-display text-2xl text-ink">In the archive</h2>
           <ul className="mt-5 flex flex-col gap-3">
-            {existing.map((n) => (
+            {existing.map((n) => {
+              const pdfHref = safeUrl(n.pdf_url);
+              return (
               <li
                 key={n.id}
                 className="flex items-center gap-4 rounded-xl border border-gold/25 bg-ivory-dim/40 p-4"
@@ -184,14 +187,20 @@ export default function NewsletterAdmin({
                   {n.year}
                 </span>
                 <div className="min-w-0 flex-1">
-                  <a
-                    href={n.pdf_url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="block truncate font-sans text-sm text-oxblood underline decoration-accent underline-offset-4 hover:text-maroon"
-                  >
-                    {n.title || `Newsletter ${n.year}`}
-                  </a>
+                  {pdfHref ? (
+                    <a
+                      href={pdfHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block truncate font-sans text-sm text-oxblood underline decoration-accent underline-offset-4 hover:text-maroon"
+                    >
+                      {n.title || `Newsletter ${n.year}`}
+                    </a>
+                  ) : (
+                    <span className="block truncate font-sans text-sm text-ink/60">
+                      {n.title || `Newsletter ${n.year}`}
+                    </span>
+                  )}
                 </div>
                 <button
                   type="button"
@@ -202,7 +211,8 @@ export default function NewsletterAdmin({
                   Delete
                 </button>
               </li>
-            ))}
+              );
+            })}
           </ul>
         </div>
       )}
