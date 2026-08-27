@@ -15,7 +15,11 @@ import worldTopoJson from "@/data/world-110m.json";
 // ssr: false from ChapterMap.tsx), so touching `Globe`/`three` here at import
 // time never runs during SSR.
 
-type ChapterPoint = { lat: number; lng: number; name: string };
+// Each chapter renders as two stacked points at the same coordinate: a wider
+// navy "ring" underneath and a smaller ivory "disc" on top, at a hair more
+// altitude. three-globe's points layer has no native stroke/outline, so this
+// is what gives the flat dot marker its outlined look.
+type ChapterDot = { lat: number; lng: number; name: string; role: "ring" | "disc" };
 
 // Land is the site's actual deep-maroon token (matches the maroon boxes/cards
 // elsewhere), with a darker maroon for country outlines so borders stay
@@ -23,64 +27,16 @@ type ChapterPoint = { lat: number; lng: number; name: string };
 const LAND_FILL = "#71293c"; // maroon token
 const LAND_STROKE = "#5a1f2f"; // darker maroon, for definition
 const LAND_SIDE = "rgba(90, 31, 47, 0.35)"; // darker maroon, low alpha
-// Ivory-fill, navy-stroke teardrop pins so they read clearly against both
-// the deep-maroon land and the white ocean.
-const PIN_FILL = "#f7f3ec"; // ivory
-const PIN_STROKE = "#2f2544"; // navy (oxblood/ink family)
+// Ivory-fill, navy-stroke dot markers so they read clearly against both the
+// deep-maroon land and the white ocean.
+const DOT_FILL = "#f7f3ec"; // ivory
+const DOT_STROKE = "#2f2544"; // navy (oxblood/ink family)
+const DOT_RADIUS = 0.9; // ~2x the original 0.45
+const RING_RADIUS = 1.15;
 
 // Ocean/base sphere: a plain light ivory fill.
 function createOceanMaterial() {
   return new MeshPhongMaterial({ color: "#f8f9fb", shininess: 4 });
-}
-
-// Classic teardrop/map-pin: rounded head, pointed tip. The wrapper has zero
-// intrinsic size — three-globe's CSS2DObject centers it at the geo point —
-// so the pin SVG (an absolutely-positioned child) can be shifted by its own
-// half-width/full-height via translate(-50%, -100%) to put its POINTED TIP
-// exactly on that point, with the rounded head floating above it.
-function createPinElement(name: string): HTMLElement {
-  const wrapper = document.createElement("div");
-  wrapper.style.position = "relative";
-  wrapper.style.width = "0px";
-  wrapper.style.height = "0px";
-
-  const pin = document.createElement("div");
-  pin.style.position = "absolute";
-  pin.style.left = "0";
-  pin.style.top = "0";
-  pin.style.transform = "translate(-50%, -100%)";
-  pin.style.cursor = "pointer";
-  pin.innerHTML = `
-    <svg width="18" height="24" viewBox="0 0 18 24" xmlns="http://www.w3.org/2000/svg" style="display:block;">
-      <path
-        d="M9 0C4.03 0 0 4.03 0 9c0 6.75 9 15 9 15s9-8.25 9-15c0-4.97-4.03-9-9-9z"
-        fill="${PIN_FILL}"
-        stroke="${PIN_STROKE}"
-        stroke-width="1.5"
-      />
-    </svg>
-  `;
-
-  const label = document.createElement("div");
-  label.textContent = name;
-  label.style.cssText = `
-    position:absolute; left:50%; bottom:calc(100% + 6px); transform:translateX(-50%);
-    background:${PIN_FILL}; color:${PIN_STROKE}; border:1px solid ${PIN_STROKE};
-    padding:3px 8px; border-radius:3px; white-space:nowrap;
-    font:600 11px/1.2 var(--font-sans, ui-sans-serif, system-ui, sans-serif);
-    opacity:0; pointer-events:none; transition:opacity 0.15s ease;
-  `;
-  pin.appendChild(label);
-
-  pin.addEventListener("mouseenter", () => {
-    label.style.opacity = "1";
-  });
-  pin.addEventListener("mouseleave", () => {
-    label.style.opacity = "0";
-  });
-
-  wrapper.appendChild(pin);
-  return wrapper;
 }
 
 const worldTopology = worldTopoJson as unknown as Topology;
@@ -103,13 +59,12 @@ export default function ChapterGlobeInner({
 
   const oceanMaterial = useMemo(() => createOceanMaterial(), []);
 
-  const points = useMemo<ChapterPoint[]>(
+  const dots = useMemo<ChapterDot[]>(
     () =>
-      chapters.map((c) => ({
-        lat: c.coordinates[1],
-        lng: c.coordinates[0],
-        name: c.name,
-      })),
+      chapters.flatMap((c) => [
+        { lat: c.coordinates[1], lng: c.coordinates[0], name: c.name, role: "ring" as const },
+        { lat: c.coordinates[1], lng: c.coordinates[0], name: c.name, role: "disc" as const },
+      ]),
     []
   );
 
@@ -176,11 +131,19 @@ export default function ChapterGlobeInner({
       polygonSideColor={() => LAND_SIDE}
       polygonStrokeColor={() => LAND_STROKE}
       polygonAltitude={0.006}
-      htmlElementsData={points}
-      htmlLat="lat"
-      htmlLng="lng"
-      htmlAltitude={0.02}
-      htmlElement={(d) => createPinElement((d as ChapterPoint).name)}
+      pointsData={dots}
+      pointLat="lat"
+      pointLng="lng"
+      pointColor={(d) => ((d as ChapterDot).role === "ring" ? DOT_STROKE : DOT_FILL)}
+      pointRadius={(d) => ((d as ChapterDot).role === "ring" ? RING_RADIUS : DOT_RADIUS)}
+      pointAltitude={(d) => ((d as ChapterDot).role === "ring" ? 0.008 : 0.009)}
+      pointResolution={24}
+      pointsMerge={false}
+      pointLabel={(d) =>
+        `<div style="background:${DOT_FILL};color:${DOT_STROKE};border:1px solid ${DOT_STROKE};padding:3px 8px;border-radius:3px;font:600 11px/1.2 var(--font-sans, ui-sans-serif, system-ui, sans-serif);white-space:nowrap;">${
+          (d as ChapterDot).name
+        }</div>`
+      }
     />
   );
 }
