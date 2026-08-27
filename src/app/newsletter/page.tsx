@@ -129,13 +129,13 @@ export default async function NewsletterPage() {
           </div>
         </section>
 
-        <section className="bg-oxblood text-ivory">
+        <section className="border-t border-gold/30">
           <div className="mx-auto max-w-7xl px-6 py-20 md:px-10 md:py-28">
             <Reveal>
-              <Eyebrow tone="ivory">What to expect</Eyebrow>
+              <Eyebrow>What to expect</Eyebrow>
             </Reveal>
             <Reveal delay={80}>
-              <h2 className="mt-6 max-w-xl font-display text-4xl leading-[1.05] text-ivory md:text-5xl">
+              <h2 className="mt-6 max-w-xl font-display text-4xl leading-[1.05] text-ink md:text-5xl">
                 A few times a year, worth the wait.
               </h2>
             </Reveal>
