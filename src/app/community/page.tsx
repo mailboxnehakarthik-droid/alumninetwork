@@ -149,7 +149,7 @@ export default async function CommunityPage({
                   <li key={p.id}>
                     <Link
                       href={`/community/${p.id}`}
-                      className="group block border border-gold/25 bg-ivory-dim/50 p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/60"
+                      className="group block rounded-2xl border border-gold/25 bg-ivory-dim/50 p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/60"
                     >
                       <h2 className="font-display text-xl leading-snug text-ink transition-colors group-hover:text-oxblood md:text-2xl">
                         {p.title}

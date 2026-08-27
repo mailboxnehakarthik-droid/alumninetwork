@@ -48,7 +48,7 @@ export default function ChapterList() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search chapters…"
-            className="w-full rounded-sm border border-gold/40 bg-ivory-dim/40 px-4 py-2.5 font-sans text-sm text-ink placeholder:text-ink/40 transition-colors focus:border-gold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            className="w-full rounded-xl border border-gold/40 bg-ivory-dim/40 px-4 py-2.5 font-sans text-sm text-ink placeholder:text-ink/40 transition-colors focus:border-gold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
           />
         </div>
         <p className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-ink/55">

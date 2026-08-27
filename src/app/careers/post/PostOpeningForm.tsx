@@ -7,7 +7,7 @@ import { EXPERIENCE_LEVELS } from "@/lib/constants";
 import type { PostingType } from "@/lib/types";
 
 const FIELD =
-  "w-full rounded-sm border border-gold/40 bg-ivory-dim/40 px-4 py-3 font-sans text-sm text-ink placeholder:text-ink/40 transition-colors focus:border-gold focus:outline-none";
+  "w-full rounded-xl border border-gold/40 bg-ivory-dim/40 px-4 py-3 font-sans text-sm text-ink placeholder:text-ink/40 transition-colors focus:border-gold focus:outline-none";
 const LABEL =
   "font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-ink/60";
 
@@ -126,7 +126,7 @@ export default function PostOpeningForm() {
             <>
               <div>
                 <span className={LABEL}>This is a…</span>
-                <div className="mt-3 inline-flex rounded-sm border border-gold/40 p-1">
+                <div className="mt-3 inline-flex rounded-xl border border-gold/40 p-1">
                   {(["job", "internship"] as const).map((t) => (
                     <button
                       key={t}
@@ -199,7 +199,7 @@ export default function PostOpeningForm() {
             <>
               <div>
                 <span className={LABEL}>Skills</span>
-                <div className="mt-2 flex flex-wrap items-center gap-2 rounded-sm border border-gold/40 bg-ivory-dim/40 px-3 py-2.5">
+                <div className="mt-2 flex flex-wrap items-center gap-2 rounded-xl border border-gold/40 bg-ivory-dim/40 px-3 py-2.5">
                   {skills.map((s) => (
                     <span
                       key={s}
@@ -305,7 +305,7 @@ export default function PostOpeningForm() {
         </div>
 
         {error && (
-          <p className="mt-6 rounded-sm border border-oxblood/30 bg-oxblood/5 px-4 py-3 font-sans text-sm text-oxblood">
+          <p className="mt-6 rounded-xl border border-oxblood/30 bg-oxblood/5 px-4 py-3 font-sans text-sm text-oxblood">
             {error}
           </p>
         )}
@@ -348,7 +348,7 @@ export default function PostOpeningForm() {
       {/* Live preview */}
       <aside className="lg:sticky lg:top-28 lg:self-start">
         <p className={LABEL}>Live preview</p>
-        <div className="mt-3 flex flex-col border border-gold/25 bg-ivory-dim/60 p-6">
+        <div className="mt-3 flex flex-col rounded-2xl border border-gold/25 bg-ivory-dim/60 p-6">
           <span className="w-fit rounded-full border border-gold/40 px-3 py-1 font-sans text-[10px] font-medium uppercase tracking-[0.12em] text-oxblood/80">
             {type === "job" ? "Job" : "Internship"}
           </span>

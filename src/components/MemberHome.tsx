@@ -200,7 +200,7 @@ function StatusNotice({
 }) {
   if (profile.verification_status === "rejected") {
     return (
-      <div className="mt-10 max-w-2xl rounded-sm border border-oxblood/30 bg-oxblood/5 px-6 py-5">
+      <div className="mt-10 max-w-2xl rounded-xl border border-oxblood/30 bg-oxblood/5 px-6 py-5">
         <p className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-oxblood">
           Profile not approved
         </p>
@@ -220,7 +220,7 @@ function StatusNotice({
   }
 
   return (
-    <div className="mt-10 max-w-2xl rounded-sm border border-gold/40 bg-gold/10 px-6 py-5">
+    <div className="mt-10 max-w-2xl rounded-xl border border-gold/40 bg-gold/10 px-6 py-5">
       <p className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-accent">
         Pending verification
       </p>
@@ -265,9 +265,9 @@ function QuickLink({
     <Reveal delay={index * 90} className="h-full">
       <Link
         href={href}
-        className={`group block h-full rounded-sm p-6 transition-colors md:p-8 ${
+        className={`group block h-full rounded-2xl p-6 transition-colors md:p-8 ${
           maroon
-            ? "bg-oxblood"
+            ? "bg-maroon"
             : "border border-gold/30 bg-ivory-dim/40 hover:border-gold/60"
         }`}
       >

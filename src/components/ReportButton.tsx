@@ -57,7 +57,7 @@ export default function ReportButton({
   }
 
   return (
-    <div className="rounded-sm border border-gold/30 bg-ivory-dim/50 p-4">
+    <div className="rounded-xl border border-gold/30 bg-ivory-dim/50 p-4">
       <p className="font-sans text-[11px] font-medium uppercase tracking-[0.14em] text-ink/60">
         Report this to the admins
       </p>
@@ -65,7 +65,7 @@ export default function ReportButton({
         value={reason}
         onChange={(e) => setReason(e.target.value)}
         placeholder="What's the problem? (optional)"
-        className="mt-2 min-h-[70px] w-full resize-y rounded-sm border border-gold/40 bg-ivory/70 px-3 py-2 font-sans text-sm text-ink placeholder:text-ink/40 focus:border-gold focus:outline-none"
+        className="mt-2 min-h-[70px] w-full resize-y rounded-lg border border-gold/40 bg-ivory/70 px-3 py-2 font-sans text-sm text-ink placeholder:text-ink/40 focus:border-gold focus:outline-none"
       />
       <div className="mt-3 flex gap-2">
         <button

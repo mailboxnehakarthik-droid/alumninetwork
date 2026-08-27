@@ -37,7 +37,7 @@ export default function PressPage() {
             </Reveal>
 
             <Reveal delay={240}>
-              <div className="mt-12 border border-gold/30 bg-ivory-dim/50 p-8 md:p-10">
+              <div className="mt-12 rounded-2xl border border-gold/30 bg-ivory-dim/50 p-8 md:p-10">
                 <span className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-accent">
                   Media enquiries
                 </span>

@@ -74,7 +74,7 @@ export default function DeletePostingButton({
   }
 
   return (
-    <div className="rounded-sm border border-oxblood/30 bg-oxblood/5 p-4">
+    <div className="rounded-xl border border-oxblood/30 bg-oxblood/5 p-4">
       <p className="font-sans text-sm font-medium text-oxblood">
         Delete this posting?
       </p>

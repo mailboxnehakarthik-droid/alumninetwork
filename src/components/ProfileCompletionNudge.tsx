@@ -33,7 +33,7 @@ export default function ProfileCompletionNudge({ show }: { show: boolean }) {
   };
 
   return (
-    <div className="mt-8 flex flex-col gap-3 rounded-sm border border-gold/40 bg-gold/10 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+    <div className="mt-8 flex flex-col gap-3 rounded-xl border border-gold/40 bg-gold/10 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
       <p className="font-sans text-sm leading-relaxed text-ink/80">
         Complete your profile — add your <strong>industry</strong> and{" "}
         <strong>role</strong> so others can find you in the directory.

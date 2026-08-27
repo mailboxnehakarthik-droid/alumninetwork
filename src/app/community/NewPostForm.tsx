@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { createPost } from "./actions";
 
 const FIELD =
-  "w-full rounded-sm border border-gold/40 bg-ivory-dim/40 px-4 py-3 font-sans text-sm text-ink placeholder:text-ink/40 transition-colors focus:border-gold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent";
+  "w-full rounded-xl border border-gold/40 bg-ivory-dim/40 px-4 py-3 font-sans text-sm text-ink placeholder:text-ink/40 transition-colors focus:border-gold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent";
 
 export default function NewPostForm() {
   const router = useRouter();
@@ -46,7 +46,7 @@ export default function NewPostForm() {
   return (
     <form
       onSubmit={submit}
-      className="flex flex-col gap-4 border border-gold/30 bg-ivory-dim/40 p-6 md:p-8"
+      className="flex flex-col gap-4 rounded-2xl border border-gold/30 bg-ivory-dim/40 p-6 md:p-8"
     >
       <label className="block">
         <span className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-ink/60">

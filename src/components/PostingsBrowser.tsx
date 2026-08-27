@@ -91,7 +91,7 @@ export default function PostingsBrowser({
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search role or company…"
-              className="w-full rounded-sm border border-gold/40 bg-ivory-dim/40 px-4 py-2.5 font-sans text-sm text-ink placeholder:text-ink/40 focus:border-gold focus:outline-none"
+              className="w-full rounded-xl border border-gold/40 bg-ivory-dim/40 px-4 py-2.5 font-sans text-sm text-ink placeholder:text-ink/40 focus:border-gold focus:outline-none"
             />
           </div>
 
@@ -203,7 +203,7 @@ function PostingCardView({
     <Reveal delay={Math.min(index, 6) * 60} className="h-full">
       <Link
         href={`/careers/openings/${posting.id}`}
-        className="flex h-full flex-col border border-gold/25 bg-ivory-dim/60 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-gold/60"
+        className="flex h-full flex-col rounded-2xl border border-gold/25 bg-ivory-dim/60 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-gold/60"
       >
         <div className="flex items-center justify-between">
           <span className="rounded-full border border-gold/40 px-3 py-1 font-sans text-[10px] font-medium uppercase tracking-[0.12em] text-oxblood/80">
@@ -271,7 +271,7 @@ function Select({
       value={value}
       onChange={(e) => onChange(e.target.value)}
       aria-label={label}
-      className="w-full rounded-sm border border-gold/40 bg-ivory-dim/40 px-3 py-2.5 font-sans text-sm text-ink focus:border-gold focus:outline-none"
+      className="w-full rounded-xl border border-gold/40 bg-ivory-dim/40 px-3 py-2.5 font-sans text-sm text-ink focus:border-gold focus:outline-none"
     >
       <option value={ALL}>{allLabel}</option>
       {options.map((o) => (
@@ -285,7 +285,7 @@ function Select({
 
 function Empty({ title, body }: { title: string; body: string }) {
   return (
-    <div className="mt-8 border border-dashed border-gold/40 bg-ivory-dim/40 px-6 py-20 text-center">
+    <div className="mt-8 rounded-2xl border border-dashed border-gold/40 bg-ivory-dim/40 px-6 py-20 text-center">
       <p className="font-display text-2xl italic text-ink">{title}</p>
       <p className="mx-auto mt-3 max-w-sm font-sans text-sm leading-relaxed text-ink/65">
         {body}

@@ -12,7 +12,7 @@ export default function SocialFeed({ posts }: { posts: SocialPost[] }) {
 
   if (posts.length === 0) {
     return (
-      <div className="mt-8 border border-dashed border-gold/40 bg-ivory-dim/40 px-6 py-16 text-center">
+      <div className="mt-8 rounded-2xl border border-dashed border-gold/40 bg-ivory-dim/40 px-6 py-16 text-center">
         <p className="font-display text-xl italic text-ink">
           No highlights yet.
         </p>
@@ -60,7 +60,7 @@ export function PostCard({ post, index }: { post: SocialPost; index: number }) {
         href={href}
         target="_blank"
         rel="noreferrer"
-        className="group flex h-full flex-col overflow-hidden border border-gold/25 bg-ivory-dim/60 transition-all duration-300 hover:-translate-y-1 hover:border-gold/60"
+        className="group flex h-full flex-col overflow-hidden rounded-2xl border border-gold/25 bg-ivory-dim/60 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-gold/60 hover:shadow-lg"
       >
         {/* Thumbnail. The 168 imported posts are re-hosted locally, so they get
             next/image optimization; admin-added posts may carry an arbitrary
@@ -92,7 +92,7 @@ export function PostCard({ post, index }: { post: SocialPost; index: number }) {
 
           {/* type badge */}
           {(isVideo || isSidecar) && (
-            <span className="absolute right-3 top-3 rounded-sm bg-ink/70 px-2 py-1 font-sans text-[10px] font-medium uppercase tracking-[0.1em] text-ivory backdrop-blur-sm">
+            <span className="absolute right-3 top-3 rounded-lg bg-ink/70 px-2 py-1 font-sans text-[10px] font-medium uppercase tracking-[0.1em] text-ivory backdrop-blur-sm">
               {isVideo ? "▸ Video" : "▦ Album"}
             </span>
           )}

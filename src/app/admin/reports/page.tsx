@@ -162,7 +162,7 @@ export default async function AdminReportsPage() {
             </p>
 
             {list.length === 0 ? (
-              <div className="mt-10 border border-dashed border-gold/40 bg-ivory-dim/40 px-6 py-16 text-center">
+              <div className="mt-10 rounded-2xl border border-dashed border-gold/40 bg-ivory-dim/40 px-6 py-16 text-center">
                 <p className="font-display text-xl italic text-ink">
                   Nothing flagged. All clear.
                 </p>
@@ -172,7 +172,7 @@ export default async function AdminReportsPage() {
                 {list.map((r) => (
                   <li
                     key={r.id}
-                    className="flex flex-col gap-4 border border-gold/25 bg-ivory-dim/50 p-6 sm:flex-row sm:items-start sm:justify-between"
+                    className="flex flex-col gap-4 rounded-2xl border border-gold/25 bg-ivory-dim/50 p-6 sm:flex-row sm:items-start sm:justify-between"
                   >
                     <div>
                       <span className="rounded-full border border-oxblood/40 px-3 py-1 font-sans text-[10px] font-medium uppercase tracking-[0.12em] text-oxblood/80">

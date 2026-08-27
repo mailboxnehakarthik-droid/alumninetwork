@@ -7,7 +7,7 @@ import { COUNTRIES, INDIA_STATES } from "@/lib/constants";
 import type { EventRow } from "@/lib/types";
 
 const FIELD =
-  "w-full rounded-sm border border-gold/40 bg-ivory-dim/40 px-4 py-3 font-sans text-sm text-ink placeholder:text-ink/40 transition-colors focus:border-gold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent";
+  "w-full rounded-xl border border-gold/40 bg-ivory-dim/40 px-4 py-3 font-sans text-sm text-ink placeholder:text-ink/40 transition-colors focus:border-gold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent";
 const LABEL =
   "font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-ink/60";
 
@@ -203,7 +203,7 @@ export default function EventForm({ event }: { event?: EventRow }) {
         </div>
 
         {error && (
-          <p className="rounded-sm border border-oxblood/30 bg-oxblood/5 px-4 py-3 font-sans text-sm text-oxblood">
+          <p className="rounded-xl border border-oxblood/30 bg-oxblood/5 px-4 py-3 font-sans text-sm text-oxblood">
             {error}
           </p>
         )}
@@ -229,7 +229,7 @@ export default function EventForm({ event }: { event?: EventRow }) {
       {/* Live preview */}
       <aside className="lg:sticky lg:top-28 lg:self-start">
         <p className={LABEL}>Live preview</p>
-        <div className="mt-3 flex flex-col overflow-hidden border border-gold/25 bg-ivory-dim/60">
+        <div className="mt-3 flex flex-col overflow-hidden rounded-2xl border border-gold/25 bg-ivory-dim/60">
           {coverImageUrl && (
             <div className="aspect-[16/9] overflow-hidden bg-ivory-dim">
               {/* eslint-disable-next-line @next/next/no-img-element */}

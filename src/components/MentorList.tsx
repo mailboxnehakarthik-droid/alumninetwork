@@ -36,7 +36,7 @@ export default function MentorList({
 }) {
   if (mentors.length === 0) {
     return (
-      <div className="mt-4 border border-dashed border-gold/40 bg-ivory-dim/40 px-6 py-20 text-center">
+      <div className="mt-4 rounded-2xl border border-dashed border-gold/40 bg-ivory-dim/40 px-6 py-20 text-center">
         <p className="font-display text-2xl italic text-ink">
           No mentors have signed up yet.
         </p>
@@ -116,7 +116,7 @@ function MentorCardView({
 
   return (
     <Reveal delay={Math.min(index, 6) * 60} className="h-full">
-      <article className="flex h-full flex-col border border-gold/25 bg-ivory-dim/60 p-6 transition-all duration-300 hover:border-gold/60">
+      <article className="flex h-full flex-col rounded-2xl border border-gold/25 bg-ivory-dim/60 p-6 transition-all duration-300 hover:border-gold/60">
         <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-full border border-gold/40 font-display text-lg italic text-oxblood">
           {mentor.photoUrl ? (
             <MemberPhoto src={mentor.photoUrl} />
@@ -185,7 +185,7 @@ function MentorCardView({
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="What are you hoping to learn, and why this mentor?"
-                className="min-h-[90px] w-full resize-y rounded-sm border border-gold/40 bg-ivory/60 px-3 py-2.5 font-sans text-sm text-ink placeholder:text-ink/40 focus:border-gold focus:outline-none"
+                className="min-h-[90px] w-full resize-y rounded-lg border border-gold/40 bg-ivory/60 px-3 py-2.5 font-sans text-sm text-ink placeholder:text-ink/40 focus:border-gold focus:outline-none"
               />
               <div className="flex gap-2">
                 <button

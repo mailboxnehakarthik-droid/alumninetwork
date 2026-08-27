@@ -55,8 +55,8 @@ export default function NotableAlumniPage() {
                   delay={Math.min(i, 8) * 60}
                   className="h-full"
                 >
-                  <article className="flex h-full flex-col border border-gold/25 bg-ivory-dim/60 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-gold/60">
-                    <div className="flex h-14 w-14 items-center justify-center border border-gold/40 font-display text-lg italic text-oxblood">
+                  <article className="flex h-full flex-col rounded-2xl border border-gold/25 bg-ivory-dim/60 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-gold/60">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-full border border-gold/40 font-display text-lg italic text-oxblood">
                       {initials(alum.name)}
                     </div>
                     <h2 className="mt-6 font-display text-xl text-ink">

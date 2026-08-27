@@ -65,7 +65,7 @@ function IncomingCard({ req }: { req: ReqView }) {
   };
 
   return (
-    <li className="border border-gold/25 bg-ivory-dim/50 p-6">
+    <li className="rounded-2xl border border-gold/25 bg-ivory-dim/50 p-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex gap-4">
           <Avatar person={req.person} />
@@ -128,7 +128,7 @@ export function OutgoingList({ requests }: { requests: ReqView[] }) {
   return (
     <ul className="flex flex-col gap-4">
       {requests.map((r) => (
-        <li key={r.id} className="border border-gold/25 bg-ivory-dim/50 p-6">
+        <li key={r.id} className="rounded-2xl border border-gold/25 bg-ivory-dim/50 p-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div className="flex gap-4">
               <Avatar person={r.person} />
@@ -170,7 +170,7 @@ function Avatar({ person }: { person: Person }) {
 function Contact({ person }: { person: Person }) {
   if (!person.email && !person.linkedin) return null;
   return (
-    <div className="mt-4 rounded-sm border border-gold/40 bg-gold/10 px-4 py-3">
+    <div className="mt-4 rounded-xl border border-gold/40 bg-gold/10 px-4 py-3">
       <p className="font-sans text-[11px] font-medium uppercase tracking-[0.14em] text-accent">
         Contact
       </p>
@@ -206,7 +206,7 @@ function StatusPill({ status }: { status: "accepted" | "declined" | "pending" })
       : "border-gold/40 bg-ivory/60 text-ink/60";
   return (
     <span
-      className={`shrink-0 self-start rounded-sm border px-4 py-2 font-sans text-[11px] font-medium uppercase tracking-[0.12em] ${tone}`}
+      className={`shrink-0 self-start rounded-lg border px-4 py-2 font-sans text-[11px] font-medium uppercase tracking-[0.12em] ${tone}`}
     >
       {label}
     </span>
@@ -215,7 +215,7 @@ function StatusPill({ status }: { status: "accepted" | "declined" | "pending" })
 
 function Empty({ text }: { text: string }) {
   return (
-    <div className="border border-dashed border-gold/40 bg-ivory-dim/40 px-6 py-14 text-center">
+    <div className="rounded-2xl border border-dashed border-gold/40 bg-ivory-dim/40 px-6 py-14 text-center">
       <p className="font-display text-xl italic text-ink">{text}</p>
     </div>
   );

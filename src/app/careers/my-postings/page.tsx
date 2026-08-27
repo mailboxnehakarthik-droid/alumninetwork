@@ -118,7 +118,7 @@ export default async function MyPostingsPage() {
                     return (
                       <li
                         key={p.id}
-                        className="border border-gold/25 bg-ivory-dim/50 p-6"
+                        className="rounded-2xl border border-gold/25 bg-ivory-dim/50 p-6"
                       >
                         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                           <div>
@@ -186,7 +186,7 @@ export default async function MyPostingsPage() {
                     return (
                       <li
                         key={a.id}
-                        className="flex flex-wrap items-center justify-between gap-4 border border-gold/25 bg-ivory-dim/50 p-5"
+                        className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-gold/25 bg-ivory-dim/50 p-5"
                       >
                         <div>
                           <Link
@@ -199,7 +199,7 @@ export default async function MyPostingsPage() {
                             {job?.company}
                           </p>
                         </div>
-                        <span className="rounded-sm border border-gold/40 bg-ivory/60 px-3 py-1.5 font-sans text-[10px] font-medium uppercase tracking-[0.12em] text-ink/65">
+                        <span className="rounded-lg border border-gold/40 bg-ivory/60 px-3 py-1.5 font-sans text-[10px] font-medium uppercase tracking-[0.12em] text-ink/65">
                           {STATUS_LABEL[a.status]}
                         </span>
                       </li>
@@ -218,7 +218,7 @@ export default async function MyPostingsPage() {
 
 function Empty({ text }: { text: string }) {
   return (
-    <div className="mt-6 border border-dashed border-gold/40 bg-ivory-dim/40 px-6 py-14 text-center">
+    <div className="mt-6 rounded-2xl border border-dashed border-gold/40 bg-ivory-dim/40 px-6 py-14 text-center">
       <p className="font-display text-xl italic text-ink">{text}</p>
     </div>
   );

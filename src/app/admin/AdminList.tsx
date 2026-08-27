@@ -24,7 +24,7 @@ export default function AdminList({
 }) {
   if (members.length === 0) {
     return (
-      <div className="border border-dashed border-gold/40 bg-ivory-dim/40 px-6 py-16 text-center">
+      <div className="rounded-2xl border border-dashed border-gold/40 bg-ivory-dim/40 px-6 py-16 text-center">
         <p className="font-display text-xl italic text-ink">
           {tab === "pending"
             ? "No one's waiting for review."
@@ -90,7 +90,7 @@ function MemberCard({
     .join(" · ");
 
   return (
-    <li className="border border-gold/25 bg-ivory-dim/50 p-6">
+    <li className="rounded-2xl border border-gold/25 bg-ivory-dim/50 p-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex gap-4">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full border border-gold/40 font-display text-base italic text-oxblood">
@@ -185,7 +185,7 @@ function MemberCard({
             value={reason}
             onChange={(e) => setReason(e.target.value)}
             placeholder="Optional reason (shown to the member)…"
-            className="flex-1 rounded-sm border border-gold/40 bg-ivory/60 px-4 py-2.5 font-sans text-sm text-ink placeholder:text-ink/40 focus:border-gold focus:outline-none"
+            className="flex-1 rounded-xl border border-gold/40 bg-ivory/60 px-4 py-2.5 font-sans text-sm text-ink placeholder:text-ink/40 focus:border-gold focus:outline-none"
           />
           <button
             type="button"

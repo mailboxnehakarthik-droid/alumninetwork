@@ -44,7 +44,7 @@ export default async function BecomeMentorPage() {
             </h1>
 
             {!eligible ? (
-              <div className="mt-8 border border-dashed border-gold/40 bg-ivory-dim/40 px-6 py-12 text-center">
+              <div className="mt-8 rounded-2xl border border-dashed border-gold/40 bg-ivory-dim/40 px-6 py-12 text-center">
                 <p className="font-display text-xl italic text-ink">
                   Mentoring is for verified alumni.
                 </p>

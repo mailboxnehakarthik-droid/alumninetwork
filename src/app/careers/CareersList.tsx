@@ -175,7 +175,7 @@ function Gate({
   href: string;
 }) {
   return (
-    <div className="mt-4 border border-dashed border-gold/40 bg-ivory-dim/40 px-6 py-20 text-center">
+    <div className="mt-4 rounded-2xl border border-dashed border-gold/40 bg-ivory-dim/40 px-6 py-20 text-center">
       <p className="font-display text-2xl italic text-ink">{title}</p>
       <p className="mx-auto mt-3 max-w-sm font-sans text-sm leading-relaxed text-ink/65">
         {body}

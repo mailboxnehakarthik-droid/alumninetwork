@@ -57,7 +57,7 @@ export default function ApplicantsClient({
 
   if (applicants.length === 0) {
     return (
-      <div className="border border-dashed border-gold/40 bg-ivory-dim/40 px-6 py-16 text-center">
+      <div className="rounded-2xl border border-dashed border-gold/40 bg-ivory-dim/40 px-6 py-16 text-center">
         <p className="font-display text-xl italic text-ink">No applicants yet.</p>
         <p className="mx-auto mt-3 max-w-sm font-sans text-sm leading-relaxed text-ink/65">
           When members apply, they&rsquo;ll show up here.
@@ -131,7 +131,7 @@ function ApplicantCard({ row }: { row: ApplicantRow }) {
     .join(" · ");
 
   return (
-    <li className="border border-gold/25 bg-ivory-dim/50 p-6">
+    <li className="rounded-2xl border border-gold/25 bg-ivory-dim/50 p-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex gap-4">
           <Link
@@ -265,7 +265,7 @@ function StatusPill({ status }: { status: ApplicationStatus }) {
       : "border-gold/40 bg-ivory/60 text-ink/60";
   return (
     <span
-      className={`self-start rounded-sm border px-3 py-1.5 font-sans text-[10px] font-medium uppercase tracking-[0.12em] ${tone}`}
+      className={`self-start rounded-lg border px-3 py-1.5 font-sans text-[10px] font-medium uppercase tracking-[0.12em] ${tone}`}
     >
       {label}
     </span>

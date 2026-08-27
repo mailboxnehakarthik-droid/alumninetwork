@@ -162,7 +162,7 @@ export default function Nav() {
                     </svg>
                   </Link>
                   <div className="pointer-events-none invisible absolute left-0 top-full z-50 pt-3 opacity-0 transition-all duration-200 group-hover:pointer-events-auto group-hover:visible group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:visible group-focus-within:opacity-100">
-                    <ul className="min-w-[190px] overflow-hidden rounded-sm border border-gold/30 bg-ivory shadow-[0_12px_32px_-14px_rgba(26,20,18,0.3)]">
+                    <ul className="min-w-[190px] overflow-hidden rounded-xl border border-gold/30 bg-ivory shadow-[0_12px_32px_-14px_rgba(26,20,18,0.3)]">
                       {item.children.map((child) => {
                         const cActive = activeChild(child.href);
                         return (

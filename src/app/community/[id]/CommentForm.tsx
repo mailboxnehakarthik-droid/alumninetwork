@@ -36,7 +36,7 @@ export default function CommentForm({ postId }: { postId: string }) {
         placeholder="Write a reply…"
         maxLength={5000}
         required
-        className="min-h-[100px] w-full resize-y rounded-sm border border-gold/40 bg-ivory-dim/40 px-4 py-3 font-sans text-sm text-ink placeholder:text-ink/40 transition-colors focus:border-gold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+        className="min-h-[100px] w-full resize-y rounded-xl border border-gold/40 bg-ivory-dim/40 px-4 py-3 font-sans text-sm text-ink placeholder:text-ink/40 transition-colors focus:border-gold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
       />
       {error && <p className="font-sans text-sm text-oxblood">{error}</p>}
       <button

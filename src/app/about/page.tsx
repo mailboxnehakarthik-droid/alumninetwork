@@ -101,10 +101,10 @@ export default function AboutPage() {
                 Four ways the network shows up.
               </h2>
             </Reveal>
-            <div className="mt-10 max-w-2xl">
+            <div className="mt-10 flex max-w-2xl flex-col gap-6">
               {WHAT_WE_RUN.map((item, i) => (
                 <Reveal key={item.tag} delay={160 + i * 70}>
-                  <div className="border-t border-gold/25 py-8">
+                  <div className="rounded-2xl border border-maroon/40 bg-ivory px-6 py-8 shadow-sm md:px-8">
                     <span className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-accent">
                       {item.tag}
                     </span>
@@ -140,7 +140,7 @@ export default function AboutPage() {
               </div>
 
               <Reveal delay={160}>
-                <div className="bg-oxblood p-8 text-ivory md:p-10">
+                <div className="rounded-2xl bg-oxblood p-8 text-ivory md:p-10">
                   <h3 className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-accent">
                     BMS College of Engineering
                   </h3>

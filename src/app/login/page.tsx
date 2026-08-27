@@ -63,7 +63,7 @@ export default async function LoginPage({ searchParams }: Props) {
 
             {error && (
               <Reveal delay={200}>
-                <p className="mt-6 rounded-sm border border-oxblood/30 bg-oxblood/5 px-4 py-3 font-sans text-sm text-oxblood">
+                <p className="mt-6 rounded-xl border border-oxblood/30 bg-oxblood/5 px-4 py-3 font-sans text-sm text-oxblood">
                   Something went wrong signing you in. Please try again.
                 </p>
               </Reveal>

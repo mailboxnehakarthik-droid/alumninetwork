@@ -23,7 +23,7 @@ export default function CareersToggle({ enabled }: { enabled: boolean }) {
   };
 
   return (
-    <div className="rounded-sm border border-gold/25 bg-ivory-dim/50 p-6">
+    <div className="rounded-2xl border border-gold/25 bg-ivory-dim/50 p-6">
       <div className="flex items-center justify-between gap-6">
         <div>
           <h3 className="font-display text-lg text-ink">Careers section</h3>

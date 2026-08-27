@@ -81,7 +81,7 @@ export default async function AdminEventsPage() {
             </div>
 
             {list.length === 0 ? (
-              <div className="mt-10 border border-dashed border-gold/40 bg-ivory-dim/40 px-6 py-16 text-center">
+              <div className="mt-10 rounded-2xl border border-dashed border-gold/40 bg-ivory-dim/40 px-6 py-16 text-center">
                 <p className="font-display text-xl italic text-ink">
                   No events yet.
                 </p>
@@ -109,7 +109,7 @@ export default async function AdminEventsPage() {
                   return (
                     <li
                       key={ev.id}
-                      className="flex flex-wrap items-center justify-between gap-4 border border-gold/25 bg-ivory-dim/50 p-6"
+                      className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-gold/25 bg-ivory-dim/50 p-6"
                     >
                       <div>
                         <div className="flex items-center gap-2">

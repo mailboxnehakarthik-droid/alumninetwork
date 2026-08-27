@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef } from "react";
-import { MeshPhongMaterial } from "three";
+import { CanvasTexture, MeshPhongMaterial } from "three";
 import Globe, { type GlobeMethods } from "react-globe.gl";
 import { feature } from "topojson-client";
 import type { FeatureCollection, GeometryObject } from "geojson";
@@ -17,15 +17,33 @@ import worldTopoJson from "@/data/world-110m.json";
 
 type ChapterPoint = { lat: number; lng: number; name: string };
 
-const GLOBE_MATERIAL = new MeshPhongMaterial({
-  color: "#eef0f5", // ivory-dim
-  shininess: 2,
-});
+// Land reads as a soft-to-medium maroon tint (blended from the brand's
+// maroon token, #71293c) instead of grey; borders are a deeper maroon for
+// definition.
+const LAND_FILL = "#ae8792"; // ~55% maroon blended into ivory
+const LAND_STROKE = "#8c5362"; // ~80% maroon blended into ivory
+const LAND_SIDE = "rgba(113, 41, 60, 0.35)"; // maroon, low alpha
+// Bright accent red so pins stay legible against both the navy ocean and the
+// now-maroon land.
+const PIN_COLOR = "#d5322b"; // accent
 
-const LAND_FILL = "#dbdcdf"; // ~13% ink tint over ivory
-const LAND_STROKE = "#95949b"; // ~45% ink tint over ivory
-const LAND_SIDE = "rgba(28, 24, 38, 0.15)"; // ink, low alpha
-const PIN_COLOR = "#2f2544"; // oxblood
+// Ocean/base sphere: a navy gradient (the "ink" family — ink itself, and
+// oxblood, which despite its name is also a navy tone) via a small canvas
+// texture, since a flat Material can't hold a gradient on its own.
+function createOceanMaterial() {
+  const canvas = document.createElement("canvas");
+  canvas.width = 2;
+  canvas.height = 256;
+  const ctx = canvas.getContext("2d");
+  if (ctx) {
+    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    gradient.addColorStop(0, "#1c1826"); // ink
+    gradient.addColorStop(1, "#6b657b"); // lighter navy, derived from oxblood
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
+  return new MeshPhongMaterial({ map: new CanvasTexture(canvas), shininess: 4 });
+}
 
 const worldTopology = worldTopoJson as unknown as Topology;
 const worldObjectName = Object.keys(worldTopology.objects)[0];
@@ -44,6 +62,8 @@ export default function ChapterGlobeInner({
   height: number;
 }) {
   const globeRef = useRef<GlobeMethods | undefined>(undefined);
+
+  const oceanMaterial = useMemo(() => createOceanMaterial(), []);
 
   const points = useMemo<ChapterPoint[]>(
     () =>
@@ -112,7 +132,7 @@ export default function ChapterGlobeInner({
       showAtmosphere
       atmosphereColor="#d5d7e1"
       atmosphereAltitude={0.18}
-      globeMaterial={GLOBE_MATERIAL}
+      globeMaterial={oceanMaterial}
       polygonsData={worldFeatures}
       polygonCapColor={() => LAND_FILL}
       polygonSideColor={() => LAND_SIDE}

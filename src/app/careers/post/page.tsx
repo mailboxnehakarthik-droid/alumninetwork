@@ -51,7 +51,7 @@ export default async function PostOpeningPage() {
             </h1>
 
             {!verified ? (
-              <div className="mt-8 border border-dashed border-gold/40 bg-ivory-dim/40 px-6 py-14 text-center">
+              <div className="mt-8 rounded-2xl border border-dashed border-gold/40 bg-ivory-dim/40 px-6 py-14 text-center">
                 <p className="font-display text-xl italic text-ink">
                   Your account is pending verification.
                 </p>

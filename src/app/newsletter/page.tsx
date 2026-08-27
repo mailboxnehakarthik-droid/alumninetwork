@@ -84,7 +84,7 @@ export default async function NewsletterPage() {
 
             {byYear.length === 0 ? (
               <Reveal delay={160}>
-                <div className="mt-12 border border-gold/30 bg-ivory-dim/40 px-6 py-16 text-center">
+                <div className="mt-12 rounded-2xl border border-gold/30 bg-ivory-dim/40 px-6 py-16 text-center">
                   <p className="font-display text-2xl italic text-oxblood">
                     Newsletter archive coming soon.
                   </p>
@@ -95,10 +95,10 @@ export default async function NewsletterPage() {
                 </div>
               </Reveal>
             ) : (
-              <div className="mt-12 border-t border-gold/30">
+              <div className="mt-12 flex flex-col gap-6">
                 {byYear.map((group, gi) => (
                   <Reveal key={group.year} delay={gi * 80}>
-                    <div className="grid grid-cols-1 gap-4 border-b border-gold/30 py-8 sm:grid-cols-[6rem_1fr] sm:gap-8">
+                    <div className="grid grid-cols-1 gap-4 rounded-2xl border border-gold/30 bg-ivory-dim/30 px-6 py-8 sm:grid-cols-[6rem_1fr] sm:gap-8 sm:px-8">
                       <div className="font-display text-3xl text-oxblood">
                         {group.year}
                       </div>
@@ -140,15 +140,11 @@ export default async function NewsletterPage() {
               </h2>
             </Reveal>
 
-            <div className="mt-16 grid grid-cols-1 border-l border-t border-ivory/15 sm:grid-cols-2">
+            <div className="mt-16 grid grid-cols-1 gap-6 sm:grid-cols-2">
               {EXPECT.map((item, i) => (
-                <Reveal
-                  key={item.title}
-                  delay={i * 90}
-                  className="border-b border-r border-ivory/15"
-                >
-                  <div className="h-full px-6 py-8 md:py-10">
-                    <span className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-accent">
+                <Reveal key={item.title} delay={i * 90} className="h-full">
+                  <div className="h-full rounded-2xl bg-maroon px-6 py-8 shadow-sm md:py-10">
+                    <span className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-ivory/75">
                       {item.tag}
                     </span>
                     <h3 className="mt-4 font-display text-2xl italic text-ivory">

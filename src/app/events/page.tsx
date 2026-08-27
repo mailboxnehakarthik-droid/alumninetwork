@@ -116,16 +116,16 @@ export default async function EventsPage() {
         {/* Event stats — simple placeholder figures, above the events list */}
         <section className="border-t border-gold/30">
           <div className="mx-auto max-w-7xl px-6 py-14 md:px-10 md:py-16">
-            <div className="grid grid-cols-1 gap-px overflow-hidden rounded-sm border border-gold/30 bg-gold/20 sm:grid-cols-3">
+            <div className="grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-ivory/50 bg-ivory sm:grid-cols-3">
               {EVENT_STATS.map((stat) => (
                 <div
                   key={stat.label}
-                  className="bg-ivory px-6 py-8 text-center md:py-10"
+                  className="bg-maroon px-6 py-8 text-center md:py-10"
                 >
-                  <p className="font-display text-4xl text-oxblood md:text-5xl">
+                  <p className="font-display text-4xl text-ivory md:text-5xl">
                     {stat.value}
                   </p>
-                  <p className="mt-3 font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-ink/60">
+                  <p className="mt-3 font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-ivory/70">
                     {stat.label}
                   </p>
                 </div>
@@ -150,7 +150,7 @@ export default async function EventsPage() {
 
             {upcoming.length === 0 ? (
               <Reveal delay={80}>
-                <div className="mt-8 border border-dashed border-gold/40 bg-ivory-dim/40 px-6 py-16 text-center">
+                <div className="mt-8 rounded-2xl border border-dashed border-gold/40 bg-ivory-dim/40 px-6 py-16 text-center">
                   <p className="font-display text-xl italic text-ink">
                     No upcoming events just yet.
                   </p>
@@ -249,7 +249,7 @@ function EventCard({
 
   return (
     <Reveal delay={Math.min(index, 6) * 70} className="h-full">
-      <article className="flex h-full flex-col overflow-hidden border border-gold/25 bg-maroon/15">
+      <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-maroon/30">
         {event.cover_image_url && (
           <div className="aspect-[16/9] overflow-hidden bg-ivory-dim">
             {/* eslint-disable-next-line @next/next/no-img-element */}

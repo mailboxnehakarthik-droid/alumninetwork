@@ -116,7 +116,7 @@ export default function DirectoryControls({
               placeholder={
                 isStudents ? "Search by name…" : "Search by name or company…"
               }
-              className="w-full rounded-sm border border-gold/40 bg-ivory-dim/40 px-4 py-2.5 font-sans text-sm text-ink placeholder:text-ink/40 focus:border-gold focus:outline-none"
+              className="w-full rounded-xl border border-gold/40 bg-ivory-dim/40 px-4 py-2.5 font-sans text-sm text-ink placeholder:text-ink/40 focus:border-gold focus:outline-none"
             />
           </div>
 
@@ -218,7 +218,7 @@ function Select({
       onChange={(e) => onChange(e.target.value)}
       aria-label={label}
       disabled={options.length === 0}
-      className="w-full rounded-sm border border-gold/40 bg-ivory-dim/40 px-3 py-2.5 font-sans text-sm text-ink transition-colors focus:border-gold focus:outline-none disabled:opacity-50"
+      className="w-full rounded-xl border border-gold/40 bg-ivory-dim/40 px-3 py-2.5 font-sans text-sm text-ink transition-colors focus:border-gold focus:outline-none disabled:opacity-50"
     >
       <option value="all">{allLabel}</option>
       {options.map((o) => (

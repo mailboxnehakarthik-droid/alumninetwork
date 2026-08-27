@@ -5,7 +5,7 @@ import { addSocialPost, deleteSocialPost } from "../actions";
 import type { SocialPost } from "@/lib/types";
 
 const FIELD =
-  "w-full rounded-sm border border-gold/40 bg-ivory-dim/40 px-4 py-3 font-sans text-sm text-ink placeholder:text-ink/40 transition-colors focus:border-gold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent";
+  "w-full rounded-xl border border-gold/40 bg-ivory-dim/40 px-4 py-3 font-sans text-sm text-ink placeholder:text-ink/40 transition-colors focus:border-gold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent";
 const LABEL =
   "font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-ink/60";
 
@@ -54,7 +54,7 @@ export default function AddSocialPost({ recent }: { recent: SocialPost[] }) {
     <div className="flex flex-col gap-12">
       <form
         onSubmit={submit}
-        className="flex flex-col gap-6 border border-gold/25 bg-ivory-dim/40 p-6 md:p-8"
+        className="flex flex-col gap-6 rounded-2xl border border-gold/25 bg-ivory-dim/40 p-6 md:p-8"
       >
         <label className="block">
           <span className={LABEL}>Instagram permalink *</span>
@@ -125,9 +125,9 @@ export default function AddSocialPost({ recent }: { recent: SocialPost[] }) {
             {recent.map((p) => (
               <li
                 key={p.id}
-                className="flex items-center gap-4 border border-gold/25 bg-ivory-dim/40 p-4"
+                className="flex items-center gap-4 rounded-xl border border-gold/25 bg-ivory-dim/40 p-4"
               >
-                <div className="h-12 w-12 shrink-0 overflow-hidden rounded-sm bg-ivory-dim">
+                <div className="h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-ivory-dim">
                   {p.image_url && (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img

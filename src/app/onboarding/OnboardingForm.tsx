@@ -7,7 +7,7 @@ import { BRANCHES, COUNTRIES, INDIA_STATES, INDUSTRIES } from "@/lib/constants";
 import type { Profile, UserType, EducationEntry } from "@/lib/types";
 
 const FIELD =
-  "w-full rounded-sm border border-gold/40 bg-ivory-dim/40 px-4 py-3 font-sans text-sm text-ink placeholder:text-ink/40 transition-colors focus:border-gold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent";
+  "w-full rounded-xl border border-gold/40 bg-ivory-dim/40 px-4 py-3 font-sans text-sm text-ink placeholder:text-ink/40 transition-colors focus:border-gold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent";
 const LABEL =
   "font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-ink/60";
 
@@ -272,7 +272,7 @@ export default function OnboardingForm({
 
   if (done) {
     return (
-      <div className="rounded-sm border border-gold/40 bg-ivory-dim/40 px-6 py-8 text-center">
+      <div className="rounded-2xl border border-gold/40 bg-ivory-dim/40 px-6 py-8 text-center">
         <span className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-accent">
           You&rsquo;re all set
         </span>
@@ -286,7 +286,7 @@ export default function OnboardingForm({
           college email. {error ? "" : ""}
         </p>
         {error && (
-          <p className="mx-auto mt-4 max-w-md rounded-sm border border-oxblood/30 bg-oxblood/5 px-4 py-3 font-sans text-sm text-oxblood">
+          <p className="mx-auto mt-4 max-w-md rounded-xl border border-oxblood/30 bg-oxblood/5 px-4 py-3 font-sans text-sm text-oxblood">
             {error}
           </p>
         )}
@@ -308,7 +308,7 @@ export default function OnboardingForm({
     <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-8">
       {/* Type toggle — hidden for college-email users (always verified students) */}
       {isCollegeEmail ? (
-        <div className="rounded-sm border border-gold/40 bg-gold/10 px-5 py-4">
+        <div className="rounded-xl border border-gold/40 bg-gold/10 px-5 py-4">
           <span className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-accent">
             ✓ Verified student
           </span>
@@ -323,7 +323,7 @@ export default function OnboardingForm({
           <span className={LABEL}>
             I am a…<span className="text-oxblood"> *</span>
           </span>
-          <div className="mt-3 inline-flex rounded-sm border border-gold/40 p-1">
+          <div className="mt-3 inline-flex rounded-xl border border-gold/40 p-1">
             {(["alumni", "student"] as const).map((t) => (
               <button
                 key={t}
@@ -391,7 +391,7 @@ export default function OnboardingForm({
           <div className="mt-2 flex items-center">
             <label
               htmlFor="onboarding-photo-upload"
-              className="mr-3 cursor-pointer rounded-sm border border-gold/40 bg-ivory-dim/60 px-3 py-1.5 font-sans text-[11px] uppercase tracking-[0.12em] text-ink"
+              className="mr-3 cursor-pointer rounded-lg border border-gold/40 bg-ivory-dim/60 px-3 py-1.5 font-sans text-[11px] uppercase tracking-[0.12em] text-ink"
             >
               {photoUrl ? "Change photo" : "Choose file"}
             </label>
@@ -678,7 +678,7 @@ export default function OnboardingForm({
       {Object.keys(errors).length > 0 && (
         <p
           role="alert"
-          className="rounded-sm border border-oxblood/30 bg-oxblood/5 px-4 py-3 font-sans text-sm text-oxblood"
+          className="rounded-xl border border-oxblood/30 bg-oxblood/5 px-4 py-3 font-sans text-sm text-oxblood"
         >
           Please fill in the required fields marked above before continuing.
         </p>

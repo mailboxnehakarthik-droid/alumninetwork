@@ -53,7 +53,7 @@ export default function Logo({
         <span
           title="Add public/logo.png (or .jpg/.svg) to replace this placeholder"
           aria-label="BMSCE Alumni Network logo placeholder"
-          className={`${placeholderClassName} flex shrink-0 items-center justify-center rounded-sm border border-dashed border-gold/60 bg-gold/5 font-sans text-[8px] font-semibold uppercase tracking-[0.1em] text-accent`}
+          className={`${placeholderClassName} flex shrink-0 items-center justify-center rounded-lg border border-dashed border-gold/60 bg-gold/5 font-sans text-[8px] font-semibold uppercase tracking-[0.1em] text-accent`}
         >
           Logo
         </span>

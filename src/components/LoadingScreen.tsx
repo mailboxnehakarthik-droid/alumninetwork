@@ -41,7 +41,7 @@ export default function LoadingScreen({
                   (_, i) => (
                     <div
                       key={i}
-                      className="h-48 animate-pulse rounded-sm border border-gold/20 bg-ivory-dim/50"
+                      className="h-48 animate-pulse rounded-2xl border border-gold/20 bg-ivory-dim/50"
                     />
                   )
                 )}

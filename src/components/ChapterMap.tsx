@@ -44,7 +44,7 @@ export default function ChapterMap() {
         ref={containerRef}
         role="img"
         aria-label="Interactive 3D globe of BMS alumni chapter locations"
-        className="relative mx-auto aspect-square w-full max-w-[520px] overflow-hidden rounded-sm border border-gold/30 bg-ivory sm:max-w-[560px] md:max-w-[600px]"
+        className="relative mx-auto aspect-square w-full max-w-[520px] overflow-hidden bg-transparent sm:max-w-[560px] md:max-w-[600px]"
       >
         {size.width > 0 ? (
           <ChapterGlobeInner width={size.width} height={size.height} />

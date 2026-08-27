@@ -42,7 +42,7 @@ export default function Testimonials() {
         <div className="mt-14 grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
           {TESTIMONIALS.map((t, i) => (
             <Reveal key={t.name} delay={i * 100} className="h-full">
-              <figure className="flex h-full flex-col border border-gold/25 bg-ivory p-8 md:p-10">
+              <figure className="flex h-full flex-col rounded-2xl border border-gold/25 bg-ivory p-8 md:p-10">
                 <span
                   aria-hidden="true"
                   className="font-display text-5xl leading-none text-accent/60"

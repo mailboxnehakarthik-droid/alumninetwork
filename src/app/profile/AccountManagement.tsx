@@ -96,7 +96,7 @@ export default function AccountManagement({ userId }: { userId: string }) {
         </p>
       </div>
 
-      <div className="mt-10 rounded-sm border border-oxblood/25 bg-oxblood/5 p-6">
+      <div className="mt-10 rounded-2xl border border-oxblood/25 bg-oxblood/5 p-6">
         <h3 className="font-sans text-[12px] font-medium uppercase tracking-[0.14em] text-oxblood">
           Delete account
         </h3>
@@ -122,7 +122,7 @@ export default function AccountManagement({ userId }: { userId: string }) {
               <input
                 value={confirmText}
                 onChange={(e) => setConfirmText(e.target.value)}
-                className="mt-2 block w-full max-w-xs rounded-sm border border-gold/40 bg-ivory/70 px-4 py-2.5 font-sans text-sm text-ink focus:border-gold focus:outline-none"
+                className="mt-2 block w-full max-w-xs rounded-xl border border-gold/40 bg-ivory/70 px-4 py-2.5 font-sans text-sm text-ink focus:border-gold focus:outline-none"
                 placeholder="DELETE"
               />
             </label>

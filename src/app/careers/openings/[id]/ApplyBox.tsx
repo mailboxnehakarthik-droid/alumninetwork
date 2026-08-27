@@ -22,7 +22,7 @@ type Prefill = {
 };
 
 const FIELD =
-  "w-full rounded-sm border border-gold/40 bg-ivory/60 px-4 py-2.5 font-sans text-sm text-ink placeholder:text-ink/40 focus:border-gold focus:outline-none";
+  "w-full rounded-xl border border-gold/40 bg-ivory/60 px-4 py-2.5 font-sans text-sm text-ink placeholder:text-ink/40 focus:border-gold focus:outline-none";
 const LABEL =
   "font-sans text-[11px] font-medium uppercase tracking-[0.14em] text-ink/60";
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -242,7 +242,7 @@ export default function ApplyBox({
             type="file"
             accept="application/pdf"
             onChange={onResume}
-            className="block w-full text-xs text-ink/60 file:mr-3 file:cursor-pointer file:rounded-sm file:border file:border-gold/40 file:bg-ivory-dim/60 file:px-3 file:py-1.5 file:font-sans file:text-[11px] file:uppercase file:tracking-[0.12em] file:text-ink"
+            className="block w-full text-xs text-ink/60 file:mr-3 file:cursor-pointer file:rounded-lg file:border file:border-gold/40 file:bg-ivory-dim/60 file:px-3 file:py-1.5 file:font-sans file:text-[11px] file:uppercase file:tracking-[0.12em] file:text-ink"
           />
           {resume && (
             <p className="mt-1 font-sans text-xs text-ink/55">{resume.name}</p>
