@@ -4,51 +4,16 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import type { Profile } from "@/lib/types";
+import { useAuth } from "@/components/AuthProvider";
 import MemberPhoto from "@/components/MemberPhoto";
-
-type State =
-  | { status: "loading" }
-  | { status: "signedout" }
-  | { status: "signedin"; profile: Profile | null };
 
 // Desktop auth control for the nav: Sign in / Join when logged out; an avatar
 // menu (Profile, Admin, Sign out) when logged in.
 export default function AuthMenu({ variant = "desktop" }: { variant?: "desktop" | "mobile" }) {
   const router = useRouter();
-  const [state, setState] = useState<State>({ status: "loading" });
+  const { signedIn, profile, loading } = useAuth();
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    const supabase = createClient();
-    let active = true;
-
-    const load = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!active) return;
-      if (!user) {
-        setState({ status: "signedout" });
-        return;
-      }
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", user.id)
-        .single<Profile>();
-      if (!active) return;
-      setState({ status: "signedin", profile: profile ?? null });
-    };
-
-    load();
-    const { data: sub } = supabase.auth.onAuthStateChange(() => load());
-    return () => {
-      active = false;
-      sub.subscription.unsubscribe();
-    };
-  }, []);
 
   useEffect(() => {
     const onClick = (e: MouseEvent) => {
@@ -70,8 +35,8 @@ export default function AuthMenu({ variant = "desktop" }: { variant?: "desktop" 
 
   // --- Mobile variant: simple stacked links ---
   if (variant === "mobile") {
-    if (state.status === "signedin") {
-      const p = state.profile;
+    if (!loading && signedIn) {
+      const p = profile;
       return (
         <div className="flex flex-col gap-3">
           <Link
@@ -116,11 +81,11 @@ export default function AuthMenu({ variant = "desktop" }: { variant?: "desktop" 
   }
 
   // --- Desktop variant ---
-  if (state.status === "loading") {
+  if (loading) {
     return <div className="h-9 w-24" aria-hidden="true" />;
   }
 
-  if (state.status === "signedout") {
+  if (!signedIn) {
     return (
       <>
         <Link
@@ -139,7 +104,7 @@ export default function AuthMenu({ variant = "desktop" }: { variant?: "desktop" 
     );
   }
 
-  const p = state.profile;
+  const p = profile;
   const initial = (p?.full_name || "?").charAt(0).toUpperCase();
 
   return (

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Logo from "./Logo";
 import AuthMenu from "./AuthMenu";
+import { useAuth } from "./AuthProvider";
 import { createClient } from "@/lib/supabase/client";
 
 type NavChild = { label: string; href: string };
@@ -47,7 +48,7 @@ export default function Nav() {
   // Careers is hidden by default and only appears once the admin flag loads on.
   const [careersEnabled, setCareersEnabled] = useState(false);
   // Community is members-only — shown once we know the visitor is signed in.
-  const [signedIn, setSignedIn] = useState(false);
+  const { signedIn } = useAuth();
   const pathname = usePathname();
 
   useEffect(() => {
@@ -69,23 +70,6 @@ export default function Nav() {
       });
     return () => {
       active = false;
-    };
-  }, []);
-
-  useEffect(() => {
-    const supabase = createClient();
-    let active = true;
-    const load = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (active) setSignedIn(Boolean(user));
-    };
-    load();
-    const { data: sub } = supabase.auth.onAuthStateChange(() => load());
-    return () => {
-      active = false;
-      sub.subscription.unsubscribe();
     };
   }, []);
 
