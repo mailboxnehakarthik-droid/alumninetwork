@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { Fraunces, Inter } from "next/font/google";
 import "./globals.css";
 
@@ -43,11 +44,22 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Next.js applies this nonce automatically to its own framework-injected
+  // scripts by parsing it back out of the Content-Security-Policy response
+  // header set in middleware — no manual <script nonce> needed for those.
+  // Reading it here (a) makes it available via headers() for any future
+  // inline/third-party <Script nonce={nonce}> this layout adds, and (b)
+  // forces every route through this layout into dynamic rendering, which
+  // nonce-based CSP requires (a nonce can't be baked into a statically
+  // pre-rendered page at build time — see Next's CSP guide).
+  const nonce = (await headers()).get("x-nonce");
+  void nonce;
+
   return (
     <html lang="en" className={`${fraunces.variable} ${inter.variable}`}>
       <body>{children}</body>
