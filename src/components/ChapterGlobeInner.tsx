@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef } from "react";
-import { CanvasTexture, MeshPhongMaterial } from "three";
+import { MeshPhongMaterial } from "three";
 import Globe, { type GlobeMethods } from "react-globe.gl";
 import { feature } from "topojson-client";
 import type { FeatureCollection, GeometryObject } from "geojson";
@@ -17,32 +17,18 @@ import worldTopoJson from "@/data/world-110m.json";
 
 type ChapterPoint = { lat: number; lng: number; name: string };
 
-// Land reads as a soft-to-medium maroon tint (blended from the brand's
-// maroon token, #71293c) instead of grey; borders are a deeper maroon for
-// definition.
-const LAND_FILL = "#ae8792"; // ~55% maroon blended into ivory
-const LAND_STROKE = "#8c5362"; // ~80% maroon blended into ivory
-const LAND_SIDE = "rgba(113, 41, 60, 0.35)"; // maroon, low alpha
-// Bright accent red so pins stay legible against both the navy ocean and the
-// now-maroon land.
-const PIN_COLOR = "#d5322b"; // accent
+// Land is the site's actual deep-maroon token (matches the maroon boxes/cards
+// elsewhere), with a darker maroon for country outlines so borders stay
+// legible against the solid fill.
+const LAND_FILL = "#71293c"; // maroon token
+const LAND_STROKE = "#5a1f2f"; // darker maroon, for definition
+const LAND_SIDE = "rgba(90, 31, 47, 0.35)"; // darker maroon, low alpha
+// Ivory pins so they pop against the deep-maroon land.
+const PIN_COLOR = "#f7f3ec"; // ivory
 
-// Ocean/base sphere: a navy gradient (the "ink" family — ink itself, and
-// oxblood, which despite its name is also a navy tone) via a small canvas
-// texture, since a flat Material can't hold a gradient on its own.
+// Ocean/base sphere: a plain light ivory fill.
 function createOceanMaterial() {
-  const canvas = document.createElement("canvas");
-  canvas.width = 2;
-  canvas.height = 256;
-  const ctx = canvas.getContext("2d");
-  if (ctx) {
-    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-    gradient.addColorStop(0, "#1c1826"); // ink
-    gradient.addColorStop(1, "#6b657b"); // lighter navy, derived from oxblood
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-  }
-  return new MeshPhongMaterial({ map: new CanvasTexture(canvas), shininess: 4 });
+  return new MeshPhongMaterial({ color: "#f8f9fb", shininess: 4 });
 }
 
 const worldTopology = worldTopoJson as unknown as Topology;
@@ -145,7 +131,7 @@ export default function ChapterGlobeInner({
       pointAltitude={0.02}
       pointRadius={0.45}
       pointLabel={(d) =>
-        `<div style="background:${PIN_COLOR};color:#f8f9fb;padding:4px 10px;border-radius:2px;font:600 11px/1.3 var(--font-sans, ui-sans-serif, system-ui, sans-serif);white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,0.25);">${
+        `<div style="background:${LAND_FILL};color:${PIN_COLOR};padding:4px 10px;border-radius:2px;font:600 11px/1.3 var(--font-sans, ui-sans-serif, system-ui, sans-serif);white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,0.25);">${
           (d as ChapterPoint).name
         }</div>`
       }
