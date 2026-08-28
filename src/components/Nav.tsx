@@ -19,6 +19,7 @@ const BASE_LINKS: NavItem[] = [
   { label: "Directory", href: "/directory" },
   { label: "Events", href: "/events" },
   { label: "Newsletter", href: "/newsletter" },
+  { label: "Gallery", href: "/gallery" },
 ];
 
 // Members-only discussions. Only shown to signed-in users.

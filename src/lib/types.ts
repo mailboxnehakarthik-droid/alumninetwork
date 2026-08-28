@@ -135,6 +135,15 @@ export type MentorshipRequest = {
   updated_at: string;
 };
 
+export type GalleryPhoto = {
+  id: string;
+  image_url: string; // medium, web-optimized — used in the lightbox
+  thumbnail_url: string; // small, compressed — used in the grid
+  caption: string | null;
+  uploaded_by: string | null;
+  uploaded_at: string;
+};
+
 export type EducationEntry = {
   id: string;
   profile_id: string;

@@ -12,6 +12,7 @@ const ROUTES = [
   "/chapters",
   "/notable-alumni",
   "/newsletter",
+  "/gallery",
   "/faqs",
   "/give-back",
   "/leadership",

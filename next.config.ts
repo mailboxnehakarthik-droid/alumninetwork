@@ -21,6 +21,17 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  images: {
+    // Gallery thumbnails/medium images live in Supabase Storage — next/image
+    // needs the host allowlisted to optimize/serve them.
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "sujxfhpvbrhhlmvzbgwv.supabase.co",
+        pathname: "/storage/v1/object/public/**",
+      },
+    ],
+  },
   async headers() {
     return [
       {

@@ -158,6 +158,12 @@ export default async function AdminPage({
                 >
                   Newsletters →
                 </Link>
+                <Link
+                  href="/admin/gallery"
+                  className="font-sans text-[12px] font-medium uppercase tracking-[0.12em] text-oxblood underline decoration-accent underline-offset-4 hover:text-maroon"
+                >
+                  Gallery →
+                </Link>
               </div>
             </div>
             <h1 className="mt-6 font-display text-[clamp(2.25rem,6vw,3.5rem)] leading-[1.02] tracking-tight text-ink">
