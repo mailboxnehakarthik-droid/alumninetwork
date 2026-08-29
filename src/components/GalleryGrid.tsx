@@ -35,12 +35,13 @@ export default function GalleryGrid({
     const supabase = createClient();
     const from = photos.length;
     const to = from + GALLERY_PAGE_SIZE - 1;
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("gallery_photos")
       .select("*")
       .order("uploaded_at", { ascending: false })
       .range(from, to)
       .returns<GalleryPhoto[]>();
+    if (error) console.error("gallery_photos fetch failed:", error.message);
 
     const batch = data ?? [];
     setPhotos((cur) => [...cur, ...batch]);
@@ -72,7 +73,7 @@ export default function GalleryGrid({
           No photos yet.
         </p>
         <p className="mx-auto mt-3 max-w-sm font-sans text-sm leading-relaxed text-ink/65">
-          Check back soon — this fills up as chapters share their moments.
+          Check back soon — this fills up as photos are added.
         </p>
       </div>
     );

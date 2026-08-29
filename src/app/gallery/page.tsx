@@ -9,20 +9,23 @@ import type { GalleryPhoto } from "@/lib/types";
 
 export const metadata: Metadata = {
   title: "Gallery — BMSCE Alumni Network",
-  description:
-    "Photos from BMS alumni chapters, reunions, and meetups around the world.",
+  description: "Photos from the BMS campus and the alumni network worldwide.",
 };
 
 export const dynamic = "force-dynamic";
 
 export default async function GalleryPage() {
   const supabase = await createClient();
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("gallery_photos")
     .select("*")
     .order("uploaded_at", { ascending: false })
     .range(0, GALLERY_PAGE_SIZE - 1)
     .returns<GalleryPhoto[]>();
+
+  // Surfaced instead of silently swallowed — an empty array from a query
+  // error looks identical to a genuinely empty gallery otherwise.
+  if (error) console.error("gallery_photos fetch failed:", error.message);
 
   const initialPhotos = data ?? [];
 
@@ -42,8 +45,8 @@ export default async function GalleryPage() {
             </Reveal>
             <Reveal delay={160}>
               <p className="mt-6 max-w-xl font-sans text-base leading-relaxed text-ink/70 md:text-lg">
-                Reunions, meetups, and chapter gatherings — click any photo
-                for a closer look.
+                Campus, chapters, reunions, and everything in between — click
+                any photo for a closer look.
               </p>
             </Reveal>
           </div>
